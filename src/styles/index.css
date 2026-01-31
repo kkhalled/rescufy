@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+/* @import "tw-animate-css"; */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Brand Tokens */
+  --color-primary: var(--brand-primary);
+  --color-accent: var(--brand-accent);
+
+  /* Semantic State Tokens */
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+  --color-info: var(--info);
+
+  /* Surface & Background Tokens */
+  --color-background: var(--background);
+  --color-background-second: var(--background-second);
+  --color-surface-card: var(--surface-card);
+  --color-bg-card: var(--background-card);
+  --color-surface-input: var(--surface-input);
+  --color-surface-muted: var(--surface-muted);
+  --color-gradient-danger: var(--gradient-danger);
+  /* Typography Tokens */
+  --color-heading: var(--text-heading);
+  --color-body: var(--text-body);
+  --color-muted: var(--text-muted);
+
+  /* Border & Radius */
+  --color-border: var(--border-default);
+  --radius-card: var(--radius-card);
+
+  /* Custom Shadows */
+  --shadow-card: var(--shadow-card);
+  --shadow-soft: var(--shadow-soft);
+  --shadow-alert: var(--shadow-alert);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-foreground: var(--foreground);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+:root {
+  /* Brand */
+  --brand-primary: #654dff;
+  --brand-accent: #8b5cf6;
+
+  /* Status */
+  --danger: #e63946;
+  --warning: #ff9500;
+  --success: #0fb67a;
+  --info: #60a5fa;
+
+  /* Text */
+  --text-heading: #111827;
+  --text-body: #353c46;
+  --text-muted: #6b7280;
+
+  /* Backgrounds */
+  --background: #f7f8fa;
+  --background-card: #ffffff;
+  --background-second: #f3f3f4;
+
+  /* Surfaces */
+  --surface-card: #ffffff;
+  --surface-soft: #f3f4f6;
+  --surface-muted: #f9fafb;
+
+  /* Borders */
+  --border-default: #e5e7eb;
+
+  /* Radius */
+  --radius-card: 16px;
+  --radius: 0.625rem;
+
+  /* Shadows */
+  --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 4px 18px rgba(0, 0, 0, 0.08);
+
+  /* ⚠️ Alert shadow (خفيف في اللايت) */
+  --shadow-alert: 0 0 20px rgba(230, 57, 70, 0.25);
+
+  /* Gradients */
+  --gradient-danger: linear-gradient(
+    to bottom right,
+    #ef4444,
+    #f87171
+  );
+}
+.dark {
+  /* Backgrounds */
+  --background: rgb(11, 18, 32);
+  --background-second: #161E2A;
+  --background-card: #0F1724;
+
+  /* Surfaces */
+  --surface-card: #0f1724;
+  --surface-soft: #0e1628;
+  --surface-muted: #111827;
+
+  /* Text */
+  --text-heading: rgb(226, 232, 240);
+  --text-body: rgb(203, 213, 225);
+  --text-muted: rgb(148, 163, 184);
+
+  /* Borders */
+  --border-default: rgba(255, 255, 255, 0.08);
+
+  /* Shadows */
+  --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.25);
+  --shadow-card: rgba(2, 6, 23, 0.6) 0px 6px 18px;
+
+  /* ⚠️ Alert shadow (أوسع وأنعم في الدارك) */
+  --shadow-alert: 0 0 60px rgba(230, 57, 70, 0.15);
+
+  /* Status */
+  --danger: #e63946;
+
+  /* Gradients */
+  --gradient-danger: linear-gradient(
+    to bottom right,
+    #ef4444,
+    #f87171
+  );
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+@layer utilities {
+  .critical-gradient {
+    background: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+  }
+  
+}
