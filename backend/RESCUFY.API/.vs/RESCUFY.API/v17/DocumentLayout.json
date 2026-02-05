@@ -1,0 +1,165 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\all\\backend new course\\RESCUFY.API\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|c:\\all\\backend new course\\rescufy.api\\rescufy.api\\dtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|solutionrelative:rescufy.api\\dtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|c:\\all\\backend new course\\rescufy.api\\rescufy.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|solutionrelative:rescufy.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|c:\\all\\backend new course\\rescufy.api\\rescufy.api\\models\\report.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|solutionrelative:rescufy.api\\models\\report.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|c:\\all\\backend new course\\rescufy.api\\rescufy.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|solutionrelative:rescufy.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|c:\\all\\backend new course\\rescufy.api\\rescufy.api\\models\\hospital.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|solutionrelative:rescufy.api\\models\\hospital.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|c:\\all\\backend new course\\rescufy.api\\rescufy.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|solutionrelative:rescufy.api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|c:\\all\\backend new course\\rescufy.api\\rescufy.api\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|solutionrelative:rescufy.api\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|c:\\all\\backend new course\\rescufy.api\\rescufy.api\\models\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|solutionrelative:rescufy.api\\models\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|c:\\all\\backend new course\\rescufy.api\\rescufy.api\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|solutionrelative:rescufy.api\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Report.cs",
+              "DocumentMoniker": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\models\\Report.cs",
+              "RelativeDocumentMoniker": "RESCUFY.API\\models\\Report.cs",
+              "ToolTip": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\models\\Report.cs",
+              "RelativeToolTip": "RESCUFY.API\\models\\Report.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-03T18:08:15.526Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Hospital.cs",
+              "DocumentMoniker": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\models\\Hospital.cs",
+              "RelativeDocumentMoniker": "RESCUFY.API\\models\\Hospital.cs",
+              "ToolTip": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\models\\Hospital.cs",
+              "RelativeToolTip": "RESCUFY.API\\models\\Hospital.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-20T16:52:40.272Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\Program.cs",
+              "RelativeDocumentMoniker": "RESCUFY.API\\Program.cs",
+              "ToolTip": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\Program.cs",
+              "RelativeToolTip": "RESCUFY.API\\Program.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAAABUAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-15T20:27:35.211Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "LoginDto.cs",
+              "DocumentMoniker": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\DTOs\\LoginDto.cs",
+              "RelativeDocumentMoniker": "RESCUFY.API\\DTOs\\LoginDto.cs",
+              "ToolTip": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\DTOs\\LoginDto.cs",
+              "RelativeToolTip": "RESCUFY.API\\DTOs\\LoginDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-15T20:11:18.691Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "RegisterDto.cs",
+              "DocumentMoniker": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\DTOs\\RegisterDto.cs",
+              "RelativeDocumentMoniker": "RESCUFY.API\\DTOs\\RegisterDto.cs",
+              "ToolTip": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\DTOs\\RegisterDto.cs",
+              "RelativeToolTip": "RESCUFY.API\\DTOs\\RegisterDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-15T20:09:04.734Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "RESCUFY.API\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "RESCUFY.API\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAB8AAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-15T20:07:31.162Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "WeatherForecastController.cs",
+              "DocumentMoniker": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\Controllers\\WeatherForecastController.cs",
+              "RelativeDocumentMoniker": "RESCUFY.API\\Controllers\\WeatherForecastController.cs",
+              "ToolTip": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\Controllers\\WeatherForecastController.cs",
+              "RelativeToolTip": "RESCUFY.API\\Controllers\\WeatherForecastController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-15T20:05:49.605Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AppUser.cs",
+              "DocumentMoniker": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\models\\AppUser.cs",
+              "RelativeDocumentMoniker": "RESCUFY.API\\models\\AppUser.cs",
+              "ToolTip": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\models\\AppUser.cs",
+              "RelativeToolTip": "RESCUFY.API\\models\\AppUser.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-15T19:50:31.696Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "RESCUFY.API\\Services\\AuthService.cs",
+              "ToolTip": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\Services\\AuthService.cs",
+              "RelativeToolTip": "RESCUFY.API\\Services\\AuthService.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAAADoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-15T19:39:49.575Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

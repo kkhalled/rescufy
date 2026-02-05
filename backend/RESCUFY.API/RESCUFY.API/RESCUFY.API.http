@@ -1,0 +1,6 @@
+@RESCUFY.API_HostAddress = http://localhost:5204
+
+GET {{RESCUFY.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
