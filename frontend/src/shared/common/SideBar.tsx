@@ -44,7 +44,7 @@ export default function SideBar({ isOpen, onClose }: SideBarProps) {
       `}
     >
       {/* Mobile Header */}
-      <div className="flex items-center justify-between mb-6 md:mb-0">
+      <div className="flex items-center justify-center mb-6 md:mb-0">
         <Logo text={null} />
         <button
           onClick={onClose}

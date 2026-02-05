@@ -3,21 +3,26 @@ import SearchInput from "../ui/SearchInput";
 
 type searchProps = {
   children: ReactNode;
-  value: string ;
-    onSearchChange: (value: string) => void;
+  value: string;
+  onSearchChange: (value: string) => void;
+  placeholder?: string;
 };
 
-export default function SearchBar({ children, value , onSearchChange }: searchProps) {
+export default function SearchBar({
+  placeholder,
+  children,
+  value,
+  onSearchChange,
+}: searchProps) {
   return (
     <>
-      <div className="bg-bg-card py-4 px-8 grid grid-cols-2 items-center  gap-8  rounded-lg shadow-card">
-        <div className="  ">
-          <SearchInput value={value}  onSearchChange={ onSearchChange}  />
+      <div className="bg-bg-card py-4 px-8 flex items-center justify-between space-x-4  rounded-lg shadow-card">
+        <div className=" w-1/2">
+          <SearchInput value={value} onSearchChange={onSearchChange} placeholder={placeholder} />
         </div>
-
-        <div className="">
-          <div className="flex *:grow gap-4">{children}</div>
-        </div>
+ 
+    {/* filter props */}
+        {children}
       </div>
     </>
   );

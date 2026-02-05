@@ -76,7 +76,7 @@ export function RequestRow({
 
       {/* Location */}
       <div className="flex items-center gap-2 flex-1 text-muted text-xs md:text-sm">
-        <MapPin className="w-3 h-3 md:w-4 md:h-4 text-muted flex-shrink-0" />
+        <MapPin className="w-3 h-3 md:w-4 md:h-4 text-muted shrink-0" />
         <span className="truncate">{location}</span>
       </div>
 

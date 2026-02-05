@@ -3,9 +3,11 @@ import { Search } from "lucide-react";
 type SearchInputProps = {
   value: string ;
   onSearchChange: (value: string) => void;
+  placeholder?: string;
 };
 
 export default function SearchInput({
+  placeholder = "Search anything",
   value,
   onSearchChange,
 }: SearchInputProps) {
@@ -16,7 +18,7 @@ export default function SearchInput({
       <input
         value={value }
         onChange={(e) => onSearchChange(e.target.value)}
-        placeholder="Search anything"
+        placeholder={placeholder}
         className="
           flex-1
           px-2 md:px-3

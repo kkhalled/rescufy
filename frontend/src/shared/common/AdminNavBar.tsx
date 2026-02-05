@@ -81,7 +81,7 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
 
             {/* Avatar */}
             <div className="relative">
-              <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-sm font-bold shadow-md group-hover:shadow-lg transition-shadow">
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-linear-to-br from-primary to-accent flex items-center justify-center text-white text-sm font-bold shadow-md group-hover:shadow-lg transition-shadow">
                 AR
               </div>
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 md:w-3 md:h-3 bg-success border-2 border-background-second rounded-full" />

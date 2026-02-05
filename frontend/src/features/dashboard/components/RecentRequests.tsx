@@ -10,7 +10,7 @@ export default function RecentRequests() {
         <div className="col-span-1 lg:col-span-8 bg-bg-card pb-10 dark:bg-bg-card rounded-lg md:rounded-2xl shadow-card dark:shadow-card overflow-hidden">
           <div className="header flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 p-4 md:p-6 font-semibold text-base md:text-lg text-heading dark:text-heading border-b border-border">
             <span>Recent Requests</span>
-            <Link to={"/requests"} className="text-xs cursor-pointer bg-primary text-white px-3 md:px-4 py-2 rounded-full hover:opacity-90 transition self-start sm:self-auto">
+            <Link to={"/admin/requests"} className="text-xs cursor-pointer bg-primary text-white px-3 md:px-4 py-2 rounded-full hover:opacity-90 transition self-start sm:self-auto">
               View All
             </Link>
           </div>

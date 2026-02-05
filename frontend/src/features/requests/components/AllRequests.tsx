@@ -28,8 +28,8 @@ export default function AllRequests() {
   return (
     <>
       <SearchBar value={searchValue} onSearchChange={setSearchValue}>
-        <RequestsStateMenu value={status} onChange={setStatus} />
-        <RequestsTypesMenu value={priority} onChange={setPriority} />
+        <div className="w-1/4"><RequestsStateMenu value={status} onChange={setStatus} /></div>
+        <div className="w-1/4"><RequestsTypesMenu value={priority} onChange={setPriority} /></div>
       </SearchBar>
 
       <div className="mt-6">
