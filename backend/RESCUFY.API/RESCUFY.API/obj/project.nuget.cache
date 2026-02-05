@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2h9VdXokcuE=",
+  "dgSpecHash": "WXHdq0Qaypw=",
   "success": true,
-  "projectFilePath": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\RESCUFY.API.csproj",
+  "projectFilePath": "C:\\Users\\Aya\\OneDrive\\Documents\\GitHub\\rescufy\\backend\\RESCUFY.API\\RESCUFY.API\\RESCUFY.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Aya\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Aya\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
@@ -89,9 +89,9 @@
       "code": "NU1603",
       "level": "Warning",
       "message": "RESCUFY.API depends on Microsoft.EntityFrameworkCore.Tools (>= 8.0.0-preview.7) but Microsoft.EntityFrameworkCore.Tools 8.0.0-preview.7 was not found. Microsoft.EntityFrameworkCore.Tools 8.0.0-preview.7.23375.4 was resolved instead.",
-      "projectPath": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\RESCUFY.API.csproj",
+      "projectPath": "C:\\Users\\Aya\\OneDrive\\Documents\\GitHub\\rescufy\\backend\\RESCUFY.API\\RESCUFY.API\\RESCUFY.API.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\all\\backend new course\\RESCUFY.API\\RESCUFY.API\\RESCUFY.API.csproj",
+      "filePath": "C:\\Users\\Aya\\OneDrive\\Documents\\GitHub\\rescufy\\backend\\RESCUFY.API\\RESCUFY.API\\RESCUFY.API.csproj",
       "libraryId": "Microsoft.EntityFrameworkCore.Tools",
       "targetGraphs": [
         "net8.0"
