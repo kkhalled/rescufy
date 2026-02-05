@@ -1,0 +1,90 @@
+# Miscellaneous
+
+*.class
+*.log
+*.tmp
+*.swp
+*.pyc
+.DS_Store
+.history
+.svn/
+.atom/
+.build/
+.buildlog/
+.swiftpm/
+migrate_working_dir/
+
+# IDEs & Editors
+
+# IntelliJ / Android Studio
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code
+.vscode/
+
+# Flutter / Dart / Pub
+
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugins-dependencies.json
+.flutter_tool_state
+.packages
+.pub/
+.pub-cache/
+build/
+coverage/
+
+
+# Flutter Generated
+
+**/doc/api/
+**/ios/Flutter/.last_build_id
+
+
+# Android
+
+android/.gradle/
+android/.idea/
+android/local.properties
+android/key.properties
+android/**/GeneratedPluginRegistrant.java
+android/app/debug
+android/app/profile
+android/app/release
+
+
+# iOS
+
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/ephemeral/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Runner.xcworkspace
+ios/Runner/GeneratedPluginRegistrant.*
+ios/.idea/
+
+
+
+# Code Generation
+generated/
+*.g.dart
+*.freezed.dart
+
+# Environment / Secrets
+.env
+.env.*
+secrets/
+
+
+# Temporary Assets
+assets/tmp/
+
+# Symbolication / Obfuscation
+app.*.symbols
+app.*.map.json
