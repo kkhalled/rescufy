@@ -6,18 +6,35 @@ import { Link } from "react-router";
 // import { Link } from 'react-dom';
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { ROLE_ROUTES } from "../../roles/auth.roles";
+import { setRole } from "../../store/auth.slice";
+import { useDispatch } from "react-redux";
+import type { responseType } from "../../types/auth.types";
+
 
 export default function SignInForm() {
    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
   type SignInFormValues = {
     email: string;
     password: string;
   };
 
-  function handleSubmit(values: SignInFormValues) {
-    console.log(values);
-    navigate("/");
-  }
+function handleSubmit(values: SignInFormValues) {
+  console.log(values);
+  
+  const fakeResponse:responseType = {
+    id: 1,
+    name: "Aya",
+    email: "aya@example.com",
+    roleId: "admin" ,
+  };
+
+  dispatch(setRole(fakeResponse.roleId));
+  navigate(ROLE_ROUTES[fakeResponse.roleId ]);
+}
+
 
   const validationSchema = yup.object({
     email: yup

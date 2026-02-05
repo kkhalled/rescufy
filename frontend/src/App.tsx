@@ -1,16 +1,18 @@
 import "./styles/index.css";
-// import "./styles/themes.css";
 
-import { RouterProvider } from "react-router";
-import router from "./app/routes/Router.tsx";
+import { Provider } from "react-redux";
+import { RouterProvider } from "react-router-dom";
+
+import router from "./app/routes/Router";
+import { store } from "./app/store/store";
 
 function App() {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* <SignUp /> */}
-
-      <RouterProvider router={router}/>
-    </div>
+    <Provider store={store}>
+      <div className="min-h-screen bg-white dark:bg-gray-900">
+        <RouterProvider router={router} />
+      </div>
+    </Provider>
   );
 }
 
