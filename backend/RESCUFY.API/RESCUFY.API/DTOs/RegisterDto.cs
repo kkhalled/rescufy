@@ -1,4 +1,5 @@
-﻿namespace RESCUFY.API.DTOs
+﻿
+namespace RESCUFY.API.DTOs
 {
     public class RegisterDto
     {
@@ -11,5 +12,9 @@
         public string gender { get; set; }
 
         public string phonenumber { get; set; }
+        public string address { get; set; }
+        
+        public int Age { get; set; }
+        public DateTime DateOfBirth { get; set; }
     }
 }

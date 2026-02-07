@@ -35,7 +35,11 @@ namespace RESCUFY.API.Services
                 PasswordHash = hashedPassword,    
                 RoleId = dto.RoleID,              
                 Gender = dto.gender,            
-                PhoneNumber = dto.phonenumber     
+                PhoneNumber = dto.phonenumber,
+                Address = dto.address,
+                CreatedAt = DateTime.Now,
+                Age = dto.Age,
+                DateOfBirth = dto.DateOfBirth
             };
 
             // Add to database

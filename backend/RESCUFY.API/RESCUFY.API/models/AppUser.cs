@@ -14,9 +14,6 @@ namespace RESCUFY.API.models
         public int UserId { get; set; }
 
         [Required]
-        public string NationalId { get; set; }
-
-        [Required]
         public string FullName { get; set; }
 
         public int Age { get; set; }
