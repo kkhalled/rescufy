@@ -2,39 +2,70 @@ import InputFiled from "../../../../shared/ui/FormInput/InputFiled";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
 import { Link } from "react-router";
-
-// import { Link } from 'react-dom';
+import { jwtDecode } from "jwt-decode";
+import { useAuth } from "@/app/provider/AuthContext";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { ROLE_ROUTES } from "../../roles/auth.roles";
-import { setRole } from "../../store/auth.slice";
-import { useDispatch } from "react-redux";
-import type { responseType } from "../../types/auth.types";
-
+import axios from "axios";
+import type { JwtPayload } from "../../types/auth.types";
 
 export default function SignInForm() {
-   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
+
   type SignInFormValues = {
     email: string;
     password: string;
   };
 
-function handleSubmit(values: SignInFormValues) {
-  console.log(values);
-  
-  const fakeResponse:responseType = {
-    id: 1,
-    name: "Aya",
-    email: "aya@example.com",
-    roleId: "admin" ,
-  };
+  async function handleSubmit(values: SignInFormValues) {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5248/api/Auth/login",
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
 
-  dispatch(setRole(fakeResponse.roleId));
-  navigate(ROLE_ROUTES[fakeResponse.roleId ]);
-}
+      console.log(data);
+      const decoded = jwtDecode<JwtPayload>(data.token);
+      console.log(decoded);
 
+      if (decoded.Role) {
+        // Store the token
+        localStorage.setItem("auth_token", data.token);
+
+        // Store user data in context
+        setUser({
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier":
+            decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name":
+            decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+          FullName: decoded.FullName,
+          PicUrl: decoded.PicUrl,
+          Email: decoded.Email,
+          UserName: decoded.UserName,
+          Role: decoded.Role.toLowerCase() as "admin" | "hospital" | "ambulance",
+          SecurityStamp: decoded.SecurityStamp,
+          aud: decoded.aud,
+          exp: decoded.exp,
+          iss: decoded.iss,
+          jti: decoded.jti,
+        });
+
+        // Navigate based on role
+        const roleRoute = decoded.Role.toLowerCase() === "admin" ? "/admin" : `/${decoded.Role.toLowerCase()}_user`;
+        navigate(roleRoute);
+      } else {
+        console.error("Role claim not found in token");
+      }
+    } catch (error: any) {
+      console.log(error.response?.data || error.message);
+    }
+  }
 
   const validationSchema = yup.object({
     email: yup
@@ -56,7 +87,6 @@ function handleSubmit(values: SignInFormValues) {
     validationSchema: validationSchema,
   });
 
- 
   return (
     <div
       className="
@@ -88,7 +118,11 @@ function handleSubmit(values: SignInFormValues) {
             value={formik.values.email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.email && formik.errors.email ? formik.errors.email : undefined}
+            error={
+              formik.touched.email && formik.errors.email
+                ? formik.errors.email
+                : undefined
+            }
           />
 
           <InputFiled
@@ -101,7 +135,11 @@ function handleSubmit(values: SignInFormValues) {
             value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.password && formik.errors.password ? formik.errors.password : undefined}
+            error={
+              formik.touched.password && formik.errors.password
+                ? formik.errors.password
+                : undefined
+            }
           />
 
           {/* Submit */}
@@ -121,7 +159,6 @@ function handleSubmit(values: SignInFormValues) {
                 focus:ring-primary/40
                 transition
               "
-              
             >
               Sign In
             </button>

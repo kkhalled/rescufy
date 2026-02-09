@@ -10,7 +10,7 @@ export default function SignInHero() {
         <div className="max-w-xl px-12">
           {/* Logo */}
           <div className="mb-10">
-            <Logo />
+            <Logo  />
           </div>
 
           {/* Headline */}

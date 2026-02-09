@@ -21,7 +21,7 @@ export default function SignUpHero() {
         - Light Mode: White/Blue linear (makes image subtle, text dark)
         - Dark Mode: Dark Blue/Black linear (makes text white)
       */}
-      <div className="absolute inset-0 bg-linear-to-br from-slate-50/95  via-slate-100/90 to-slate-200/85  dark:from-blue-950/90 dark:via-slate-900/90 dark:to-black/95 transition-all duration-500 z-0"></div>
+      <div className="absolute inset-0 bg-linear-to-br from-slate-50/20  bg-transparent/50 via-slate-100/30 to-slate-200  dark:from-blue-950/90 dark:via-slate-900/90 dark:to-black/95 transition-all duration-500 z-0"></div>
 
       <div className="relative z-10 max-w-4xl px-6 md:px-10 py-6 md:py-6">
         {/* Branding */}

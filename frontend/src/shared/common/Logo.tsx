@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function Logo({text}) {
+export default function Logo({text}: {text?: string}) {
   return (
-    <div className="flex items-center justify-center gap-2 mb-8">
+    <div className="flex mx-auto items-center justify-center gap-2 mb-8">
       <div className="h-12 w-12 md:h-14 md:w-14 rounded-2xl bg-primary shadow-[0_0_15px_rgba(37,99,235,0.3)] flex items-center justify-center border border-white/20">
         <span className="text-xl md:text-2xl font-bold text-white">⌁</span>
       </div>

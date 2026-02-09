@@ -1,5 +1,6 @@
 import { Search, Bell, Sun, Moon, Menu } from "lucide-react";
 import { useTheme } from "@/shared/hooks/useTheme";
+import { useAuth } from "@/app/provider/AuthContext";
 
 interface AdminNavbarProps {
   onMenuClick: () => void;
@@ -7,6 +8,7 @@ interface AdminNavbarProps {
 
 export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
   const { theme, toggleTheme } = useTheme();
+  const { user } = useAuth();
 
   return (
     <header className="fixed top-0 right-0 left-0 md:left-22 bg-background-second/95 backdrop-blur-md border-b border-border z-30">
@@ -72,17 +74,24 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
             {/* User Info - Hidden on small screens */}
             <div className="hidden md:block text-right">
               <p className="text-sm font-semibold text-heading leading-tight">
-                Dr. Abdullah
+                {user?.FullName || "Admin User"}
               </p>
+             
               <span className="inline-block text-[10px] px-2 py-0.5 rounded-full bg-primary text-white font-medium">
-                ADMIN
+                {(user?.Role)?.toUpperCase() || "ADMIN"}
               </span>
             </div>
 
             {/* Avatar */}
             <div className="relative">
               <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-linear-to-br from-primary to-accent flex items-center justify-center text-white text-sm font-bold shadow-md group-hover:shadow-lg transition-shadow">
-                AR
+                {user?.UserName
+                  ? user.UserName
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()
+                  : "AU"}
               </div>
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 md:w-3 md:h-3 bg-success border-2 border-background-second rounded-full" />
             </div>
