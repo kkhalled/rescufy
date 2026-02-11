@@ -1,6 +1,6 @@
 // lib/presentation/features/auth/cubit/register_state.dart
 import 'package:equatable/equatable.dart';
-import '../../../../domain/entities/user.dart';
+import '../../../../../domain/entities/user.dart';
 
 abstract class RegisterState extends Equatable {
   const RegisterState();

@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rescufy/core/theme/colors.dart';
-import '../cubit/login_cubit.dart';
-import '../cubit/login_state.dart';
+import '../cubit/login/login_cubit.dart';
+import '../cubit/login/login_state.dart';
 
 // ✅ Remove BlocProvider from here - it's already in main.dart
 class LoginScreen extends StatefulWidget {
@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     'Account Login Form',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.white70,
+                      color: AppColors.card,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.card,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.card,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
@@ -198,6 +198,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             TextButton(
                               onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/forgot-password',
+                                );
                                 // TODO: Navigate to forgot password
                               },
                               style: TextButton.styleFrom(
@@ -243,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     width: 20,
                                     height: 20,
                                     child: CircularProgressIndicator(
-                                      color: Colors.white,
+                                      color: AppColors.card,
                                       strokeWidth: 2,
                                     ),
                                   )
@@ -252,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.white,
+                                      color: AppColors.card,
                                       height: 1,
                                     ),
                                   ),

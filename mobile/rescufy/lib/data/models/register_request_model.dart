@@ -1,7 +1,7 @@
-// lib/domain/entities/register_request.dart
+// lib/domain/entities/register_request_model.dart
 import 'package:equatable/equatable.dart';
 
-class RegisterRequest extends Equatable {
+class RegisterRequestModel extends Equatable {
   final String fullName;
   final String email;
   final String password;
@@ -10,7 +10,7 @@ class RegisterRequest extends Equatable {
   final int age;
   final String gender;
 
-  const RegisterRequest({
+  const RegisterRequestModel({
     required this.fullName,
     required this.email,
     required this.password,

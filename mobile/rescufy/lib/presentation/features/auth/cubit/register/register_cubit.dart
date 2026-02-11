@@ -1,6 +1,6 @@
 // lib/presentation/features/auth/cubit/register_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../domain/usecases/register_usecase.dart';
+import '../../../../../domain/usecases/register_usecase.dart';
 import 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {

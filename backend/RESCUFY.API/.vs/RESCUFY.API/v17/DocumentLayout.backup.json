@@ -1,7 +1,16 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Aya\\OneDrive\\Documents\\GitHub\\rescufy\\backend\\RESCUFY.API\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\Omar Waqqad\\rescufy\\backend\\RESCUFY.API\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|c:\\users\\omar waqqad\\rescufy\\backend\\rescufy.api\\rescufy.api\\rescufy.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|solutionrelative:rescufy.api\\rescufy.api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|c:\\users\\omar waqqad\\rescufy\\backend\\rescufy.api\\rescufy.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DDCC72EE-C390-4207-9490-19A48DD388A7}|RESCUFY.API\\RESCUFY.API.csproj|solutionrelative:rescufy.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +18,33 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RESCUFY.API.http",
+              "DocumentMoniker": "C:\\Users\\Omar Waqqad\\rescufy\\backend\\RESCUFY.API\\RESCUFY.API\\RESCUFY.API.http",
+              "RelativeDocumentMoniker": "RESCUFY.API\\RESCUFY.API.http",
+              "ToolTip": "C:\\Users\\Omar Waqqad\\rescufy\\backend\\RESCUFY.API\\RESCUFY.API\\RESCUFY.API.http",
+              "RelativeToolTip": "RESCUFY.API\\RESCUFY.API.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2026-02-07T19:38:38.434Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Omar Waqqad\\rescufy\\backend\\RESCUFY.API\\RESCUFY.API\\Program.cs",
+              "RelativeDocumentMoniker": "RESCUFY.API\\Program.cs",
+              "ToolTip": "C:\\Users\\Omar Waqqad\\rescufy\\backend\\RESCUFY.API\\RESCUFY.API\\Program.cs",
+              "RelativeToolTip": "RESCUFY.API\\Program.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-07T19:38:35.457Z",
+              "EditorCaption": ""
             }
           ]
         }

@@ -1,5 +1,6 @@
 // lib/core/theme/text_styles.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'colors.dart';
 
 class AppTextStyles {
@@ -21,7 +22,7 @@ class AppTextStyles {
 
   static TextStyle get displaySmall => TextStyle(
     fontSize: 24,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
     height: 1.3,
   );

@@ -13,7 +13,6 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
         elevation: 0,
         title: const Text('Rescufy'),
         actions: [

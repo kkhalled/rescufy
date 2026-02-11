@@ -1,6 +1,6 @@
 // lib/core/network/network_exceptions.dart
 import 'package:dio/dio.dart';
-import '../errors/failures.dart';
+import '../../domain/core/failures.dart';
 
 class NetworkExceptions {
   static Failure handleDioException(DioException error) {

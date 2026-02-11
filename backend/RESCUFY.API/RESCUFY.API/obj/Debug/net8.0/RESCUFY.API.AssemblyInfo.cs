@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RESCUFY.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3ccc06eaea143b0d6706feb501d41511245a0770")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+32bb1b31d669312e904a829fffe2564812a708f9")]
 [assembly: System.Reflection.AssemblyProductAttribute("RESCUFY.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RESCUFY.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

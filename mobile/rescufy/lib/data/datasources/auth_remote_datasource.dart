@@ -18,6 +18,20 @@ abstract class AuthRemoteDataSource {
   });
 
   Future<void> logout();
+
+  // ✅ NEW: Password Reset
+  Future<String> forgotPassword({required String email});
+
+  Future<void> verifyResetPasswordOtp({
+    required String email,
+    required String otp,
+  });
+
+  Future<void> resetPassword({
+    required String email,
+    required String otp,
+    required String newPassword,
+  });
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -36,7 +50,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         data: {'email': email, 'password': password},
       );
 
-      return UserModel.fromJson(response.data['data']);
+      final token = response.data['token'];
+      if (token != null) {
+        return UserModel.fromToken(token);
+      } else {
+        throw Exception('No token received from server');
+      }
     } on DioException {
       rethrow;
     }
@@ -66,7 +85,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         },
       );
 
-      return UserModel.fromJson(response.data['data']);
+      if (response.data['token'] != null) {
+        return UserModel.fromToken(response.data['token']);
+      } else {
+        throw Exception('Invalid response format');
+      }
     } on DioException {
       rethrow;
     }
@@ -76,6 +99,55 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> logout() async {
     try {
       await dioClient.post(ApiEndpoints.logout);
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  // ✅ NEW: Forgot Password
+  @override
+  Future<String> forgotPassword({required String email}) async {
+    try {
+      final response = await dioClient.post(
+        ApiEndpoints.forgotPassword,
+        data: {'email': email},
+      );
+
+      // API might return a message
+      return response.data['message'] ?? 'OTP sent to your email';
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  // ✅ NEW: Verify OTP
+  @override
+  Future<void> verifyResetPasswordOtp({
+    required String email,
+    required String otp,
+  }) async {
+    try {
+      await dioClient.post(
+        ApiEndpoints.verifyResetPasswordOtp,
+        data: {'email': email, 'otp': otp},
+      );
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  // ✅ NEW: Reset Password
+  @override
+  Future<void> resetPassword({
+    required String email,
+    required String otp,
+    required String newPassword,
+  }) async {
+    try {
+      await dioClient.post(
+        ApiEndpoints.resetPassword,
+        data: {'email': email, 'otp': otp, 'newPassword': newPassword},
+      );
     } on DioException {
       rethrow;
     }

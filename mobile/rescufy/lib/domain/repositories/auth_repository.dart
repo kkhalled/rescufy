@@ -1,6 +1,6 @@
 // lib/domain/repositories/auth_repository.dart
 import 'package:dartz/dartz.dart';
-import '../../core/errors/failures.dart';
+import '../core/failures.dart';
 import '../entities/user.dart';
 
 abstract class AuthRepository {
@@ -20,4 +20,18 @@ abstract class AuthRepository {
   });
 
   Future<Either<Failure, void>> logout();
+
+  // ✅ NEW: Forgot Password Flow
+  Future<Either<Failure, String>> forgotPassword({required String email});
+
+  Future<Either<Failure, void>> verifyResetPasswordOtp({
+    required String email,
+    required String otp,
+  });
+
+  Future<Either<Failure, void>> resetPassword({
+    required String email,
+    required String otp,
+    required String newPassword,
+  });
 }

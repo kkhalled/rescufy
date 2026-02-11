@@ -1,9 +1,10 @@
 // lib/presentation/features/auth/views/signup_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rescufy/core/theme/colors.dart';
-import '../cubit/register_cubit.dart';
-import '../cubit/register_state.dart';
+import '../cubit/register/register_cubit.dart';
+import '../cubit/register/register_state.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -64,14 +65,17 @@ class _SignupScreenState extends State<SignupScreen> {
                     children: [
                       IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: AppColors.card,
+                        ),
                       ),
                       const SizedBox(width: 16),
                       const Text(
                         'Sign Up',
                         style: TextStyle(
                           fontSize: 24,
-                          color: Colors.white,
+                          color: AppColors.card,
                           fontWeight: FontWeight.w700,
                           height: 1,
                         ),
@@ -86,7 +90,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     margin: const EdgeInsets.symmetric(horizontal: 24),
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.card,
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(24),
                         topRight: Radius.circular(24),
@@ -183,7 +187,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               keyboardType: TextInputType.number,
                             ),
 
-                            const SizedBox(height: 16),
+                            SizedBox(height: 16.h),
 
                             // Phone Number
                             _buildTextField(
@@ -193,7 +197,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               keyboardType: TextInputType.phone,
                             ),
 
-                            const SizedBox(height: 16),
+                            SizedBox(height: 16.h),
 
                             // Age
                             _buildTextField(
@@ -203,7 +207,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               keyboardType: TextInputType.number,
                             ),
 
-                            const SizedBox(height: 16),
+                            SizedBox(height: 16.h),
 
                             // Gender Dropdown
                             DropdownButtonFormField<String>(
@@ -293,7 +297,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                         width: 20,
                                         height: 20,
                                         child: CircularProgressIndicator(
-                                          color: Colors.white,
+                                          color: AppColors.card,
                                           strokeWidth: 2,
                                         ),
                                       )
@@ -302,7 +306,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
-                                          color: Colors.white,
+                                          color: AppColors.card,
                                         ),
                                       ),
                               ),
