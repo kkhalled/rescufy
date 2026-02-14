@@ -15,13 +15,16 @@ namespace Persistence
 			services.AddDbContext<ApplicationDbContext>(options =>
 			{
 				var connectionString = configuration.GetConnectionString("DefaultConnection");
-				options.UseSqlServer(connectionString);
+				options.UseSqlServer("Server=localhost;Database=rescufy_test;Trusted_Connection=True;TrustServerCertificate=True;");
 			});
 
 			services.AddScoped<IDataSeeding, DataSeeding>();
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			services.AddScoped<SuperAdminSeeder>();
 			services.AddScoped<RolesSeeder>();
+			services.AddScoped<UsersSeeder>();
+			services.AddScoped<AmbulanceSeeder>();
+			services.AddScoped<HospitalSeeder>();
 			return services;
 		}
 	}

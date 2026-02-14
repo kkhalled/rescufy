@@ -6,6 +6,7 @@ namespace Domain.Models
     {
         public string Name { get; set; } = "";
         public string? ProfileImageUrl { get; set; }
+
         public bool IsBanned { get; set; } = false;
         public EmailVerificationCode EmailVerificationCode { get; set; } = default!;
 

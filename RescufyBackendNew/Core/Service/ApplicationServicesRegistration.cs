@@ -24,6 +24,8 @@ namespace Service
             }, typeof(MappingProfile));
 
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IRequestService, RequestService>();
+            services.AddScoped<IUserService, UserService>();
             return services;
         }
     }

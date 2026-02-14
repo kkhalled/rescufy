@@ -22,7 +22,10 @@ public class HospitalConfiguration : IEntityTypeConfiguration<Hospital>
                .HasMaxLength(20)
                .IsRequired();
 
-        builder.Property(x => x.CapacityNotes)
-               .HasMaxLength(1000);
+        builder.Property(x => x.Latitude)
+               .HasPrecision(9, 6);
+
+        builder.Property(x => x.Longitude)
+               .HasPrecision(9, 6);
     }
 }

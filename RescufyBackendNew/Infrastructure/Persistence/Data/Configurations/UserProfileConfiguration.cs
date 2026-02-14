@@ -17,12 +17,13 @@ public class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
         builder.Property(x => x.MedicalNotes)
                .HasMaxLength(1000);
 
-        builder.Property(x => x.EmergencyContactName)
-               .HasMaxLength(200)
-               .IsRequired();
+        builder.Property(x => x.WeightKg)
+               .HasColumnType("decimal(18,2)");
 
-        builder.Property(x => x.EmergencyContactPhone)
-               .HasMaxLength(20)
+        builder.Property(x => x.HeightCm)
+               .HasColumnType("decimal(18,2)");
+        
+        builder.Property(x => x.PregnancyStatus)
                .IsRequired();
 
         builder.HasOne(x => x.ApplicationUser)

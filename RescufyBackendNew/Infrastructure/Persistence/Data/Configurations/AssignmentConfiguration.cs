@@ -13,6 +13,10 @@ public class AssignmentConfiguration : IEntityTypeConfiguration<Assignment>
         builder.Property(x => x.Notes)
                .HasMaxLength(1000);
 
+        builder.Property(x => x.Status)
+               .HasConversion<int>()
+               .IsRequired();
+
         builder.HasOne(x => x.Request)
                .WithMany(r => r.Assignments)
                .HasForeignKey(x => x.RequestId)

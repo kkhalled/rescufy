@@ -5,7 +5,11 @@
         public string Name { get; set; } = default!;
         public string Address { get; set; } = default!;
         public string ContactPhone { get; set; } = default!;
-        public string CapacityNotes { get; set; } = default!;
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
+        public int AvailableBeds { get; set; }
+        public int BedCapacity { get; set; }
+        // public string CapacityNotes { get; set; } = default!; // Removed as per ERD/Plan
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 

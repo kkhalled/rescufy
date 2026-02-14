@@ -9,7 +9,13 @@
         public DateTime AssignedAt { get; set; }
         public int? EtaMinutes { get; set; }
         public DateTime? CompletedAt { get; set; }
+        public bool AutoAssigned { get; set; }
+        public float DistanceKm { get; set; }
+        public float HospitalDistanceKm { get; set; }
+        public float AssignmentScore { get; set; }
+        public int ReassignmentCount { get; set; }
         public string Notes { get; set; } = default!;
+        public Shared.Enums.AssignmentStatus Status { get; set; }
 
         // Navigation Properties
         public Request Request { get; set; } = default!;

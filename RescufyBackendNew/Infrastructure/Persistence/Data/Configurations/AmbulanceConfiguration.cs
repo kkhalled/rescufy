@@ -17,6 +17,10 @@ public class AmbulanceConfiguration : IEntityTypeConfiguration<Ambulance>
         builder.Property(x => x.VehicleInfo)
                .HasMaxLength(300);
 
+        builder.Property(x => x.DriverPhone)
+               .HasMaxLength(20)
+               .IsRequired();
+
         builder.Property(x => x.AmbulanceStatus)
                .HasConversion<int>()
                .IsRequired();

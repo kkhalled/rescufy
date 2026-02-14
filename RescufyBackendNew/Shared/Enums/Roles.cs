@@ -4,6 +4,8 @@
     {
         SuperAdmin,
         Admin,
-        User
+        User,
+        AmbulanceDriver,
+        HospitalAdmin
     }
 }
