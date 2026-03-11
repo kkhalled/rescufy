@@ -1,0 +1,383 @@
+{
+  "@@locale": "en",
+
+  "appName": "Rescufy",
+  "@appName": {
+    "description": "The application name"
+  },
+
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile screen title"
+  },
+
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button text"
+  },
+
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Notifications setting"
+  },
+
+  "manageAlerts": "Manage alerts",
+  "@manageAlerts": {
+    "description": "Notifications subtitle"
+  },
+
+  "language": "Language",
+  "@language": {
+    "description": "Language setting"
+  },
+
+  "english": "English",
+  "@english": {
+    "description": "English language name"
+  },
+
+  "arabic": "Arabic",
+  "@arabic": {
+    "description": "Arabic language name"
+  },
+
+  "privacySecurity": "Privacy & Security",
+  "@privacySecurity": {
+    "description": "Privacy setting"
+  },
+
+  "manageYourData": "Manage your data",
+  "@manageYourData": {
+    "description": "Privacy subtitle"
+  },
+
+  "helpSupport": "Help & Support",
+  "@helpSupport": {
+    "description": "Help setting"
+  },
+
+  "faqContactUs": "FAQ, contact us",
+  "@faqContactUs": {
+    "description": "Help subtitle"
+  },
+
+  "medications": "Medications",
+  "@medications": {
+    "description": "Medications section title"
+  },
+
+  "allergies": "Allergies",
+  "@allergies": {
+    "description": "Allergies section title"
+  },
+
+  "chronicDiseases": "Chronic Diseases",
+  "@chronicDiseases": {
+    "description": "Chronic diseases section title"
+  },
+
+  "pastSurgeries": "Past Surgeries",
+  "@pastSurgeries": {
+    "description": "Past surgeries section title"
+  },
+
+  "emergencyContacts": "Emergency Contacts",
+  "@emergencyContacts": {
+    "description": "Emergency contacts section title"
+  },
+
+  "selectLanguage": "Select Language",
+  "@selectLanguage": {
+    "description": "Language selection screen title"
+  },
+
+  "chooseYourPreferredLanguage": "Choose your preferred language",
+  "@chooseYourPreferredLanguage": {
+    "description": "Language selection description"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+
+  "save": "Save",
+  "@save": {
+    "description": "Save button text"
+  },
+
+  "helloUser": "Hello, {name} 👋",
+  "@helloUser": {
+    "description": "User greeting",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "howCanWeHelp": "How can we help you today?",
+  "@howCanWeHelp": {
+    "description": "Home screen subtitle"
+  },
+
+  "emergencyServices": "Emergency Services",
+  "@emergencyServices": {
+    "description": "Emergency services section title"
+  },
+
+  "requestAmbulance": "Request Ambulance",
+  "@requestAmbulance": {
+    "description": "Request ambulance button"
+  },
+
+  "forMyselfOrFamily": "For myself or family member",
+  "@forMyselfOrFamily": {
+    "description": "Request ambulance subtitle"
+  },
+
+  "reportEmergency": "Report Emergency",
+  "@reportEmergency": {
+    "description": "Report emergency button"
+  },
+
+  "witnessingEmergency": "Witnessing an emergency situation",
+  "@witnessingEmergency": {
+    "description": "Report emergency subtitle"
+  },
+
+  "quickAccess": "Quick Access",
+  "@quickAccess": {
+    "description": "Quick access section title"
+  },
+
+  "firstAid": "First Aid",
+  "@firstAid": {
+    "description": "First aid card title"
+  },
+
+  "quickGuides": "Quick guides",
+  "@quickGuides": {
+    "description": "First aid subtitle"
+  },
+
+  "hospitals": "Hospitals",
+  "@hospitals": {
+    "description": "Hospitals card title"
+  },
+
+  "findNearby": "Find nearby",
+  "@findNearby": {
+    "description": "Hospitals subtitle"
+  },
+
+  "history": "History",
+  "@history": {
+    "description": "History card title"
+  },
+
+  "pastRequests": "Past requests",
+  "@pastRequests": {
+    "description": "History subtitle"
+  },
+
+  "safetyTips": "Safety Tips",
+  "@safetyTips": {
+    "description": "Safety tips card title"
+  },
+
+  "stayPrepared": "Stay prepared",
+  "@stayPrepared": {
+    "description": "Safety tips subtitle"
+  },
+
+  "emergencyHotline": "Emergency Hotline",
+  "@emergencyHotline": {
+    "description": "Emergency hotline banner title"
+  },
+
+  "support24_7": "24/7 Support • 123-456-7890",
+  "@support24_7": {
+    "description": "Emergency hotline subtitle"
+  },
+
+  "home": "Home",
+  "@home": {
+    "description": "Home navigation label"
+  },
+
+  "accountLoginForm": "Account Login Form",
+  "@accountLoginForm": {
+    "description": "Login screen header"
+  },
+
+  "signInToAccount": "Sign in to your account",
+  "@signInToAccount": {
+    "description": "Login form title"
+  },
+
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+
+  "emailHint": "example@email.com",
+  "@emailHint": {
+    "description": "Email field hint"
+  },
+
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+
+  "enterPassword": "Enter your password",
+  "@enterPassword": {
+    "description": "Password field hint"
+  },
+
+  "rememberMe": "Remember me",
+  "@rememberMe": {
+    "description": "Remember me checkbox"
+  },
+
+  "forgotPassword": "Forgot password?",
+  "@forgotPassword": {
+    "description": "Forgot password link"
+  },
+
+  "logIn": "Log In",
+  "@logIn": {
+    "description": "Login button"
+  },
+
+  "dontHaveAccount": "Don't have an Account? ",
+  "@dontHaveAccount": {
+    "description": "Sign up prompt"
+  },
+
+  "createAccount": "Create Account",
+  "@createAccount": {
+    "description": "Create account link"
+  },
+
+  "pleaseEnterEmail": "Please enter your email",
+  "@pleaseEnterEmail": {
+    "description": "Email validation error"
+  },
+
+  "pleaseEnterValidEmail": "Please enter a valid email",
+  "@pleaseEnterValidEmail": {
+    "description": "Email format validation error"
+  },
+
+  "pleaseEnterPassword": "Please enter your password",
+  "@pleaseEnterPassword": {
+    "description": "Password validation error"
+  },
+
+  "passwordMinLength": "Password must be at least 6 characters",
+  "@passwordMinLength": {
+    "description": "Password length validation error"
+  },
+
+  "firstAidGuide": "First Aid Guide",
+  "@firstAidGuide": {
+    "description": "First aid dialog title"
+  },
+
+  "checkSceneSafety": "Check the scene for safety",
+  "@checkSceneSafety": {
+    "description": "First aid step 1"
+  },
+
+  "callEmergencyServices": "Call emergency services",
+  "@callEmergencyServices": {
+    "description": "First aid step 2"
+  },
+
+  "checkResponsiveness": "Check responsiveness",
+  "@checkResponsiveness": {
+    "description": "First aid step 3"
+  },
+
+  "performCPR": "Perform CPR if needed",
+  "@performCPR": {
+    "description": "First aid step 4"
+  },
+
+  "stopBleeding": "Stop bleeding with pressure",
+  "@stopBleeding": {
+    "description": "First aid step 5"
+  },
+
+  "keepPersonWarm": "Keep the person warm",
+  "@keepPersonWarm": {
+    "description": "First aid step 6"
+  },
+
+  "monitorUntilHelp": "Monitor until help arrives",
+  "@monitorUntilHelp": {
+    "description": "First aid step 7"
+  },
+
+  "close": "Close",
+  "@close": {
+    "description": "Close button"
+  },
+
+  "nearbyHospitals": "Nearby Hospitals",
+  "@nearbyHospitals": {
+    "description": "Nearby hospitals dialog title"
+  },
+
+  "cityGeneralHospital": "City General Hospital",
+  "@cityGeneralHospital": {
+    "description": "Hospital name"
+  },
+
+  "emergencyMedicalCenter": "Emergency Medical Center",
+  "@emergencyMedicalCenter": {
+    "description": "Hospital name"
+  },
+
+  "rescueHospital": "Rescue Hospital",
+  "@rescueHospital": {
+    "description": "Hospital name"
+  },
+
+  "firstAidClinic": "First Aid Clinic",
+  "@firstAidClinic": {
+    "description": "Clinic name"
+  },
+
+  "safetyTip1": "Stay calm and assess the situation",
+  "@safetyTip1": {
+    "description": "Safety tip 1"
+  },
+
+  "safetyTip2": "Call emergency services immediately",
+  "@safetyTip2": {
+    "description": "Safety tip 2"
+  },
+
+  "safetyTip3": "Provide clear location information",
+  "@safetyTip3": {
+    "description": "Safety tip 3"
+  },
+
+  "safetyTip4": "Follow dispatcher instructions",
+  "@safetyTip4": {
+    "description": "Safety tip 4"
+  },
+
+  "safetyTip5": "Keep emergency contacts accessible",
+  "@safetyTip5": {
+    "description": "Safety tip 5"
+  },
+
+  "safetyTip6": "Know your medical information",
+  "@safetyTip6": {
+    "description": "Safety tip 6"
+  }
+}

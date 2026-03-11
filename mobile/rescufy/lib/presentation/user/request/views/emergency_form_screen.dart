@@ -3,8 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rescufy/core/theme/colors.dart';
 import 'package:rescufy/core/theme/app_text_styles.dart';
 
-/// PURE UI - ZERO state management, ZERO Bloc imports
-/// All logic is handled by callbacks
 class EmergencyFormScreen extends StatefulWidget {
   final bool isSelfCase;
 
@@ -86,8 +84,6 @@ class _EmergencyFormScreenState extends State<EmergencyFormScreen> {
                     _buildAdditionalInfo(isDark, textColor),
                     SizedBox(height: 32.h),
                     _buildSubmitButton(),
-                    SizedBox(height: 20.h),
-                    _buildAINote(isDark),
                     SizedBox(height: 20.h),
                   ],
                 ),
@@ -498,43 +494,6 @@ class _EmergencyFormScreenState extends State<EmergencyFormScreen> {
                   ),
                 ],
               ),
-      ),
-    );
-  }
-
-  Widget _buildAINote(bool isDark) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.info.withOpacity(0.1),
-            AppColors.info.withOpacity(0.05),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.info.withOpacity(0.3)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(8.w),
-            decoration: BoxDecoration(
-              color: AppColors.info.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Icon(Icons.psychology, color: AppColors.info, size: 24.sp),
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Text(
-              'AI will analyze your request and prioritize based on severity for immediate dispatch.',
-              style: AppTextStyles.bodySmall(
-                AppColors.info,
-              ).copyWith(fontWeight: FontWeight.w500),
-            ),
-          ),
-        ],
       ),
     );
   }

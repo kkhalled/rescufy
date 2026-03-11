@@ -21,6 +21,7 @@ class AppRoutes {
   static const String emergencyForm = '/emergency-form';
   static const String userHistory = '/user/history';
   static const String userProfile = '/user/profile';
+  static const String language = '/language';
 
   // =========================
   // PARAMEDIC MODULE

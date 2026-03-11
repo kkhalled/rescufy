@@ -1,3 +1,4 @@
+// lib/core/navigation/app_router.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rescufy/core/di/injection_container.dart' as di;
@@ -20,6 +21,7 @@ import 'package:rescufy/presentation/user/request/views/emergency_form_builder.d
 import 'package:rescufy/presentation/user/request/views/emergency_form_screen.dart';
 import 'package:rescufy/presentation/user/history/views/request_history_screen.dart';
 import 'package:rescufy/presentation/user/profile/views/profile_screen.dart';
+import 'package:rescufy/presentation/settings/language/language_screen.dart';
 
 // Paramedic Screens
 import 'package:rescufy/presentation/paramedic/paramedic_shell/paramedic_navigation_screen.dart';
@@ -40,7 +42,7 @@ class AppRouter {
       // Splash / Onboarding
       // =============================
       case AppRoutes.splash:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(builder: (_) => const OnBoardingScreen());
 
       case AppRoutes.onboarding:
         return MaterialPageRoute(builder: (_) => const OnBoardingScreen());
@@ -105,6 +107,7 @@ class AppRouter {
             child: EmergencyFormBuilder(isSelfCase: isSelfCase),
           ),
         );
+
       case AppRoutes.userHistory:
         return MaterialPageRoute(builder: (_) => const RequestHistoryScreen());
 
@@ -115,6 +118,9 @@ class AppRouter {
             child: const ProfileScreen(),
           ),
         );
+
+      case AppRoutes.language:
+        return MaterialPageRoute(builder: (_) => const LanguageScreen());
 
       // =============================
       // PARAMEDIC MODULE

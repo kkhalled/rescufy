@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rescufy/core/navigation/app_routes.dart';
+import 'package:rescufy/l10n/app_localizations.dart';
 import '../widgets/emergency_option_card.dart';
 import '../widgets/info_card.dart';
 
@@ -14,10 +15,11 @@ class HomeScreen extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Rescufy'),
+        title: Text(l10n.appName),
         actions: [
           IconButton(
             icon: Badge(
@@ -38,7 +40,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             // User Greeting
             Text(
-              'Hello, Sara 👋',
+              l10n.helloUser('Sara'),
               style: textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -48,7 +50,7 @@ class HomeScreen extends StatelessWidget {
 
             // Subtitle
             Text(
-              'How can we help you today?',
+              l10n.howCanWeHelp,
               style: textTheme.bodyLarge?.copyWith(
                 color: textTheme.bodySmall?.color,
               ),
@@ -58,7 +60,7 @@ class HomeScreen extends StatelessWidget {
 
             // Emergency Actions Section
             Text(
-              'Emergency Services',
+              l10n.emergencyServices,
               style: textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -68,8 +70,8 @@ class HomeScreen extends StatelessWidget {
 
             // Request Ambulance Card
             EmergencyOptionCard(
-              title: 'Request Ambulance',
-              subtitle: 'For myself or family member',
+              title: l10n.requestAmbulance,
+              subtitle: l10n.forMyselfOrFamily,
               icon: Icons.local_hospital,
               color: colorScheme.primary,
               onTap: () {
@@ -81,8 +83,8 @@ class HomeScreen extends StatelessWidget {
 
             // Report Someone Else Card
             EmergencyOptionCard(
-              title: 'Report Emergency',
-              subtitle: 'Witnessing an emergency situation',
+              title: l10n.reportEmergency,
+              subtitle: l10n.witnessingEmergency,
               icon: Icons.warning_amber_rounded,
               color: const Color(0xFFF57C00), // Orange for urgency
               onTap: () {
@@ -94,7 +96,7 @@ class HomeScreen extends StatelessWidget {
 
             // Quick Access Section
             Text(
-              'Quick Access',
+              l10n.quickAccess,
               style: textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -103,12 +105,12 @@ class HomeScreen extends StatelessWidget {
             SizedBox(height: 16.h),
 
             // Quick Access Grid
-            _buildQuickAccessGrid(context, theme),
+            _buildQuickAccessGrid(context, theme, l10n),
 
             SizedBox(height: 32.h),
 
             // Emergency Hotline Banner
-            _buildHotlineBanner(theme, isDark),
+            _buildHotlineBanner(theme, isDark, l10n),
 
             SizedBox(height: 20.h),
           ],
@@ -121,15 +123,19 @@ class HomeScreen extends StatelessWidget {
   }
 
   // Quick Access Grid
-  Widget _buildQuickAccessGrid(BuildContext context, ThemeData theme) {
+  Widget _buildQuickAccessGrid(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     return Column(
       children: [
         Row(
           children: [
             Expanded(
               child: InfoCard(
-                title: 'First Aid',
-                subtitle: 'Quick guides',
+                title: l10n.firstAid,
+                subtitle: l10n.quickGuides,
                 icon: Icons.medical_services_outlined,
                 iconColor: const Color(0xFF2E7D32),
                 onTap: () => _showFirstAidGuide(context),
@@ -138,8 +144,8 @@ class HomeScreen extends StatelessWidget {
             SizedBox(width: 12.w),
             Expanded(
               child: InfoCard(
-                title: 'Hospitals',
-                subtitle: 'Find nearby',
+                title: l10n.hospitals,
+                subtitle: l10n.findNearby,
                 icon: Icons.local_hospital_outlined,
                 iconColor: const Color(0xFF1976D2),
                 onTap: () => _showNearbyHospitals(context),
@@ -152,8 +158,8 @@ class HomeScreen extends StatelessWidget {
           children: [
             Expanded(
               child: InfoCard(
-                title: 'History',
-                subtitle: 'Past requests',
+                title: l10n.history,
+                subtitle: l10n.pastRequests,
                 icon: Icons.history,
                 iconColor: const Color(0xFF6A1B9A),
                 onTap: () => _navigateToHistory(context),
@@ -162,8 +168,8 @@ class HomeScreen extends StatelessWidget {
             SizedBox(width: 12.w),
             Expanded(
               child: InfoCard(
-                title: 'Safety Tips',
-                subtitle: 'Stay prepared',
+                title: l10n.safetyTips,
+                subtitle: l10n.stayPrepared,
                 icon: Icons.lightbulb_outline,
                 iconColor: const Color(0xFFF57C00),
                 onTap: () => _showEmergencyTips(context),
@@ -176,7 +182,11 @@ class HomeScreen extends StatelessWidget {
   }
 
   // Emergency Hotline Banner
-  Widget _buildHotlineBanner(ThemeData theme, bool isDark) {
+  Widget _buildHotlineBanner(
+    ThemeData theme,
+    bool isDark,
+    AppLocalizations l10n,
+  ) {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -205,7 +215,7 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Emergency Hotline',
+                  l10n.emergencyHotline,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: theme.colorScheme.primary,
@@ -213,7 +223,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  '24/7 Support • 123-456-7890',
+                  l10n.support24_7,
                   style: theme.textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
@@ -235,21 +245,21 @@ class HomeScreen extends StatelessWidget {
   BottomNavigationBar _buildBottomNavigationBar(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: 0,
-      items: const [
+      items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          activeIcon: Icon(Icons.home),
-          label: 'Home',
+          icon: const Icon(Icons.home_outlined),
+          activeIcon: const Icon(Icons.home),
+          label: AppLocalizations.of(context)!.home,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.history_outlined),
-          activeIcon: Icon(Icons.history),
-          label: 'History',
+          icon: const Icon(Icons.history_outlined),
+          activeIcon: const Icon(Icons.history),
+          label: AppLocalizations.of(context)!.history,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          activeIcon: Icon(Icons.person),
-          label: 'Profile',
+          icon: const Icon(Icons.person_outline),
+          activeIcon: const Icon(Icons.person),
+          label: AppLocalizations.of(context)!.profile,
         ),
       ],
       onTap: (index) {
@@ -281,6 +291,7 @@ class HomeScreen extends StatelessWidget {
 
   void _showFirstAidGuide(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -288,7 +299,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Icon(Icons.medical_services, color: theme.colorScheme.primary),
             SizedBox(width: 8.w),
-            const Text('First Aid Guide'),
+            Text(l10n.firstAidGuide),
           ],
         ),
         content: SingleChildScrollView(
@@ -296,13 +307,13 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildFirstAidStep('1', 'Check the scene for safety', theme),
-              _buildFirstAidStep('2', 'Call emergency services', theme),
-              _buildFirstAidStep('3', 'Check responsiveness', theme),
-              _buildFirstAidStep('4', 'Perform CPR if needed', theme),
-              _buildFirstAidStep('5', 'Stop bleeding with pressure', theme),
-              _buildFirstAidStep('6', 'Keep the person warm', theme),
-              _buildFirstAidStep('7', 'Monitor until help arrives', theme),
+              _buildFirstAidStep('1', l10n.checkSceneSafety, theme),
+              _buildFirstAidStep('2', l10n.callEmergencyServices, theme),
+              _buildFirstAidStep('3', l10n.checkResponsiveness, theme),
+              _buildFirstAidStep('4', l10n.performCPR, theme),
+              _buildFirstAidStep('5', l10n.stopBleeding, theme),
+              _buildFirstAidStep('6', l10n.keepPersonWarm, theme),
+              _buildFirstAidStep('7', l10n.monitorUntilHelp, theme),
             ],
           ),
         ),
@@ -361,6 +372,7 @@ class HomeScreen extends StatelessWidget {
 
   void _showNearbyHospitals(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -368,7 +380,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Icon(Icons.local_hospital, color: theme.colorScheme.primary),
             SizedBox(width: 8.w),
-            const Text('Nearby Hospitals'),
+            Text(l10n.nearbyHospitals),
           ],
         ),
         content: SingleChildScrollView(
@@ -377,21 +389,21 @@ class HomeScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildHospitalItem(
-                'City General Hospital',
+                l10n.cityGeneralHospital,
                 '2.3 km',
                 Icons.local_hospital,
               ),
               _buildHospitalItem(
-                'Emergency Medical Center',
+                l10n.emergencyMedicalCenter,
                 '3.1 km',
                 Icons.emergency,
               ),
               _buildHospitalItem(
-                'Rescue Hospital',
+                l10n.rescueHospital,
                 '4.5 km',
                 Icons.medical_services,
               ),
-              _buildHospitalItem('First Aid Clinic', '1.8 km', Icons.healing),
+              _buildHospitalItem(l10n.firstAidClinic, '1.8 km', Icons.healing),
             ],
           ),
         ),
@@ -436,6 +448,7 @@ class HomeScreen extends StatelessWidget {
 
   void _showEmergencyTips(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -443,25 +456,25 @@ class HomeScreen extends StatelessWidget {
           children: [
             Icon(Icons.lightbulb, color: theme.colorScheme.primary),
             SizedBox(width: 8.w),
-            const Text('Safety Tips'),
+            Text(l10n.safetyTips),
           ],
         ),
-        content: const SingleChildScrollView(
+        content: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('• Stay calm and assess the situation'),
-              SizedBox(height: 10),
-              Text('• Call emergency services immediately'),
-              SizedBox(height: 10),
-              Text('• Provide clear location information'),
-              SizedBox(height: 10),
-              Text('• Follow dispatcher instructions'),
-              SizedBox(height: 10),
-              Text('• Keep emergency contacts accessible'),
-              SizedBox(height: 10),
-              Text('• Know your medical information'),
+              Text('• ${l10n.safetyTip1}'),
+              const SizedBox(height: 10),
+              Text('• ${l10n.safetyTip2}'),
+              const SizedBox(height: 10),
+              Text('• ${l10n.safetyTip3}'),
+              const SizedBox(height: 10),
+              Text('• ${l10n.safetyTip4}'),
+              const SizedBox(height: 10),
+              Text('• ${l10n.safetyTip5}'),
+              const SizedBox(height: 10),
+              Text('• ${l10n.safetyTip6}'),
             ],
           ),
         ),

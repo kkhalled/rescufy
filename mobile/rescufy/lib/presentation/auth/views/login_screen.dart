@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:rescufy/core/navigation/app_routes.dart';
 import 'package:rescufy/core/theme/colors.dart';
 import 'package:rescufy/domain/entities/user_role.dart';
+import 'package:rescufy/l10n/app_localizations.dart';
 import '../cubit/login/login_cubit.dart';
 import '../cubit/login/login_state.dart';
 import '../widgets/admin_blocked_dialog.dart';
@@ -28,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
     final cubit = context.read<LoginCubit>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: colorScheme.primary,
@@ -52,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // Header Text
                   Text(
-                    'Account Login Form',
+                    l10n.accountLoginForm,
                     style: textTheme.titleMedium?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w400,
@@ -105,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         // Title
                         Text(
-                          'Sign in to your account',
+                          l10n.signInToAccount,
                           style: textTheme.headlineMedium,
                         ),
 
@@ -117,18 +119,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           style: textTheme.bodyLarge,
                           decoration: InputDecoration(
-                            labelText: 'Email',
-                            hintText: 'example@email.com',
+                            labelText: l10n.email,
+                            hintText: l10n.emailHint,
                             prefixIcon: Icon(Icons.email_outlined, size: 22.sp),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
+                              return l10n.pleaseEnterEmail;
                             }
                             if (!RegExp(
                               r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                             ).hasMatch(value)) {
-                              return 'Please enter a valid email';
+                              return l10n.pleaseEnterValidEmail;
                             }
                             return null;
                           },
@@ -146,8 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               obscureText: snapshot.data ?? true,
                               style: textTheme.bodyLarge,
                               decoration: InputDecoration(
-                                labelText: 'Password',
-                                hintText: 'Enter your password',
+                                labelText: l10n.password,
+                                hintText: l10n.enterPassword,
                                 prefixIcon: Icon(
                                   Icons.lock_outline_rounded,
                                   size: 22.sp,
@@ -164,10 +166,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please enter your password';
+                                  return l10n.pleaseEnterPassword;
                                 }
                                 if (value.length < 6) {
-                                  return 'Password must be at least 6 characters';
+                                  return l10n.passwordMinLength;
                                 }
                                 return null;
                               },
@@ -200,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                     SizedBox(width: 8.w),
                                     Text(
-                                      'Remember me',
+                                      l10n.rememberMe,
                                       style: textTheme.bodyMedium,
                                     ),
                                   ],
@@ -220,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               ),
                               child: Text(
-                                'Forgot password?',
+                                l10n.forgotPassword,
                                 style: textTheme.bodyMedium?.copyWith(
                                   color: colorScheme.primary,
                                   fontWeight: FontWeight.w600,
@@ -260,7 +262,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       )
                                     : Text(
-                                        'Log In',
+                                        l10n.logIn,
                                         style: textTheme.labelLarge?.copyWith(
                                           fontSize: 16.sp,
                                           fontWeight: FontWeight.w600,
@@ -280,7 +282,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Don't have an Account? ",
+                                l10n.dontHaveAccount,
                                 style: textTheme.bodyMedium,
                               ),
                               TextButton(
@@ -297,7 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: Text(
-                                  'Create Account',
+                                  l10n.createAccount,
                                   style: textTheme.bodyMedium?.copyWith(
                                     color: colorScheme.primary,
                                     fontWeight: FontWeight.w700,

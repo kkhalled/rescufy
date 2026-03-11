@@ -1,22 +1,35 @@
-// lib/presentation/features/profile/cubit/profile_cubit.dart
+// lib/presentation/user/profile/cubit/profile_cubit.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rescufy/core/cubit/locale/locale_cubit.dart';
 import 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit() : super(const ProfileState());
+  final LocaleCubit _localeCubit;
+  StreamSubscription? _localeSubscription;
+
+  ProfileCubit(this._localeCubit) : super(const ProfileState()) {
+    // Listen to locale changes
+    _localeSubscription = _localeCubit.stream.listen((localeState) {
+      _updateLanguage();
+    });
+    // Set initial language
+    _updateLanguage();
+  }
 
   BuildContext? _context;
 
   void initialize(BuildContext context) {
     _context = context;
-    // TODO: Load profile data from repository
     _loadProfileData();
   }
 
+  void _updateLanguage() {
+    emit(state.copyWith(currentLanguage: _localeCubit.currentLanguageName));
+  }
+
   void _loadProfileData() {
-    // TODO: Replace with actual data from repository/API
     emit(
       ProfileState(
         // Basic Info
@@ -24,7 +37,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         email: 'sara.john@email.com',
         phone: '+1 (555) 123-4567',
         profileImageUrl: null,
-
+        currentLanguage: _localeCubit.currentLanguageName, // ← GET FROM CUBIT
         // Medical Stats
         bloodType: 'O+',
         heightCm: 170,
@@ -89,7 +102,6 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void navigateToEditProfile() {
     if (_context == null) return;
-    // TODO: Navigate to edit profile screen
     ScaffoldMessenger.of(
       _context!,
     ).showSnackBar(const SnackBar(content: Text('Edit Profile - Coming Soon')));
@@ -97,7 +109,6 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void navigateToEditMedicalInfo() {
     if (_context == null) return;
-    // TODO: Navigate to edit medical info screen
     ScaffoldMessenger.of(_context!).showSnackBar(
       const SnackBar(content: Text('Edit Medical Info - Coming Soon')),
     );
@@ -110,7 +121,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void navigateToLanguage() {
     if (_context == null) return;
-    // TODO: Navigate to language settings
+    Navigator.of(_context!).pushNamed('/language');
   }
 
   void navigateToPrivacy() {
@@ -125,7 +136,6 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void callEmergencyContact(String phone) {
     if (_context == null) return;
-    // TODO: Implement actual phone call functionality
     ScaffoldMessenger.of(
       _context!,
     ).showSnackBar(SnackBar(content: Text('Calling $phone...')));
@@ -159,7 +169,12 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void _performLogout() {
     if (_context == null) return;
-    // TODO: Clear user data, tokens, etc.
     Navigator.of(_context!).pushReplacementNamed('/login');
+  }
+
+  @override
+  Future<void> close() {
+    _localeSubscription?.cancel();
+    return super.close();
   }
 }

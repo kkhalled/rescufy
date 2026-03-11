@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rescufy/core/cubit/theme/theme_cubit.dart';
 import 'package:rescufy/core/cubit/theme/theme_state.dart';
+import 'package:rescufy/l10n/app_localizations.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
 import '../widgets/profile_header.dart';
@@ -17,16 +18,31 @@ import '../widgets/surgery_card.dart';
 import '../widgets/contact_card.dart';
 import '../widgets/settings_section.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Initialize ProfileCubit with context after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileCubit>().initialize(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text(l10n.profile),
         actions: [
           // Theme Switcher
           BlocBuilder<ThemeCubit, ThemeState>(
@@ -49,7 +65,6 @@ class ProfileScreen extends StatelessWidget {
                     Switch(
                       value: isDarkMode,
                       onChanged: (_) => themeCubit.toggleTheme(),
-                      activeColor: theme.colorScheme.primary,
                     ),
                     SizedBox(width: 4.w),
                     Icon(
@@ -179,6 +194,7 @@ class ProfileScreen extends StatelessWidget {
                   onLanguageTap: cubit.navigateToLanguage,
                   onPrivacyTap: cubit.navigateToPrivacy,
                   onHelpTap: cubit.navigateToHelp,
+                  currentLanguage: state.currentLanguage, // ← FROM STATE!
                 ),
 
                 SizedBox(height: 32.h),

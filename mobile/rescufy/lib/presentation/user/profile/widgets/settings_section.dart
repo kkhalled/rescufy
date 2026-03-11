@@ -1,12 +1,14 @@
-// lib/presentation/features/profile/widgets/settings_section.dart
+// lib/presentation/user/profile/widgets/settings_section.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rescufy/l10n/app_localizations.dart';
 
 class SettingsSection extends StatelessWidget {
   final VoidCallback onNotificationsTap;
   final VoidCallback onLanguageTap;
   final VoidCallback onPrivacyTap;
   final VoidCallback onHelpTap;
+  final String currentLanguage;
 
   const SettingsSection({
     super.key,
@@ -14,11 +16,13 @@ class SettingsSection extends StatelessWidget {
     required this.onLanguageTap,
     required this.onPrivacyTap,
     required this.onHelpTap,
+    required this.currentLanguage,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Card(
       child: Column(
@@ -26,32 +30,32 @@ class SettingsSection extends StatelessWidget {
           _SettingItem(
             theme: theme,
             icon: Icons.notifications_outlined,
-            title: 'Notifications',
-            subtitle: 'Manage alerts',
+            title: l10n.notifications,
+            subtitle: l10n.manageAlerts,
             onTap: onNotificationsTap,
           ),
           Divider(height: 1.h),
           _SettingItem(
             theme: theme,
             icon: Icons.language,
-            title: 'Language',
-            subtitle: 'English (US)',
+            title: l10n.language,
+            subtitle: currentLanguage,
             onTap: onLanguageTap,
           ),
           Divider(height: 1.h),
           _SettingItem(
             theme: theme,
             icon: Icons.privacy_tip_outlined,
-            title: 'Privacy & Security',
-            subtitle: 'Manage your data',
+            title: l10n.privacySecurity,
+            subtitle: l10n.manageYourData,
             onTap: onPrivacyTap,
           ),
           Divider(height: 1.h),
           _SettingItem(
             theme: theme,
             icon: Icons.help_outline,
-            title: 'Help & Support',
-            subtitle: 'FAQ, contact us',
+            title: l10n.helpSupport,
+            subtitle: l10n.faqContactUs,
             onTap: onHelpTap,
           ),
         ],

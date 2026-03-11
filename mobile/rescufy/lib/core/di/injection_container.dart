@@ -1,3 +1,4 @@
+// lib/core/di/injection_container.dart
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rescufy/core/services/location_service.dart';
@@ -27,6 +28,7 @@ import 'package:rescufy/presentation/auth/cubit/register/register_cubit.dart';
 import 'package:rescufy/presentation/auth/cubit/forgot_password/forgot_password_cubit.dart';
 import 'package:rescufy/presentation/auth/cubit/reset_password/reset_password_cubit.dart';
 import 'package:rescufy/core/cubit/theme/theme_cubit.dart';
+import 'package:rescufy/core/cubit/locale/locale_cubit.dart';
 
 import '../../presentation/auth/cubit/verify_reset_otp/verify_reset_otp_cubit.dart';
 
@@ -45,6 +47,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => Dio());
   sl.registerLazySingleton(() => DioClient(sl()));
   sl.registerLazySingleton(() => LocationService());
+
   // =============================
   // Data sources
   // =============================
@@ -78,7 +81,11 @@ Future<void> init() async {
   sl.registerLazySingleton(() => VerifyResetOtpUseCase(sl()));
   sl.registerLazySingleton(() => ResetPasswordUseCase(sl()));
 
+  // =============================
+  // Global Cubits (Singleton)
+  // =============================
   sl.registerLazySingleton(() => ThemeCubit());
+  sl.registerLazySingleton(() => LocaleCubit(sl()));
 
   // =============================
   // Cubits (FACTORY, not singleton)
@@ -90,6 +97,6 @@ Future<void> init() async {
   sl.registerFactory(() => VerifyResetOtpCubit(sl()));
   sl.registerFactory(() => ResetPasswordCubit(sl()));
 
-  sl.registerFactory(() => ProfileCubit());
+  sl.registerFactory(() => ProfileCubit(sl()));
   sl.registerFactory(() => EmergencyRequestCubit(sl(), sl()));
 }
