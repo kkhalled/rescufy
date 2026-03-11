@@ -18,5 +18,11 @@
     "breadcrumbs": {
         "home": "Home",
         "dashboard": "Dashboard"
+    },
+    "hospitalSidebar": {
+        "dashboard": "Dashboard",
+        "requests": "Requests",
+        "hospitalProfile": "My Hospital",
+        "settings": "Settings"
     }
 }

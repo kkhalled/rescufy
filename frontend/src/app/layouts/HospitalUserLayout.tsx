@@ -1,14 +1,37 @@
-import { Outlet } from "react-router-dom";
+import { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import HospitalSideBar from "../../shared/common/HospitalSideBar";
+import AdminNavbar from "../../shared/common/AdminNavBar";
 
 export default function HospitalUserLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const location = useLocation();
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const closeSidebar = () => setSidebarOpen(false);
+
   return (
     <div className="flex min-h-screen bg-background">
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+          onClick={closeSidebar}
+        />
+      )}
+
+      {/* Sidebar */}
+      <HospitalSideBar isOpen={sidebarOpen} onClose={closeSidebar} />
+
       {/* Main Content Wrapper */}
-      <div className="flex-1 flex flex-col min-w-0 md:ml-22">
+      <div className="flex-1 flex flex-col min-w-0 md:ltr:ml-22 md:rtl:mr-22">
+        <AdminNavbar onMenuClick={toggleSidebar} />
+
         {/* Main Content with top padding for fixed navbar */}
         <main className="flex-1 pt-20 md:pt-24 pb-6 px-4 md:px-8 lg:px-12 overflow-y-auto">
-          <Outlet />
-          <h2 className="text-2xl font-bold text-white">Hospital User </h2>
+          <div key={location.pathname} className="page-enter">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

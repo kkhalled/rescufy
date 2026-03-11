@@ -1,4 +1,5 @@
 import { useParams } from "react-router";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import PatientCard from "../components/PatientCard";
 import AmbulanceCard from "../components/AmbulanceCard";
@@ -7,60 +8,76 @@ import HospitalCard from "../components/HospitalCard";
 import TimelineCard from "../components/TimelineCard";
 import AIAnalysisCard from "../components/AIAnalysisCard";
 import ActionButtons from "../components/ActionButtons";
+import Loading from "@/shared/common/Loading";
+import { useGetRequestById } from "../hooks/useGetRequestById";
+import type { RequestDetail } from "../types/requestDetails.types";
+
+/* ── helpers ── */
+const statusMap: Record<number, { label: string; color: string; bg: string }> = {
+  0: { label: "Pending",    color: "var(--warning)",  bg: "rgba(255, 183, 3, 0.1)" },
+  1: { label: "Assigned",   color: "var(--info, #3b82f6)",     bg: "rgba(59, 130, 246, 0.1)" },
+  2: { label: "InProgress", color: "var(--brand-primary)", bg: "rgba(100, 77, 255, 0.1)" },
+  3: { label: "Completed",  color: "var(--success)",  bg: "rgba(42, 157, 143, 0.1)" },
+  4: { label: "Cancelled",  color: "var(--danger)",   bg: "rgba(230, 57, 70, 0.1)" },
+};
+
+function buildConditions(req: RequestDetail): string[] {
+  const profile = req.applicationUser?.userProfile;
+  if (!profile) return [];
+  return [
+    ...profile.chronicDiseases.filter((d) => d.isActive).map((d) => d.name),
+    ...profile.allergies.map((a) => a.name),
+  ];
+}
+
+function buildMedicalHistory(req: RequestDetail): string {
+  const profile = req.applicationUser?.userProfile;
+  if (!profile) return "—";
+  const parts: string[] = [];
+  if (profile.medicalNotes) parts.push(profile.medicalNotes);
+  if (profile.medications.length) {
+    parts.push(
+      profile.medications.map((m) => `${m.name} ${m.dosage} (${m.frequency})`).join(", "),
+    );
+  }
+  if (profile.pastSurgeries.length) {
+    parts.push(
+      profile.pastSurgeries.map((s) => `${s.name} (${s.year})`).join(", "),
+    );
+  }
+  return parts.join(". ") || "—";
+}
+
+function formatTime(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
 
 export default function RequestDetails() {
   const { t } = useTranslation("requests");
   const { id } = useParams<{ id: string }>();
+  const { request, isLoading, fetchRequest } = useGetRequestById();
 
-  // Sample data - in a real application, this would come from an API
-  const requestData = {
-    id: id || "REQ-2025-001",
-    patientName: "Ahmed Al-Rashid",
-    age: 45,
-    gender: "Male",
-    bloodType: "O+",
-    conditions: ["Chest Pain", "Shortness of Breath"],
-    medicalHistory:
-      "Hypertension, Type 2 Diabetes. Currently on Lisinopril and Metformin",
-    description:
-      "Patient reported sudden onset of chest pain and shortness of breath while at work. Pain is 8/10 intensity. No trauma. Patient is conscious and responsive.",
-    additionalNotes:
-      "Patient appears anxious. Has history of panic attacks. Wife is accompanying the patient.",
-    ambulanceVehicle: "AMB-101",
-    ambulanceType: "Advanced Life Support",
-    eta: "3 mins",
-    ambulanceLocation: "Heading to King Fahd Road junction",
-    ambulanceCrew: ["Driver: Mohammed", "Paramedic: Fatima"],
-    hospitalName: "King Fahd Medical City",
-    hospitalAddress: "Riyadh, Saudi Arabia",
-    department: "Cardiology",
-    availableBeds: 3,
-    distance: "2.5 km",
-    diagnosis: "Likely acute coronary syndrome with anxiety component",
-    confidence: 85,
-    timeline: [
-      {
-        title: t("details.timelineEvents.requestReceived.title"),
-        time: "14:05",
-        description: t("details.timelineEvents.requestReceived.desc"),
-      },
-      {
-        title: t("details.timelineEvents.ambulanceDispatched.title"),
-        time: "14:07",
-        description: t("details.timelineEvents.ambulanceDispatched.desc"),
-      },
-      {
-        title: t("details.timelineEvents.hospitalNotified.title"),
-        time: "14:08",
-        description: t("details.timelineEvents.hospitalNotified.desc"),
-      },
-      {
-        title: t("details.timelineEvents.enRoute.title"),
-        time: "14:12",
-        description: t("details.timelineEvents.enRoute.desc"),
-      },
-    ],
-  };
+  useEffect(() => {
+    if (id) fetchRequest(id);
+  }, [id]);
+
+  if (isLoading || !request) return <Loading />;
+
+  const assignment = request.assignments?.[0] ?? null;
+  const ambulance = assignment?.ambulance ?? null;
+  const hospital = assignment?.hospital ?? null;
+  const ai = request.aiAnalysis;
+  const status = statusMap[request.requestStatus] ?? statusMap[0];
+
+  const timelineEvents = request.auditLogs
+    .slice()
+    .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+    .map((log) => ({
+      title: log.action,
+      time: formatTime(log.timestamp),
+      description: log.details,
+    }));
 
   return (
     <div
@@ -80,62 +97,70 @@ export default function RequestDetails() {
           </h1>
           <span
             style={{
-              backgroundColor: "rgba(230, 57, 70, 0.1)",
-              color: "var(--danger)",
+              backgroundColor: status.bg,
+              color: status.color,
             }}
             className="text-sm font-semibold px-4 py-2 rounded-full"
           >
-            {t("details.critical")}
+            {t(`details.status.${status.label.toLowerCase()}`, status.label)}
           </span>
         </div>
-        <p style={{ color: "var(--text-muted)" }}>{t("details.requestIdLabel")}: {requestData.id}</p>
+        <p style={{ color: "var(--text-muted)" }}>
+          {t("details.requestIdLabel")}: #{request.id}
+        </p>
       </div>
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
         <PatientCard
-          name={requestData.patientName}
-          age={requestData.age}
-          gender={requestData.gender}
-          blood={requestData.bloodType}
-          conditions={requestData.conditions}
-          history={requestData.medicalHistory}
+          name={request.applicationUser?.name ?? "—"}
+          age={null}
+          gender={"—"}
+          blood={request.applicationUser?.userProfile?.bloodType ?? "—"}
+          conditions={buildConditions(request)}
+          history={buildMedicalHistory(request)}
         />
 
         <AmbulanceCard
-          vehicle={requestData.ambulanceVehicle}
-          type={requestData.ambulanceType}
-          eta={requestData.eta}
-          location={requestData.ambulanceLocation}
-          crew={requestData.ambulanceCrew}
+          vehicle={ambulance?.name ?? "—"}
+          type={ambulance?.vehicleInfo ?? "—"}
+          eta={assignment?.etaMinutes != null ? `${assignment.etaMinutes} min` : "—"}
+          location={request.address ?? "—"}
+          crew={ambulance ? [
+            `${t("details.driver")}: ${ambulance.driver?.name ?? ambulance.driverPhone}`,
+          ] : []}
         />
 
         <HospitalCard
-          name={requestData.hospitalName}
-          address={requestData.hospitalAddress}
-          department={requestData.department}
-          beds={requestData.availableBeds}
-          distance={requestData.distance}
+          name={hospital?.name ?? "—"}
+          address={hospital?.address ?? "—"}
+          department={hospital ? `${hospital.availableBeds}/${hospital.bedCapacity}` : "—"}
+          beds={hospital?.availableBeds ?? 0}
+          distance={assignment ? `${assignment.hospitalDistanceKm} km` : "—"}
         />
       </div>
 
       {/* Extended Information */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <DescriptionCard
-          description={requestData.description}
-          additionalNotes={requestData.additionalNotes}
+          description={request.description}
+          additionalNotes={assignment?.notes || null}
         />
 
-        <AIAnalysisCard
-          diagnosis={requestData.diagnosis}
-          confidence={requestData.confidence}
-        />
+        {ai && (
+          <AIAnalysisCard
+            diagnosis={ai.summary}
+            confidence={Math.round(ai.confidence * 100)}
+          />
+        )}
       </div>
 
       {/* Timeline */}
-      <div className="mb-6">
-        <TimelineCard events={requestData.timeline} />
-      </div>
+      {timelineEvents.length > 0 && (
+        <div className="mb-6">
+          <TimelineCard events={timelineEvents} />
+        </div>
+      )}
 
       {/* Action Buttons */}
       <div className="mb-6">

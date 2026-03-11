@@ -1,19 +1,18 @@
-import { useAuth } from '@/app/provider/AuthContext';
-import axios from 'axios';
+import { useAuth } from "@/app/provider/AuthContext";
+import axios from "axios";
 import { useTranslation } from "react-i18next";
-import  { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-import type { JwtPayload } from '../types/auth.types';
-import { jwtDecode } from 'jwt-decode';
-import { toast } from 'sonner';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { useLanguage } from '@/i18n/useLanguage';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import type { JwtPayload } from "../types/auth.types";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "sonner";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { useLanguage } from "@/i18n/useLanguage";
+import { getApiUrl, API_CONFIG } from "@/config/api.config";
 
 export default function useSignIn() {
-
-
-     const navigate = useNavigate();
+  const navigate = useNavigate();
   const { setUser } = useAuth();
   const { t } = useTranslation(["auth", "validation"]);
   const { isRTL } = useLanguage();
@@ -28,7 +27,7 @@ export default function useSignIn() {
     setIsLoading(true);
     try {
       const { data } = await axios.post(
-        "http://rescufyy.runasp.net/api/Auth/login",
+        getApiUrl(API_CONFIG.ENDPOINTS.AUTH.LOGIN),
         values,
         {
           headers: {
@@ -42,30 +41,34 @@ export default function useSignIn() {
       const decoded = jwtDecode<JwtPayload>(data.token);
       console.log(decoded);
 
-
-
       if (decoded.Role) {
+        // Handle Role as array or string
+        const roles = Array.isArray(decoded.Role) ? decoded.Role : [decoded.Role];
+        
+        // Determine primary role (SuperAdmin > Admin > HospitalAdmin)
+        let primaryRole: "SuperAdmin" | "Admin" | "hospitaladmin";
+        if (roles.includes("SuperAdmin")) {
+          primaryRole = "SuperAdmin";
+        } else if (roles.includes("Admin")) {
+          primaryRole = "Admin";
+        } else if (roles.includes("HospitalAdmin")) {
+          primaryRole = "hospitaladmin";
+        } else {
+          primaryRole = "hospitaladmin"; // fallback
+        }
+
         // Store the token
         localStorage.setItem("auth_token", data.token);
 
         // Store user data in context
         setUser({
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier":
-            decoded[
-              "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-            ],
-          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name":
-            decoded[
-              "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-            ],
+          id: decoded.Id || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
           FullName: decoded.FullName,
           PicUrl: decoded.PicUrl,
           Email: decoded.Email,
           UserName: decoded.UserName,
-          Role: decoded.Role.toLowerCase() as
-            | "admin"
-            | "hospital"
-            | "ambulance",
+          Role: primaryRole,
+          HospitalId: decoded.HospitalId, // Extract hospital ID from JWT
           SecurityStamp: decoded.SecurityStamp,
           aud: decoded.aud,
           exp: decoded.exp,
@@ -73,15 +76,17 @@ export default function useSignIn() {
           jti: decoded.jti,
         });
 
-        toast.success(t("auth:signIn.success"), { 
+        toast.success(t("auth:signIn.success"), {
           position: isRTL ? "top-left" : "top-right",
         });
 
-        // Navigate based on role
-        const roleRoute =
-          decoded.Role.toLowerCase() === "admin"
-            ? "/admin"
-            : `/${decoded.Role.toLowerCase()}_user`;
+        // Navigate based on primary role
+        let roleRoute;
+        if (primaryRole === "SuperAdmin" || primaryRole === "Admin") {
+          roleRoute = "/admin";
+        } else {
+          roleRoute = "/hospital_user";
+        }
         navigate(roleRoute);
       } else {
         toast.error(t("auth:signIn.roleNotFound"), {
@@ -94,16 +99,15 @@ export default function useSignIn() {
 
       // Handle different error scenarios
       const toastPosition = isRTL ? "top-left" : "top-right";
-      const toastDir = isRTL ? "rtl" : "ltr";
-      
+
+
       if (error.response?.status === 401) {
         toast.error(t("auth:signIn.invalidCredentials"), {
           position: toastPosition,
         });
       } else if (error.response?.status === 400) {
         const errorMessage =
-          error.response?.data?.message ||
-          t("auth:signIn.badRequest");
+          error.response?.data?.message || t("auth:signIn.badRequest");
         toast.error(errorMessage, {
           position: toastPosition,
         });
@@ -121,8 +125,7 @@ export default function useSignIn() {
         });
       } else {
         toast.error(
-          error.response?.data?.message ||
-            t("auth:signIn.genericError"),
+          error.response?.data?.message || t("auth:signIn.genericError"),
           {
             position: toastPosition,
           },
@@ -134,7 +137,7 @@ export default function useSignIn() {
   }
 
   const validationSchema = yup.object({
-    email: yup 
+    email: yup
       .string()
       .email(t("validation:email.invalid"))
       .required(t("validation:email.required")),
@@ -153,9 +156,8 @@ export default function useSignIn() {
     validationSchema: validationSchema,
   });
 
-    return {
-        formik,
-        isLoading,
-    };
-  
+  return {
+    formik,
+    isLoading,
+  };
 }

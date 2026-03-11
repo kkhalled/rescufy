@@ -5,54 +5,97 @@
     },
     "title": "Users",
     "subtitle": "Manage system users",
-    "addUser": "Add User",
-    "table": {
-        "name": "Name",
-        "email": "Email",
-        "phone": "Phone",
-        "role": "Role",
-        "status": "Status",
-        "lastLogin": "Last Login",
-        "actions": "Actions"
-    },
+
     "form": {
-        "name": "Full Name",
-        "namePlaceholder": "Enter full name",
-        "email": "Email Address",
-        "emailPlaceholder": "Enter email address",
-        "phone": "Phone Number",
-        "phonePlaceholder": "Enter phone number",
-        "role": "Role",
-        "rolePlaceholder": "Select role",
+        "name": "Name",
+        "email": "Email", 
         "password": "Password",
-        "passwordPlaceholder": "Enter password",
-        "confirmPassword": "Confirm Password",
-        "confirmPasswordPlaceholder": "Confirm password"
+        "phoneNumber": "Phone Number",
+        "role": "Role",
+        "hospital": "Hospital",
+        "namePlaceholder": "Enter user name",
+        "emailPlaceholder": "user@example.com",
+        "passwordPlaceholder": "Min 8 chars, 1 uppercase, 1 number, 1 special char",
+        "phonePlaceholder": "Enter phone number",
+        "selectRole": "Select role",
+        "selectHospital": "Select hospital",
+        "loadingHospitals": "Loading hospitals..."
     },
     "roles": {
         "all": "All Roles",
-        "admin": "Admin",
-        "hospital": "Hospital Staff",
-        "hospitalUser": "Hospital User",
-        "ambulance": "Ambulance Driver",
-        "ambulanceUser": "Ambulance User",
-        "dispatcher": "Dispatcher"
+        "SuperAdmin": "Super Admin",
+        "Admin": "Administrator",
+        "HospitalAdmin": "Hospital Administrator",
+        "Paramedic": "Paramedic",
+        "AmbulanceDriver": "Ambulance Driver"
     },
-    "row": {
-        "password": "Pass:",
-        "editTooltip": "Edit user",
-        "deleteTooltip": "Delete user"
-    },
-    "filters": {
-        "searchPlaceholder": "Search users by name, email, or ID"
+    "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "save": "Save Changes",
+        "add": "Add User"
     },
     "status": {
         "active": "Active",
         "inactive": "Inactive",
         "suspended": "Suspended"
     },
+    "filters": {
+        "searchPlaceholder": "Search users by name, email, or ID"
+    },
     "empty": {
         "title": "No users found",
         "description": "Start by adding a new user."
+    },
+    "row": {
+        "password": "Pass:",
+        "editTooltip": "Edit user",
+        "deleteTooltip": "Delete user"
+    },
+    "search": "Search users...",
+   
+    "addUser": {
+        "success": "User {{name}} created successfully",
+        "badRequest": "Invalid user data",
+        "emailExists": "A user with this email already exists",
+        "genericError": "Failed to create user"
+    },
+    "updateUser": {
+        "success": "User {{name}} updated successfully",
+        "badRequest": "Invalid user data",
+        "userNotFound": "User not found",
+        "emailExists": "A user with this email already exists",
+        "genericError": "Failed to update user"
+    },
+    "deleteUser": {
+        "success": "User {{name}} deleted successfully",
+        "successGeneric": "User deleted successfully",
+        "userNotFound": "User not found",
+        "forbidden": "You don't have permission to delete this user",
+        "conflict": "Cannot delete user - user has dependencies",
+        "genericError": "Failed to delete user {{name}}",
+        "genericErrorGeneric": "Failed to delete user"
+    },
+    "editUser": {
+        "success": "User {{name}} updated successfully",
+        "genericError": "Failed to update user"
+    },
+    "fetchUsers": {
+        "error": "Failed to fetch users from server"
+    },
+    "assignHospital": {
+        "success": "Hospital assigned successfully",
+        "notFound": "User or hospital not found",
+        "badRequest": "Invalid hospital assignment data",
+        "genericError": "Failed to assign hospital"
+    },
+    "table": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "role": "Role",
+        "actions": "Actions",
+        "noUsers": "No users found"
     }
 }

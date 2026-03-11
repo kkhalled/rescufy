@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { createPortal } from "react-dom";
 import type { Ambulance } from "../data/ambulances.data";
 import useModal from "../hooks/useModal";
 
@@ -26,7 +27,7 @@ export function AmbulanceFormModal({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-surface-card w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col rounded-2xl shadow-card border border-border">
         {/* Header */}
@@ -212,6 +213,7 @@ export function AmbulanceFormModal({
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

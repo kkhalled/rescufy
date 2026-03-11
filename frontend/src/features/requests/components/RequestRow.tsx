@@ -1,4 +1,4 @@
-import { MapPin } from "lucide-react";
+import { MapPin, Phone, Clock } from "lucide-react";
 import type { RequestStatus, RequestPriority } from "../types/request.types";
 import { StatusBadge } from "../../../shared/ui/StatusBadge";
 import { useNavigate } from "react-router";
@@ -8,126 +8,146 @@ interface RequestRowProps {
   id?: string;
   userName?: string;
   userPhone?: string;
-  location?: string;
+  address?: string;
   priority?: RequestPriority;
   status?: RequestStatus;
   timestamp?: string;
   compact?: boolean;
 }
 
+/** Returns a human-readable relative time string like "3 min ago" */
+function timeAgo(dateStr: string | undefined): string {
+  if (!dateStr) return "";
+  const now = new Date();
+  const then = new Date(dateStr);
+  const diffMs = now.getTime() - then.getTime();
+
+  if (diffMs < 0) return "";
+
+  const mins = Math.floor(diffMs / 60_000);
+  const hours = Math.floor(diffMs / 3_600_000);
+  const days = Math.floor(diffMs / 86_400_000);
+
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins} min ago`;
+  if (hours < 24) return `${hours}h ago`;
+  if (days < 30) return `${days}d ago`;
+
+  return then.toLocaleDateString();
+}
+
+const PRIORITY_COLORS: Record<string, string> = {
+  critical: "#ef4444",
+  high: "#f97316",
+  medium: "#f59e0b",
+  low: "#3b82f6",
+};
+
 export function RequestRow({
   id,
   userName,
   userPhone,
-  location,
   priority,
   status,
   timestamp,
+  address,
   compact = false,
 }: RequestRowProps) {
-  const priorityColorMap: Record<string, string> = {
-    critical: "#ef4444",
-    high: "#f97316",
-    medium: "#f59e0b",
-    low: "#3b82f6",
-  };
-
-  const priorityColor = priorityColorMap[priority || "low"] || "#3b82f6";
   const navigate = useNavigate();
   const { isRTL } = useLanguage();
+  const indicatorColor = priority ? (PRIORITY_COLORS[priority] || "#3b82f6") : "#3b82f6";
+  const relativeTime = timeAgo(timestamp);
+
   return (
     <button
       onClick={() => navigate(`/admin/request_details/${id}`)}
-      className="w-full text-left bg-transparent border-none p-0 cursor-pointer hover:opacity-80 transition-opacity"
+      className="w-full text-left rtl:text-right bg-transparent border-none p-0 cursor-pointer group"
     >
       <div
-        className={`relative flex flex-col md:flex-row md:items-center ${compact ? "gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-2" : "gap-3 md:gap-6 px-4 md:px-6 py-3 md:py-4"} bg-card border-b border-border`}
+        className={`relative flex flex-col md:flex-row md:items-center ${
+          compact ? "gap-2 md:gap-3 px-3 md:px-5 py-2" : "gap-3 md:gap-5 px-4 md:px-6 py-3 md:py-4"
+        } bg-card border-b border-border hover:bg-surface-muted/50 transition-colors`}
       >
-        {/* Severity Indicator */}
-        <div
-          style={{ backgroundColor: priorityColor }}
-          className={`absolute top-0 h-1 md:h-full w-full md:w-1 rounded-t md:rounded-t-none ${isRTL ? "right-0 md:rounded-l" : "left-0 md:rounded-r"}`}
-        />
-
-        {/* Top Row - Mobile */}
-        <div
-          className={`md:hidden flex items-center justify-between gap-2 ${compact ? "pt-1" : "pt-2"} w-full ${isRTL ? "flex-row-reverse" : ""}`}
-        >
-          {/* Request ID */}
-          <div className={`${isRTL ? "text-right" : ""}`}>
-            <p
-              className={`font-semibold text-heading dark:text-heading ${compact ? "text-xs" : "text-xs"}`}
-            >
-              {id}
-            </p>
-            <p className={`text-muted ${compact ? "text-xs" : "text-xs"}`}>
-              {timestamp}
-            </p>
-          </div>
-          {/* Priority Badge */}
-          <StatusBadge priority={priority} />
-        </div>
-
-        {/* Desktop Request ID */}
-        <div
-          className={`hidden md:block ${compact ? "w-28 shrink-0" : "w-36 shrink-0"} ${isRTL ? "text-right" : "text-left"}`}
-        >
-          <p
-            className={`font-semibold text-heading dark:text-heading ${compact ? "text-xs" : "text-sm"}`}
-          >
-            {id}
-          </p>
-          <p className={`text-muted ${compact ? "text-xs" : "text-xs"}`}>
-            {timestamp}
-          </p>
-        </div>
-
-        {/* User Info - Desktop */}
-        <div
-          className={`hidden md:block ${compact ? "w-32 shrink-0" : "w-48 shrink-0"} ${isRTL ? "text-right" : "text-left"}`}
-        >
-          <p
-            className={`font-medium text-heading ${compact ? "text-xs" : "text-sm"}`}
-          >
-            {userName}
-          </p>
-          <p className="text-xs text-muted">{userPhone}</p>
-        </div>
-
-        {/* Mobile User Info */}
-        <div className="md:hidden">
-          <p
-            className={`font-medium text-heading ${compact ? "text-xs" : "text-sm"}`}
-          >
-            {userName}
-          </p>
-          <p className="text-xs text-muted">{userPhone}</p>
-        </div>
-
-        {/* Location */}
-        <div
-          className={`flex items-center gap-2 flex-1 max-w-90 text-muted ${compact ? "text-xs" : "text-xs md:text-sm"}`}
-        >
-          <MapPin
-            className={`text-muted shrink-0 ${compact ? "w-3 h-3" : "w-3 h-3 md:w-4 md:h-4"}`}
+        {/* Priority indicator bar */}
+        {priority && (
+          <div
+            style={{ backgroundColor: indicatorColor }}
+            className={`absolute top-0 h-1 md:h-full w-full md:w-1 rounded-t md:rounded-t-none ${
+              isRTL ? "right-0 md:rounded-l" : "left-0 md:rounded-r"
+            }`}
           />
-          <span className="truncate">{location}</span>
-        </div>
+        )}
 
-        {/* Badges Container */}
-        <div
-          className={`flex items-center ${compact ? "gap-1 md:gap-2" : "gap-2 md:gap-3"} justify-start ms-auto `}
-        >
-          {/* Desktop Priority Badge */}
-          <div className=" hidden lg:block">
-            <StatusBadge priority={priority} />
+        {/* ── Mobile layout ── */}
+        <div className="md:hidden flex flex-col gap-2 w-full pt-1">
+          {/* Row 1: Name + Priority */}
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold text-heading truncate">{userName}</p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <Clock className="w-3 h-3 text-muted shrink-0" />
+                <span className="text-[11px] text-muted">{relativeTime}</span>
+              </div>
+            </div>
+            {priority && <StatusBadge priority={priority} />}
           </div>
 
-          {/* Status Badge */}
-          <div className=" ">
+          {/* Row 2: Phone + Status */}
+          <div className="flex items-center justify-between gap-2">
+            {userPhone && (
+              <div className="flex items-center gap-1.5 text-xs text-body">
+                <Phone className="w-3 h-3 text-muted shrink-0" />
+                <span dir="ltr">{userPhone}</span>
+              </div>
+            )}
             <StatusBadge status={status} />
           </div>
+
+          {/* Row 3: Address */}
+          {address && (
+            <div className="flex items-center gap-1.5 text-xs text-muted">
+              <MapPin className="w-3 h-3 shrink-0" />
+              <span className="truncate">{address}</span>
+            </div>
+          )}
         </div>
+
+        {/* ── Desktop layout ── */}
+
+        {/* User info: name + relative time */}
+        <div className={`hidden md:block ${compact ? "w-40" : "w-48"} shrink-0`}>
+          <p className={`font-semibold text-heading truncate ${compact ? "text-xs" : "text-sm"}`}>
+            {userName}
+          </p>
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <Clock className="w-3 h-3 text-muted shrink-0" />
+            <span className="text-[11px] text-muted">{relativeTime}</span>
+          </div>
+        </div>
+
+        {/* Phone */}
+        <div className={`hidden md:flex items-center gap-2 ${compact ? "w-32" : "w-40"} shrink-0`}>
+          <Phone className="w-3.5 h-3.5 text-muted shrink-0" />
+          <span className="text-sm text-body truncate" dir="ltr">{userPhone}</span>
+        </div>
+
+        {/* Address */}
+        <div className="hidden md:flex items-center gap-2 flex-1 min-w-0 text-muted">
+          <MapPin className={`shrink-0 ${compact ? "w-3 h-3" : "w-4 h-4"}`} />
+          <span className={`truncate ${compact ? "text-xs" : "text-sm"}`}>{address}</span>
+        </div>
+
+        {/* Status badge */}
+        <div className="hidden md:block shrink-0">
+          <StatusBadge status={status} />
+        </div>
+
+        {/* Priority badge */}
+        {priority && (
+          <div className="hidden lg:block shrink-0">
+            <StatusBadge priority={priority} />
+          </div>
+        )}
       </div>
     </button>
   );

@@ -13,7 +13,24 @@
         "successRate": "Success Rate",
         "activeSessions": "Active Sessions",
         "totalRevenue": "Total Revenue",
-        "pendingTasks": "Pending Tasks"
+        "pendingTasks": "Pending Tasks",
+        "activeEmergencyRequests": "Active Emergency Requests",
+        "ongoingCases": "Ongoing Cases",
+        "newInLastTenMinutes": "new in last 10 mins",
+        "resolvedRecently": "resolved recently",
+        "criticalCases": "Critical Cases",
+        "severityHighCritical": "High/Critical Severity",
+        "avgResponseTime": "Avg. response: {{time}}",
+        "availableAmbulances": "Available Ambulances",
+        "fleetBusy": "{{percent}}% of fleet busy",
+        "available": "Available",
+        "lowAvailabilityWarning": "Low availability",
+        "hospitalCapacity": "Hospital Capacity",
+        "bedsAvailable": "Beds Available",
+        "occupancyRate": "{{percent}}% Occupancy",
+        "highOccupancyWarning": "High occupancy",
+        "criticalCapacity": "Critical capacity",
+        "live": "LIVE"
     },
     "charts": {
         "requestsOverview": "Requests Overview",
@@ -40,5 +57,13 @@
         "addHospital": "Add Hospital",
         "addAmbulance": "Add Ambulance",
         "viewReports": "View Reports"
+    },
+    "hospital": {
+        "assignedRequests": "Assigned Requests",
+        "newAssigned": "newly assigned",
+        "completedRecently": "completed recently",
+        "availableBeds": "Available Beds",
+        "activeCases": "Active Cases",
+        "inTransit": "{{count}} patients in transit"
     }
 }

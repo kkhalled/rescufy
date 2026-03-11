@@ -28,12 +28,12 @@ export default function useModal({
     defaultValues: {
       id: "",
       name: "",
-      email: "",
-      phone: "",
       address: "",
-      status: "NORMAL",
-      totalBeds: 0,
-      usedBeds: 0,
+      contactPhone: "",
+      latitude: 0,
+      longitude: 0,
+      availableBeds: 0,
+      bedCapacity: 0,
     },
   });
 
@@ -42,14 +42,14 @@ export default function useModal({
       reset(hospital);
     } else {
       reset({
-        id: `Hospital-${Date.now()}`,
+        id: "",
         name: "",
-        email: "",
-        phone: "",
         address: "",
-        status: "NORMAL",
-        totalBeds: 0,
-        usedBeds: 0,
+        contactPhone: "",
+        latitude: 0,
+        longitude: 0,
+        availableBeds: 0,
+        bedCapacity: 0,
       });
     }
   }, [hospital, mode, reset]);

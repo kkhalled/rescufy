@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import type { Hospital } from "../data/hospitals.data";
+import { faXmark, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { createPortal } from "react-dom";
+import type { Hospital } from "../types/hospitals.types";
 import useModal from "../hooks/useModal";
 import { useTranslation } from "react-i18next";
 
@@ -10,6 +11,7 @@ interface HospitalFormModalProps {
   onSubmit: (hospital: Hospital) => void;
   hospital?: Hospital;
   mode: "add" | "edit";
+  isLoading?: boolean;
 }
 
 // Zod validation schema
@@ -20,6 +22,7 @@ export function HospitalFormModal({
   onSubmit,
   hospital,
   mode,
+  isLoading = false,
 }: HospitalFormModalProps) {
   const { register, submitHandler, errors } = useModal({
     onSubmit,
@@ -30,7 +33,7 @@ export function HospitalFormModal({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-surface-card w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col rounded-2xl shadow-card border border-border">
         {/* Header */}
@@ -56,7 +59,7 @@ export function HospitalFormModal({
             {/* Hidden ID field */}
             <input type="hidden" {...register("id")} />
 
-            {/* Row 1: Hospital Name & Email */}
+            {/* Row 1: Hospital Name & Phone */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Hospital Name */}
               <div>
@@ -83,155 +86,162 @@ export function HospitalFormModal({
                 )}
               </div>
 
-              {/* Email */}
+              {/* Contact Phone */}
               <div>
                 <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-body mb-1.5"
-                >
-                  {t('hospitals:form.email')} <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  {...register("email")}
-                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.email
-                      ? "border-danger focus:ring-danger/20"
-                      : "border-border focus:ring-primary/30 focus:border-primary"
-                    }`}
-                  placeholder={t('hospitals:form.emailPlaceholder')}
-                />
-                {errors.email && (
-                  <p className="mt-1.5 text-xs text-danger">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Row 2: Phone & Address */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Phone */}
-              <div>
-                <label
-                  htmlFor="phone"
+                  htmlFor="contactPhone"
                   className="block text-sm font-medium text-body mb-1.5"
                 >
                   {t('hospitals:form.phone')} <span className="text-danger">*</span>
                 </label>
                 <input
                   type="tel"
-                  id="phone"
-                  {...register("phone")}
-                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.phone
+                  id="contactPhone"
+                  {...register("contactPhone")}
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.contactPhone
                       ? "border-danger focus:ring-danger/20"
                       : "border-border focus:ring-primary/30 focus:border-primary"
                     }`}
                   placeholder={t('hospitals:form.phonePlaceholder')}
                 />
-                {errors.phone && (
+                {errors.contactPhone && (
                   <p className="mt-1.5 text-xs text-danger">
-                    {errors.phone.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Address */}
-              <div>
-                <label
-                  htmlFor="address"
-                  className="block text-sm font-medium text-body mb-1.5"
-                >
-                  {t('hospitals:form.address')} <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="address"
-                  {...register("address")}
-                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.address
-                      ? "border-danger focus:ring-danger/20"
-                      : "border-border focus:ring-primary/30 focus:border-primary"
-                    }`}
-                  placeholder={t('hospitals:form.addressPlaceholder')}
-                />
-                {errors.address && (
-                  <p className="mt-1.5 text-xs text-danger">
-                    {errors.address.message}
+                    {errors.contactPhone.message}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Row 3: Status & Bed Information */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Status */}
-              <div>
-                <label
-                  htmlFor="status"
-                  className="block text-sm font-medium text-body mb-1.5"
-                >
-                  {t('hospitals:table.status')}
-                </label>
-                <select
-                  id="status"
-                  {...register("status")}
-                  className="w-full px-3.5 py-2.5 text-sm border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary bg-background text-heading transition-all"
-                >
-                  <option value="NORMAL">{t('hospitals:status.normal')}</option>
-                  <option value="BUSY">{t('hospitals:status.busy')}</option>
-                  <option value="CRITICAL">{t('hospitals:status.critical')}</option>
-                  <option value="FULL">{t('hospitals:status.full')}</option>
-                </select>
-              </div>
+            {/* Row 2: Address */}
+            <div>
+              <label
+                htmlFor="address"
+                className="block text-sm font-medium text-body mb-1.5"
+              >
+                {t('hospitals:form.address')} <span className="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                id="address"
+                {...register("address")}
+                className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.address
+                    ? "border-danger focus:ring-danger/20"
+                    : "border-border focus:ring-primary/30 focus:border-primary"
+                  }`}
+                placeholder={t('hospitals:form.addressPlaceholder')}
+              />
+              {errors.address && (
+                <p className="mt-1.5 text-xs text-danger">
+                  {errors.address.message}
+                </p>
+              )}
+            </div>
 
-              {/* Total Beds */}
+            {/* Row 3: Latitude & Longitude */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Latitude */}
               <div>
                 <label
-                  htmlFor="totalBeds"
+                  htmlFor="latitude"
                   className="block text-sm font-medium text-body mb-1.5"
                 >
-                  {t('hospitals:form.totalBeds')} <span className="text-danger">*</span>
+                  {t('hospitals:form.latitude')} <span className="text-danger">*</span>
                 </label>
                 <input
                   type="number"
-                  id="totalBeds"
-                  {...register("totalBeds", { valueAsNumber: true })}
-                  min="0"
-                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.totalBeds
+                  id="latitude"
+                  step="0.0001"
+                  {...register("latitude", { valueAsNumber: true })}
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.latitude
                       ? "border-danger focus:ring-danger/20"
                       : "border-border focus:ring-primary/30 focus:border-primary"
                     }`}
-                  placeholder="0"
+                  placeholder="31.2001"
                 />
-                {errors.totalBeds && (
+                {errors.latitude && (
                   <p className="mt-1.5 text-xs text-danger">
-                    {errors.totalBeds.message}
+                    {errors.latitude.message}
                   </p>
                 )}
               </div>
 
-              {/* Used Beds */}
+              {/* Longitude */}
               <div>
                 <label
-                  htmlFor="usedBeds"
+                  htmlFor="longitude"
                   className="block text-sm font-medium text-body mb-1.5"
                 >
-                  {t('hospitals:form.usedBeds')} <span className="text-danger">*</span>
+                  {t('hospitals:form.longitude')} <span className="text-danger">*</span>
                 </label>
                 <input
                   type="number"
-                  id="usedBeds"
-                  {...register("usedBeds", { valueAsNumber: true })}
+                  id="longitude"
+                  step="0.0001"
+                  {...register("longitude", { valueAsNumber: true })}
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.longitude
+                      ? "border-danger focus:ring-danger/20"
+                      : "border-border focus:ring-primary/30 focus:border-primary"
+                    }`}
+                  placeholder="29.9187"
+                />
+                {errors.longitude && (
+                  <p className="mt-1.5 text-xs text-danger">
+                    {errors.longitude.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Row 4: Bed Capacity & Available Beds */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Bed Capacity */}
+              <div>
+                <label
+                  htmlFor="bedCapacity"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  {t('hospitals:form.bedCapacity')} <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="bedCapacity"
+                  {...register("bedCapacity", { valueAsNumber: true })}
                   min="0"
-                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.usedBeds
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.bedCapacity
                       ? "border-danger focus:ring-danger/20"
                       : "border-border focus:ring-primary/30 focus:border-primary"
                     }`}
                   placeholder="0"
                 />
-                {errors.usedBeds && (
+                {errors.bedCapacity && (
                   <p className="mt-1.5 text-xs text-danger">
-                    {errors.usedBeds.message}
+                    {errors.bedCapacity.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Available Beds */}
+              <div>
+                <label
+                  htmlFor="availableBeds"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  {t('hospitals:form.availableBeds')} <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="availableBeds"
+                  {...register("availableBeds", { valueAsNumber: true })}
+                  min="0"
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.availableBeds
+                      ? "border-danger focus:ring-danger/20"
+                      : "border-border focus:ring-primary/30 focus:border-primary"
+                    }`}
+                  placeholder="0"
+                />
+                {errors.availableBeds && (
+                  <p className="mt-1.5 text-xs text-danger">
+                    {errors.availableBeds.message}
                   </p>
                 )}
               </div>
@@ -243,19 +253,25 @@ export function HospitalFormModal({
             <button
               type="button"
               onClick={onClose}
-              className=" cursor-pointer px-5 py-2.5 text-sm font-medium text-body bg-background-second border border-border rounded-xl hover:bg-surface-muted focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              disabled={isLoading}
+              className=" cursor-pointer px-5 py-2.5 text-sm font-medium text-body bg-background-second border border-border rounded-xl hover:bg-surface-muted focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all disabled:opacity-50"
             >
               {t('hospitals:buttons.cancel')}
             </button>
             <button
               type="submit"
-              className=" cursor-pointer px-5 py-2.5 text-sm font-medium text-white bg-primary rounded-xl hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-lg active:scale-95"
+              disabled={isLoading}
+              className=" cursor-pointer px-5 py-2.5 text-sm font-medium text-white bg-primary rounded-xl hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
             >
+              {isLoading && (
+                <FontAwesomeIcon icon={faSpinner} className="animate-spin" />
+              )}
               {mode === "add" ? t('hospitals:buttons.add') : t('hospitals:buttons.update')}
             </button>
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

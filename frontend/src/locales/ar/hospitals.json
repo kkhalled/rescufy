@@ -21,10 +21,14 @@
         "namePlaceholder": "أدخل اسم المستشفى",
         "address": "العنوان",
         "addressPlaceholder": "أدخل العنوان الكامل",
-        "phone": "رقم الهاتف",
+        "phone": "هاتف التواصل",
         "phonePlaceholder": "‎+966 5X XXX XXXX",
         "email": "البريد الإلكتروني",
         "emailPlaceholder": "hospital@example.com",
+        "latitude": "خط العرض",
+        "longitude": "خط الطول",
+        "bedCapacity": "سعة الأسرّة",
+        "availableBeds": "الأسرّة المتاحة",
         "capacity": "سعة الأسرّة",
         "capacityPlaceholder": "أدخل سعة الأسرّة",
         "totalBeds": "إجمالي الأسرّة",
@@ -63,5 +67,30 @@
     "empty": {
         "title": "لم يتم العثور على مستشفيات",
         "description": "ابدأ بإضافة مستشفى جديد."
+    },
+    "hospitalProfile": {
+        "title": "ملف المستشفى",
+        "subtitle": "إدارة معلومات المستشفى وسعة الأسرّة",
+        "availableBeds": "الأسرّة المتاحة",
+        "availableBedsPlaceholder": "أدخل عدد الأسرّة المتاحة",
+        "occupancy": "نسبة الإشغال",
+        "saveChanges": "حفظ التغييرات",
+        "cancel": "إلغاء"
+    },
+    "api": {
+        "fetchError": "فشل في جلب المستشفيات",
+        "addSuccess": "تمت إضافة المستشفى \"{{name}}\" بنجاح",
+        "addError": "فشل في إضافة المستشفى",
+        "updateSuccess": "تم تحديث المستشفى \"{{name}}\" بنجاح",
+        "updateError": "فشل في تحديث المستشفى",
+        "deleteSuccess": "تم حذف المستشفى \"{{name}}\" بنجاح",
+        "deleteSuccessGeneric": "تم حذف المستشفى بنجاح",
+        "deleteError": "فشل في حذف المستشفى \"{{name}}\"",
+        "deleteErrorGeneric": "فشل في حذف المستشفى",
+        "deleteConflict": "لا يمكن حذف المستشفى لوجود مراجع نشطة",
+        "notFound": "المستشفى غير موجود",
+        "badRequest": "بيانات المستشفى غير صالحة",
+        "alreadyExists": "مستشفى بهذه المعلومات موجود بالفعل",
+        "forbidden": "ليس لديك صلاحية لتنفيذ هذا الإجراء"
     }
 }

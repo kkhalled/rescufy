@@ -1,22 +1,29 @@
 import type { User } from "../types/users.types";
 
-type filters = {
+export interface FilterOptions {
   search: string;
-  roleId: string;
-};
+  role: string; // Add this property
+}
 
-export default function usersFilter(users: User[], filters: filters) {
-  const q = filters.search.trim().toLowerCase();
+export default function usersFilter(
+  users: User[],
+  { search, role }: FilterOptions,
+): User[] {
+  return users.filter((user) => {
+    // Filter by role — match exact backend values: Admin, HospitalAdmin, Paramedic, SuperAdmin, AmbulanceDriver
+    // Handle both roles array and role property
+    const userRole = user.roles && user.roles.length > 0 ? user.roles[0] : user.role;
+    const matchesRole = role === "all" || userRole === role;
 
-  return users.filter((u) => {
-    const matchSearch =
-      !q ||
-      u.name.toLowerCase().includes(q) ||
-      u.email.toLowerCase().includes(q) ||
-      u.id.toLowerCase().includes(q);
+    // Filter by search
+    const lowerSearch = search.toLowerCase();
+    const matchesSearch =
+      !search ||
+      user.name.toLowerCase().includes(lowerSearch) ||
+      user.email.toLowerCase().includes(lowerSearch) ||
+      user.phoneNumber?.toLowerCase().includes(lowerSearch) ||
+      user.id?.toLowerCase().includes(lowerSearch);
 
-    const matchRole = filters.roleId === "all" || u.roleId === filters.roleId;
-
-    return matchSearch && matchRole;
+    return matchesRole && matchesSearch;
   });
 }

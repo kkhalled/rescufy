@@ -1,5 +1,6 @@
 import { type LucideIcon } from "lucide-react";
 import { useLanguage } from "@/i18n/useLanguage";
+import React from "react";
 
 interface StatCardProps {
   title: string;
@@ -11,7 +12,7 @@ interface StatCardProps {
   };
   isLoading?: boolean;
   variant?: "default" | "critical" | "success" | "warning";
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   badge?: string;
   chart?: React.ReactNode;
 }
@@ -32,25 +33,21 @@ export function StatCard({
       card: "bg-bg-card dark:bg-bg-card backdrop-blur-sm text-heading ",
       iconBg: "bg-primary/10",
       iconColor: "text-primary",
-      
     },
     critical: {
       card: "bg-gradient-to-br from-[#EF4444] to-[#F87171] text-white  ",
       iconBg: "bg-white/20 backdrop-blur-sm",
       iconColor: "text-white",
-  
     },
     success: {
       card: "bg-bg-card dark:bg-bg-card text-heading  ",
       iconBg: "bg-success/10",
       iconColor: "text-success",
-      
     },
     warning: {
       card: "bg-bg-card dark:bg-bg-card  text-heading ",
       iconBg: "bg-info/10",
       iconColor: "text-info",
-     
     },
   };
 
@@ -72,7 +69,6 @@ export function StatCard({
       <div className="flex items-start justify-between mb-3">
         {/* Icon */}
         <div
-         
           className={`
             flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl
             ${styles.iconBg}
@@ -129,7 +125,6 @@ export function StatCard({
                       : "rotate-180"
                 }
               `}
-             
             >
               <path
                 d="M6 2L10 6L6 10M10 6H2"
@@ -156,9 +151,7 @@ export function StatCard({
 
       {/* Subtitle (e.g., "2 Critical • 12 High") */}
       {subtitle && (
-        <div className={`text-sm font-medium mb-4 `}>
-          {subtitle}
-        </div>
+        <div className={`text-sm font-medium mb-4 `}>{subtitle}</div>
       )}
 
       {/* Chart/Graph Section */}

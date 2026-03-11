@@ -4,17 +4,17 @@ export const hospitalSchema = z
   .object({
     id: z.string(),
     name: z.string().min(1, "Hospital name is required"),
-    email: z.email("Invalid email format").min(1, "Email is required"),
-    phone: z
+    address: z.string().min(1, "Address is required"),
+    contactPhone: z
       .string()
       .min(1, "Phone number is required")
       .regex(/^[\d\s\-+()]+$/, "Invalid phone number format"),
-    address: z.string().min(1, "Address is required"),
-    status: z.enum(["NORMAL", "BUSY", "CRITICAL", "FULL"]),
-    totalBeds: z.number().int().positive("Total beds must be greater than 0"),
-    usedBeds: z.number().int().min(0, "Used beds cannot be negative"),
+    latitude: z.number().min(-90).max(90, "Latitude must be between -90 and 90"),
+    longitude: z.number().min(-180).max(180, "Longitude must be between -180 and 180"),
+    availableBeds: z.number().int().min(0, "Available beds cannot be negative"),
+    bedCapacity: z.number().int().positive("Bed capacity must be greater than 0"),
   })
-  .refine((data) => data.usedBeds <= data.totalBeds, {
-    message: "Used beds cannot exceed total beds",
-    path: ["usedBeds"],
+  .refine((data) => data.availableBeds <= data.bedCapacity, {
+    message: "Available beds cannot exceed bed capacity",
+    path: ["availableBeds"],
   });

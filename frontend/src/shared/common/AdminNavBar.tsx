@@ -1,20 +1,32 @@
-import { Search, Bell, Sun, Moon, Menu } from "lucide-react";
-import { useTheme } from "@/shared/hooks/useTheme";
+import {
+  Search,
+  Bell,
+  Sun,
+  Moon,
+  Menu,
+  LogOut,
+ 
+} from "lucide-react";
+import { useTheme } from "../hooks/useTheme";
 import { useAuth } from "@/app/provider/AuthContext";
 import { useTranslation } from "react-i18next";
-import { LanguageSwitcher } from "@/shared/ui/LanguageSwitcher";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import LanguageSwitcher from "../ui/LanguageSwitcher";
+// ...existing code...
 
-interface AdminNavbarProps {
+type AdminNavbarProps = {
   onMenuClick: () => void;
-}
+};
 
 export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
-  const { t } = useTranslation(['navigation', 'common', 'auth']);
+  const { t } = useTranslation(["navigation", "common", "auth"]);
+  const { logout } = useAuth();
 
   return (
-    <header className="fixed top-0 right-0 left-0 md:ltr:left-22 md:rtl:right-22 md:rtl:left-0 bg-background-second/95 backdrop-blur-md border-b border-border z-30">
+    <header className="fixed top-0 right-0 left-0 md:ltr:left-22 md:rtl:right-22 md:rtl:left-0 bg-background-second/95 backdrop-blur-md border-b border-border z-49">
       <div className="h-14 md:h-16 px-4 md:px-6 lg:px-8 flex items-center justify-between gap-3">
         {/* Left Section - Mobile Menu + Search */}
         <div className="flex items-center gap-3">
@@ -22,25 +34,13 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
           <button
             onClick={onMenuClick}
             className="md:hidden p-2 -ml-2 rtl:-mr-2 rtl:ml-0 rounded-lg hover:bg-muted transition-colors"
-            aria-label={t('common:aria.openMenu')}
+            aria-label={t("common:aria.openMenu")}
           >
             <Menu size={22} className="text-heading" />
           </button>
 
           {/* Desktop Search */}
-          <div className="hidden md:flex items-center flex-1 max-w-md">
-            <div className="relative w-full">
-              <Search
-                size={18}
-                className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 text-muted"
-              />
-              <input
-                type="text"
-                placeholder={t('navigation:navbar.search')}
-                className="w-full pl-10 rtl:pl-4 rtl:pr-10 pr-4 py-2.5 bg-surface-muted dark:bg-surface-soft border border-border rounded-xl text-sm text-heading placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-              />
-            </div>
-          </div>
+          <div className="hidden md:flex items-center flex-1 max-w-md"></div>
         </div>
 
         {/* Right Section - Actions */}
@@ -48,7 +48,7 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
           {/* Mobile Search Icon */}
           <button
             className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
-            aria-label={t('common:aria.search')}
+            aria-label={t("common:aria.search")}
           >
             <Search size={18} className="text-heading" />
           </button>
@@ -60,7 +60,7 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
           <button
             onClick={toggleTheme}
             className="p-2 rounded-lg hover:bg-muted transition-colors"
-            aria-label={t('common:aria.toggleTheme')}
+            aria-label={t("common:aria.toggleTheme")}
           >
             {theme === "dark" ? (
               <Sun size={18} className="text-heading" />
@@ -72,7 +72,7 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
           {/* Notifications */}
           <button
             className="relative p-2 rounded-lg hover:bg-muted transition-colors"
-            aria-label={t('common:aria.notifications')}
+            aria-label={t("common:aria.notifications")}
           >
             <Bell size={18} className="text-heading" />
             <span className="absolute top-1.5 right-1.5 rtl:right-auto rtl:left-1.5 w-2 h-2 rounded-full bg-danger animate-pulse" />
@@ -82,30 +82,69 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
           <div className="hidden sm:block h-8 w-px bg-border" />
 
           {/* User Profile */}
-          <div className="flex items-center gap-2 md:gap-3 cursor-pointer group">
-            {/* User Info - Hidden on small screens */}
-            <div className="hidden md:block text-right rtl:text-left">
-              <p className="text-sm font-semibold text-heading leading-tight">
-                {user?.FullName || "Admin User"}
-              </p>
+          <div className="relative group">
+            <div className="flex items-center gap-2 md:gap-3 cursor-pointer">
+              {/* User Info - Hidden on small screens */}
+              <div className="hidden md:flex flex-col items-center space-y-1 text-right rtl:text-left">
+                <p className="text-sm font-semibold text-heading leading-tight">
+                  {user?.FullName  || t("auth:defaultUser")}
 
-              <span className="inline-block text-[10px] px-2 py-0.5 rounded-full bg-primary text-white font-medium">
-                {t(`auth:roles.${user?.Role?.toLowerCase() || 'admin'}`).toUpperCase()}
-              </span>
+
+                
+                </p>
+
+                <span className="inline-block text-[10px] px-2 py-0.5 rounded-full bg-primary text-white font-medium">
+                 {
+                    user?.Role                      ? t(`auth:roles.${user.Role}`)
+                      : t("auth:roles.SuperAdmin")
+                 }
+                </span>
+              </div>
+
+              {/* Avatar */}
+              <div className="flex items-center gap-2 border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow p-2 bg-background-second">
+                <div className="relative">
+                  <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-linear-to-br from-primary to-accent flex items-center justify-center text-white text-sm font-bold">
+                    {user?.UserName
+                      ? user.UserName.split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase()
+                      : "AU"}
+                  </div>
+                  <span className="absolute bottom-0 right-0 rtl:right-auto rtl:left-0 w-2.5 h-2.5 md:w-3 md:h-3 bg-success border-2 border-background-second rounded-full" />
+                </div>
+                <FontAwesomeIcon
+                  className="text-heading transition-transform group-hover:rotate-180 duration-300"
+                  icon={faAngleDown}
+                />
+              </div>
             </div>
 
-            {/* Avatar */}
-            <div className="relative">
-              <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-linear-to-br from-primary to-accent flex items-center justify-center text-white text-sm font-bold shadow-md group-hover:shadow-lg transition-shadow">
-                {user?.UserName
-                  ? user.UserName
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
-                    .toUpperCase()
-                  : "AU"}
+            {/* Dropdown Menu */}
+            <div className="absolute right-0 rtl:right-auto rtl:left-0 top-full mt-2 w-40 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="bg-background-second border border-border rounded-lg shadow-lg overflow-hidden ">
+                {/* User Info in Dropdown (Mobile) */}
+                <div className="md:hidden px-2 py-3 border-b border-border">
+                  <p className="text-sm font-semibold text-heading">
+                    {user?.FullName || "Admin User"}
+                  </p>
+                  <p className="text-xs text-muted mt-1">
+                    {user?.Email || "admin@rescufy.com"}
+                  </p>
+                </div>
+
+                {/* Logout Button */}
+                <div className="">
+                  <button
+                    onClick={logout}
+                    className="w-full cursor-pointer px-4 py-3 text-xs font-bold text-danger hover:bg-danger transition-colors hover:text-white  flex items-center gap-1 text-left rtl:text-right"
+                  >
+                    <LogOut size={16} />
+                    <span>{t("auth:logout.title")}</span>
+                  </button>
+                </div>
               </div>
-              <span className="absolute bottom-0 right-0 rtl:right-auto rtl:left-0 w-2.5 h-2.5 md:w-3 md:h-3 bg-success border-2 border-background-second rounded-full" />
             </div>
           </div>
         </div>
@@ -113,4 +152,3 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
     </header>
   );
 }
-

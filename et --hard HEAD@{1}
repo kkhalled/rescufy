@@ -1,0 +1,18 @@
+[33m545e733[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33mb392296[m HEAD@{1}: reset: moving to HEAD
+[33mb392296[m HEAD@{2}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m2a9e76c[m HEAD@{3}: pull --ff --recurse-submodules --progress origin: Merge made by the 'ort' strategy.
+[33mbcfffa1[m HEAD@{4}: commit: handle the request details page
+[33m57f2635[m HEAD@{5}: commit: new backend
+[33m77d82c8[m HEAD@{6}: commit: handle the auth login
+[33m32bb1b3[m HEAD@{7}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33mdf367f0[m HEAD@{8}: pull --ff --recurse-submodules --progress origin: Merge made by the 'ort' strategy.
+[33mf04bd0a[m HEAD@{9}: commit: handle the ambulance and users screen
+[33m26cd427[m HEAD@{10}: commit: add the hospital feature designs and crud opreations
+[33m587e7f0[m HEAD@{11}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m3ccc06e[m HEAD@{12}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m4b1cb67[m HEAD@{13}: commit: Add auth store, protected routes, and layouts
+[33m3ee674b[m HEAD@{14}: pull --ff --recurse-submodules --progress origin: Fast-forward
+[33m44d198b[m HEAD@{15}: commit: handle the responsive of the layout
+[33m0d80c87[m HEAD@{16}: commit: handle the request page design , filters and search
+[33mfadf9b9[m HEAD@{17}: clone: from https://github.com/omarwaqad/rescufy.git

@@ -1,4 +1,4 @@
-export type Role = "admin" | "hospital" | "ambulance";
+export type Role = "Admin" | "hospitaladmin" | "SuperAdmin";
 
 export type responseType = {
   id: number;
@@ -8,14 +8,13 @@ export type responseType = {
 };
 
 export type JwtPayload = {
-  "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": string;
-  "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string;
-  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"?: string;
+  Id: string;
   FullName: string;
   PicUrl: string;
   Email: string;
   UserName: string;
-  Role: string; // Can be "Admin", "Hospital", or "Ambulance"
+  Role: string[] | string; // Can be array ["SuperAdmin", "Admin"] or single string
+  HospitalId?: string; // For hospital users
   SecurityStamp?: string;
   aud?: string;
   exp?: number;

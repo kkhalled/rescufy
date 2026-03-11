@@ -1,11 +1,14 @@
 import type { User } from "../types/users.types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userSchema } from "../schemas/modal.schema";
+import { userSchema, userEditSchema } from "../schemas/modal.schema";
 import { useEffect } from "react";
 import type { z } from "zod";
 
-type UserFormData = z.infer<typeof userSchema>;
+
+type UserAddFormData = z.infer<typeof userSchema>;
+type UserEditFormData = z.infer<typeof userEditSchema>;
+type UserFormData = UserAddFormData | UserEditFormData;
 
 interface UserFormModalProps {
   onSubmit: (user: User) => void;
@@ -13,48 +16,65 @@ interface UserFormModalProps {
   mode: "add" | "edit";
 }
 
-export default function useModal({
-  onSubmit,
-  user,
-  mode,
-}: UserFormModalProps) {
+export default function useModal({ onSubmit, user, mode }: UserFormModalProps) {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
+    reset,
+    watch,
   } = useForm<UserFormData>({
-    resolver: zodResolver(userSchema),
+    resolver: zodResolver(mode === "edit" ? userEditSchema : userSchema) as any,
     defaultValues: {
-      id: "",
       name: "",
       email: "",
       password: "",
-      roleId: "HOSPITAL_USER",
+      phoneNumber: "",
+      role: undefined,
+      hospitalId: "",
     },
   });
 
   useEffect(() => {
     if (user && mode === "edit") {
-      reset(user);
+      reset({
+        name: user.name,
+        email: user.email,
+        password: "",
+        phoneNumber: user.phoneNumber || "",
+        role: (user.roles && user.roles.length > 0 ? user.roles[0] : user.role) as any,
+        hospitalId: user.hospitalId ? String(user.hospitalId) : "",
+      });
     } else {
       reset({
-        id: `USR-${Date.now()}`,
         name: "",
         email: "",
         password: "",
-        roleId: "HOSPITAL_USER",
+        phoneNumber: "",
+        role: undefined,
+        hospitalId: "",
       });
     }
   }, [user, mode, reset]);
 
   const submitHandler = handleSubmit((data) => {
-    onSubmit(data as User);
+    const userData: User = {
+      ...(mode === "edit" && user?.id ? { id: user.id } : {}),
+      name: data.name,
+      email: data.email,
+      phoneNumber: data.phoneNumber,
+      role: data.role as any,
+      ...(data.password ? { password: data.password } : {}),
+      ...(data.hospitalId ? { hospitalId: Number(data.hospitalId) } : {}),
+    };
+    onSubmit(userData);
   });
 
   return {
     register,
     submitHandler,
     errors,
+    reset,
+    watch,
   };
 }

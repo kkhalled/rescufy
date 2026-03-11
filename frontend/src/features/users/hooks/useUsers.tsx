@@ -1,58 +1,111 @@
-import { useState, useMemo } from "react";
-import { usersData } from "../data/users.data";
-import type { User } from "../data/users.data";
-import usersFilter from "../utils/users.filter";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import type { User } from "../types/users.types";
+import { useAddUser } from "./useAddUser";
+import { useGetUsers } from "./useGetUsers";
+import { useUpdateUser } from "./useUpdateUser";
+import { useDeleteUser } from "./useDeleteUser";
+import { useAssignHospital } from "./useAssignHospital";
 
 export function useUsers() {
-  const [users, setUsers] = useState<User[]>(usersData);
   const [search, setSearch] = useState("");
-  const [roleId, setRoleId] = useState("all");
+  const [role, setRole] = useState("all");
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [selectedUser, setSelectedUser] = useState<User | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const filteredUsers = useMemo(() => {
-    return usersFilter(users, { search, roleId });
-  }, [users, search, roleId]);
+  const { addUser, isLoading: isAddLoading } = useAddUser();
+  const { users, isLoading: isFetchLoading, fetchUsers } = useGetUsers();
+  const { updateUser, isLoading: isUpdateLoading } = useUpdateUser();
+  const { deleteUser, isLoading: isDeleteLoading } = useDeleteUser();
+  const { assignHospital, isLoading: isAssignLoading } = useAssignHospital();
 
-  const openAddModal = () => {
+  // Fetch users on component mount and when role filter changes
+  useEffect(() => {
+    fetchUsers(role);
+  }, [role]);
+
+  // Apply search filter on the fetched users (role filtering is handled by API)
+  const filteredUsers = useMemo(() => {
+    if (!search) return users;
+    
+    const lowerSearch = search.toLowerCase();
+    return users.filter((user) =>
+      user.name.toLowerCase().includes(lowerSearch) ||
+      user.email.toLowerCase().includes(lowerSearch) ||
+      user.phoneNumber?.toLowerCase().includes(lowerSearch) ||
+      user.id?.toLowerCase().includes(lowerSearch)
+    );
+  }, [users, search]);
+
+  const openAddModal = useCallback(() => {
     setSelectedUser(undefined);
     setModalMode("add");
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const openEditModal = (user: User) => {
+  const openEditModal = useCallback((user: User) => {
     setSelectedUser(user);
     setModalMode("edit");
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    setSelectedUser(undefined);
+  }, []);
 
-  const submitUser = (user: User) => {
-    if (modalMode === "add") {
-      setUsers((prev) => [...prev, user]);
-      setIsModalOpen(false);
-    } else {
-      setUsers((prev) =>
-        prev.map((u) => (u.id === user.id ? user : u))
-      );
-      setIsModalOpen(false);
-    }
-  };
+  const submitUser = useCallback(
+    async (user: User) => {
+      if (modalMode === "add") {
+        const createdUser = await addUser(user);
+        if (createdUser) {
+          // If the user is a HospitalAdmin and has a hospitalId, assign the hospital
+          if (user.role === "HospitalAdmin" && user.hospitalId && createdUser.id) {
+            await assignHospital(createdUser.id, user.hospitalId);
+          }
+          setIsModalOpen(false);
+          setSelectedUser(undefined);
+          await fetchUsers(role);
+        }
+      } else {
+        if (user.id) {
+          const updatedUser = await updateUser(user.id, user);
+          if (updatedUser) {
+            setIsModalOpen(false);
+            setSelectedUser(undefined);
+            await fetchUsers(role);
+          }
+        }
+      }
+    },
+    [modalMode, addUser, updateUser, assignHospital, fetchUsers, role],
+  );
+
+  const handleDeleteUser = useCallback(
+    async (userId: string, userName?: string) => {
+      const success = await deleteUser(userId, userName);
+      if (success) {
+        await fetchUsers(role);
+      }
+      return success;
+    },
+    [deleteUser, fetchUsers, role],
+  );
 
   return {
     users: filteredUsers,
     search,
-    roleId,
+    role,
     setSearch,
-    setRoleId,
+    setRole,
     isModalOpen,
     modalMode,
     selectedUser,
+    isLoading: isAddLoading || isFetchLoading || isUpdateLoading || isDeleteLoading || isAssignLoading,
     openAddModal,
     openEditModal,
     closeModal,
     submitUser,
+    handleDeleteUser,
   };
 }

@@ -19,8 +19,7 @@ export const useAuthUser = () => {
 
   const getUserName = () => user?.UserName;
 
-  const getUserId = () =>
-    user?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+  const getUserId = () =>user?.id; /* Assuming `id` is the claim for user ID in the token */
 
   const isAdmin = () => user?.Role === "admin";
 

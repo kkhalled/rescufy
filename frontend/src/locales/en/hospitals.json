@@ -21,10 +21,14 @@
         "namePlaceholder": "Enter hospital name",
         "address": "Address",
         "addressPlaceholder": "Enter full address",
-        "phone": "Phone Number",
+        "phone": "Contact Phone",
         "phonePlaceholder": "+1 (555) 123-4567",
         "email": "Email",
         "emailPlaceholder": "hospital@example.com",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "bedCapacity": "Bed Capacity",
+        "availableBeds": "Available Beds",
         "capacity": "Bed Capacity",
         "capacityPlaceholder": "Enter bed capacity",
         "totalBeds": "Total Beds",
@@ -63,5 +67,30 @@
     "empty": {
         "title": "No hospitals found",
         "description": "Start by adding a new hospital."
+    },
+    "hospitalProfile": {
+        "title": "Hospital Profile",
+        "subtitle": "Manage your hospital information and bed capacity",
+        "availableBeds": "Available Beds",
+        "availableBedsPlaceholder": "Enter available beds",
+        "occupancy": "Occupancy Rate",
+        "saveChanges": "Save Changes",
+        "cancel": "Cancel"
+    },
+    "api": {
+        "fetchError": "Failed to fetch hospitals",
+        "addSuccess": "Hospital \"{{name}}\" added successfully",
+        "addError": "Failed to add hospital",
+        "updateSuccess": "Hospital \"{{name}}\" updated successfully",
+        "updateError": "Failed to update hospital",
+        "deleteSuccess": "Hospital \"{{name}}\" deleted successfully",
+        "deleteSuccessGeneric": "Hospital deleted successfully",
+        "deleteError": "Failed to delete hospital \"{{name}}\"",
+        "deleteErrorGeneric": "Failed to delete hospital",
+        "deleteConflict": "Cannot delete hospital with active references",
+        "notFound": "Hospital not found",
+        "badRequest": "Invalid hospital data",
+        "alreadyExists": "A hospital with this information already exists",
+        "forbidden": "You don't have permission to perform this action"
     }
 }

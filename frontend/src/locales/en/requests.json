@@ -5,6 +5,12 @@
     },
     "title": "Requests",
     "subtitle": "Manage emergency requests",
+    "time": {
+        "justNow": "Just now",
+        "minsAgo": "{{count}} min ago",
+        "hoursAgo": "{{count}}h ago",
+        "daysAgo": "{{count}}d ago"
+    },
     "table": {
         "id": "ID",
         "userName": "User Name",
@@ -19,7 +25,17 @@
         "all": "All",
         "status": "Status",
         "priority": "Priority",
-        "searchPlaceholder": "Search by name  or request id "
+        "searchPlaceholder": "Search by name or request ID",
+        "advancedFilters": "Filters",
+        "search": "Search",
+        "reset": "Reset Filters",
+        "userId": "User ID",
+        "userIdPlaceholder": "Enter user ID",
+        "caseType": "Case Type",
+        "selfCase": "Self Case",
+        "forOthers": "For Others",
+        "startDate": "Start Date",
+        "endDate": "End Date"
     },
     "status": {
         "all": "All Statuses",
@@ -104,6 +120,11 @@
     "empty": {
         "title": "No requests found",
         "description": "There are no requests matching your criteria."
+    },
+    "fetchRequests": {
+        "error": "Failed to fetch requests from server"
+    },
+    "hospital": {
+        "requestsSubtitle": "View and track requests assigned to your hospital"
     }
-    
 }

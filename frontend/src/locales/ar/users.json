@@ -6,16 +6,84 @@
     "title": "المستخدمون",
     "subtitle": "إدارة مستخدمي النظام",
     "addUser": "إضافة مستخدم",
+    "addUserSuccess": "تم إنشاء المستخدم {{name}} بنجاح",
+    "addUserError": "فشل في إنشاء المستخدم. حاول مرة أخرى.",
+    "search": "بحث عن مستخدمين...",
+    "roles": {
+        "all": "جميع الأدوار",
+        "System SuperAdmin": "مدير عام",
+        "Admin": "مدير النظام",
+        "HospitalAdmin": "مدير المستشفى",
+        "Paramedic": "المسعف",
+        "AmbulanceDriver": "سائق الإسعاف"
+    },
+    "form": {
+        "name": "الاسم",
+        "namePlaceholder": "أدخل الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "emailPlaceholder": "أدخل البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "passwordPlaceholder": "أدخل كلمة المرور",
+        "phone": "رقم الهاتف",
+        "phonePlaceholder": "أدخل رقم الهاتف",
+        "role": "الدور",
+        "selectRole": "اختر دوراً",
+        "hospital": "المستشفى",
+        "selectHospital": "اختر مستشفى",
+        "loadingHospitals": "جاري تحميل المستشفيات..."
+    },
+    "actions": {
+        "add": "إضافة مستخدم",
+        "edit": "تعديل مستخدم",
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "delete": "حذف"
+    },
+   
+    "addUser": {
+        "success": "تم إنشاء المستخدم {{name}} بنجاح",
+        "badRequest": "بيانات مستخدم غير صحيحة",
+        "emailExists": "يوجد مستخدم بهذا البريد الإلكتروني مسبقاً",
+        "genericError": "فشل في إنشاء المستخدم"
+    },
+    "updateUser": {
+        "success": "تم تحديث المستخدم {{name}} بنجاح",
+        "badRequest": "بيانات مستخدم غير صحيحة",
+        "userNotFound": "لم يتم العثور على المستخدم",
+        "emailExists": "يوجد مستخدم بهذا البريد الإلكتروني مسبقاً",
+        "genericError": "فشل في تحديث المستخدم"
+    },
+    "deleteUser": {
+        "success": "تم حذف المستخدم {{name}} بنجاح",
+        "successGeneric": "تم حذف المستخدم بنجاح",
+        "userNotFound": "لم يتم العثور على المستخدم",
+        "forbidden": "ليس لديك صلاحية لحذف هذا المستخدم",
+        "conflict": "لا يمكن حذف المستخدم - المستخدم له تبعيات",
+        "genericError": "فشل في حذف المستخدم {{name}}",
+        "genericErrorGeneric": "فشل في حذف المستخدم"
+    },
+    "editUser": {
+        "success": "تم تحديث المستخدم {{name}} بنجاح",
+        "genericError": "فشل في تحديث المستخدم"
+    },
+    "fetchUsers": {
+        "error": "فشل في جلب المستخدمين من الخادم"
+    },
+    "assignHospital": {
+        "success": "تم تعيين المستشفى بنجاح",
+        "notFound": "لم يتم العثور على المستخدم أو المستشفى",
+        "badRequest": "بيانات تعيين المستشفى غير صحيحة",
+        "genericError": "فشل في تعيين المستشفى"
+    },
     "table": {
         "name": "الاسم",
         "email": "البريد الإلكتروني",
         "phone": "الهاتف",
         "role": "الدور",
-        "status": "الحالة",
-        "lastLogin": "آخر تسجيل دخول",
-        "actions": "الإجراءات"
+        "actions": "الإجراءات",
+        "noUsers": "لم يتم العثور على مستخدمين"
     },
-    "form": {
+    "formExtended": {
         "name": "الاسم الكامل",
         "namePlaceholder": "أدخل الاسم الكامل",
         "email": "البريد الإلكتروني",
@@ -29,18 +97,10 @@
         "confirmPassword": "تأكيد كلمة المرور",
         "confirmPasswordPlaceholder": "أكد كلمة المرور"
     },
-    "roles": {
-        "all": "جميع الأدوار",
-        "admin": "مدير",
-        "hospital": "موظف مستشفى",
-        "hospitalUser": "مستخدم مستشفى",
-        "ambulance": "سائق إسعاف",
-        "ambulanceUser": "مستخدم إسعاف",
-        "dispatcher": "منسق"
-    },
+    
     "row": {
         "password": "كلمة المرور:",
-        "editTooltip": "تعديل المستخدم",
+        "editTooltip": " تعديل المستخدم",
         "deleteTooltip": "حذف المستخدم"
     },
     "filters": {

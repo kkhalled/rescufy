@@ -5,6 +5,12 @@
     },
     "title": "الطلبات",
     "subtitle": "إدارة طلبات الطوارئ",
+    "time": {
+        "justNow": "الآن",
+        "minsAgo": "منذ {{count}} د",
+        "hoursAgo": "منذ {{count}} س",
+        "daysAgo": "منذ {{count}} ي"
+    },
     "table": {
         "id": "المعرّف",
         "userName": "اسم المستخدم",
@@ -19,7 +25,17 @@
         "all": "الكل",
         "status": "الحالة",
         "priority": "الأولوية",
-        "searchPlaceholder": "البحث بالاسم أو رقم الطلب"
+        "searchPlaceholder": "البحث بالاسم أو رقم الطلب",
+        "advancedFilters": "التصفية",
+        "search": "بحث",
+        "reset": "إعادة تعيين",
+        "userId": "معرّف المستخدم",
+        "userIdPlaceholder": "أدخل معرّف المستخدم",
+        "caseType": "نوع الحالة",
+        "selfCase": "حالة شخصية",
+        "forOthers": "لشخص آخر",
+        "startDate": "تاريخ البداية",
+        "endDate": "تاريخ النهاية"
     },
     "status": {
         "all": "جميع الحالات",
@@ -104,5 +120,11 @@
     "empty": {
         "title": "لم يتم العثور على طلبات",
         "description": "لا توجد طلبات تطابق معاييرك."
+    },
+    "fetchRequests": {
+        "error": "فشل في جلب الطلبات من الخادم"
+    },
+    "hospital": {
+        "requestsSubtitle": "عرض وتتبع الطلبات المُسندة لمستشفاك"
     }
 }

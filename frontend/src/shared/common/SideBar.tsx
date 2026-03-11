@@ -24,8 +24,8 @@ const navItemsConfig = [
   { key: "hospitals", icon: Hospital, path: "/admin/hospitals_management" },
   { key: "ambulances", icon: Ambulance, path: "/admin/ambulances_management" },
   { key: "users", icon: UsersIcon, path: "/admin/users" },
-  { key: "audit", icon: FileText, path: "/admin/audits" },
   { key: "settings", icon: Settings, path: "/admin/settings" },
+  
 ];
 
 export default function SideBar({ isOpen, onClose }: SideBarProps) {

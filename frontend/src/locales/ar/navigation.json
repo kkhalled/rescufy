@@ -18,5 +18,11 @@
     "breadcrumbs": {
         "home": "الرئيسية",
         "dashboard": "لوحة التحكم"
+    },
+    "hospitalSidebar": {
+        "dashboard": "لوحة التحكم",
+        "requests": "الطلبات",
+        "hospitalProfile": "مستشفاي",
+        "settings": "الإعدادات"
     }
 }

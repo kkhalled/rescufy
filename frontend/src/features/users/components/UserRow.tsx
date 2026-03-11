@@ -6,8 +6,7 @@ import {
   faEye,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 interface UserRowProps {
@@ -15,8 +14,10 @@ interface UserRowProps {
   name: string;
   email: string;
   password: string;
-  roleId: string;
-  onEdit?: () => void;
+  role: string;
+  phoneNumber?: string | null;
+  isBanned?: boolean;
+  onEdit: () => void;
   onDelete?: () => void;
 }
 
@@ -25,68 +26,81 @@ export function UserRow({
   name,
   email,
   password,
-  roleId,
+  role,
+  phoneNumber,
+  isBanned,
   onEdit,
   onDelete,
 }: UserRowProps) {
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation(['users', 'common']);
 
-  const roleColor: Record<typeof roleId, string> = {
-    ADMIN: "bg-purple-500",
-    HOSPITAL_USER: "bg-blue-500",
-    AMBULANCE_USER: "bg-green-500",
+  // Generate initials from name
+  const initials = useMemo(() => {
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    return name.slice(0, 2).toUpperCase();
+  }, [name]);
+
+  // Updated role mappings to match current API values
+  const roleColor: Record<string, string> = {
+    SuperAdmin: "bg-red-500",
+    Admin: "bg-purple-500", 
+    HospitalAdmin: "bg-blue-500",
+    Paramedic: "bg-green-500",
+    AmbulanceDriver: "bg-emerald-500",
   };
 
-  const roleLabel: Record<typeof roleId, string> = {
-    ADMIN: t('users:roles.admin'),
-    HOSPITAL_USER: t('users:roles.hospitalUser'),
-    AMBULANCE_USER: t('users:roles.ambulanceUser'),
+  const roleLabel: Record<string, string> = {
+    SuperAdmin: t('users:roles.SuperAdmin'),
+    Admin: t('users:roles.Admin'),
+    HospitalAdmin: t('users:roles.HospitalAdmin'), 
+    Paramedic: t('users:roles.Paramedic'),
+    AmbulanceDriver: t('users:roles.AmbulanceDriver') || 'Ambulance Driver',
   };
 
-  const roleBgColor: Record<typeof roleId, string> = {
-    ADMIN: "bg-purple-500/15 dark:bg-purple-500/25 text-purple-600 dark:text-purple-400",
-    HOSPITAL_USER: "bg-blue-500/15 dark:bg-blue-500/25 text-blue-600 dark:text-blue-400",
-    AMBULANCE_USER: "bg-green-500/15 dark:bg-green-500/25 text-green-600 dark:text-green-400",
+  const roleBgColor: Record<string, string> = {
+    SuperAdmin: "bg-red-500/15 dark:bg-red-500/25 text-red-600 dark:text-red-400",
+    Admin: "bg-purple-500/15 dark:bg-purple-500/25 text-purple-600 dark:text-purple-400",
+    HospitalAdmin: "bg-blue-500/15 dark:bg-blue-500/25 text-blue-600 dark:text-blue-400",
+    Paramedic: "bg-green-500/15 dark:bg-green-500/25 text-green-600 dark:text-green-400",
+    AmbulanceDriver: "bg-emerald-500/15 dark:bg-emerald-500/25 text-emerald-600 dark:text-emerald-400",
   };
 
   return (
     <div className={`relative flex flex-col md:flex-row md:items-center gap-3 md:gap-4 px-4 md:px-6 py-4 md:py-4 bg-card border-b border-border hover:bg-surface-muted/50 transition-colors`}>
       {/* Indicator Bar */}
-      <div className={`absolute left-0 rtl:left-auto rtl:right-0 top-0 h-1 md:h-full w-full md:w-1 ${roleColor[roleId]} md:rounded-r rtl:md:rounded-r-none rtl:md:rounded-l rounded-t`} />
+      <div className={`absolute left-0 rtl:left-auto rtl:right-0 top-0 h-1 md:h-full w-full md:w-1 ${roleColor[role] || 'bg-gray-500'} md:rounded-r rtl:md:rounded-r-none rtl:md:rounded-l rounded-t`} />
 
       {/* Top Row - Mobile */}
       <div className="md:hidden flex items-start justify-between gap-3 pt-1 w-full">
-        {/* User ID & Name */}
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-semibold text-heading dark:text-heading truncate">
-            {id}
-          </p>
-          <p className="text-sm font-medium text-heading mt-1">
-            {name}
-          </p>
+        {/* User Avatar & Name */}
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <div className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white ${roleColor[role] || 'bg-gray-500'}`}>
+            {initials}
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-heading truncate">{name}</p>
+            <p className="text-[10px] text-muted font-mono truncate">{id}</p>
+          </div>
         </div>
         {/* Role Badge Mobile */}
         <span
-          className={`inline-flex px-2 py-1 rounded-lg text-xs font-semibold whitespace-nowrap ${roleBgColor[roleId]}`}
+          className={`inline-flex px-2 py-1 rounded-lg text-xs font-semibold whitespace-nowrap ${roleBgColor[role] || 'bg-gray-500/15 text-gray-600'}`}
         >
-          {roleLabel[roleId]}
+          {roleLabel[role] || role}
         </span>
       </div>
 
-      {/* Desktop Layout */}
-      <div className="hidden md:block md:w-32">
-        <p className="text-sm font-semibold text-heading">
-          {id}
-        </p>
-      </div>
-
-      {/* User Name */}
-      <div className="hidden md:flex md:items-center md:gap-2 md:w-48">
-        <FontAwesomeIcon icon={faUser} className="w-4 h-4 text-muted shrink-0" />
-        <p className="text-sm font-medium text-heading truncate">
-          {name}
-        </p>
+      {/* Desktop: Avatar + Name */}
+      <div className="hidden md:flex md:items-center md:gap-3 md:w-64">
+        <div className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white ${roleColor[role] || 'bg-gray-500'}`}>
+          {initials}
+        </div>
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-heading truncate">{name}</p>
+          <p className="text-[11px] text-muted font-mono truncate">{(id).split('-')[0]}</p>
+        </div>
       </div>
 
       {/* Email */}
@@ -114,30 +128,30 @@ export function UserRow({
       </div>
 
       {/* Desktop Password */}
-      <div className="hidden md:flex     md:items-center md:gap-3 md:w-30">
-        <span className="text-sm mt-1 text-body font-mono">
-          {showPassword ? password : "•".repeat(8)}
+      <div className="hidden md:flex md:items-center md:gap-3 md:w-32">
+        <span className="text-sm text-body font-mono">
+          {showPassword ? (password || '••••••••') : "••••••••"}
         </span>
         <button
           onClick={() => setShowPassword(!showPassword)}
           className="text-muted hover:text-heading transition-colors cursor-pointer p-1 shrink-0"
-          aria-label={showPassword ? t('common:aria.hidePassword') : t('common:aria.showPassword')}
+          aria-label={showPassword ? 'Hide password' : 'Show password'}
         >
-          <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="text-xs" />
+          <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="w-3 h-3" />
         </button>
       </div>
 
       {/* Desktop Role Badge */}
       <div className="hidden md:flex md:items-center md:w-40 md:justify-center">
         <span
-          className={`inline-flex px-2 py-1 rounded-lg text-xs font-semibold whitespace-nowrap ${roleBgColor[roleId]}`}
+          className={`inline-flex px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap ${roleBgColor[role] || 'bg-gray-500/15 text-gray-600'}`}
         >
-          {roleLabel[roleId]}
+          {roleLabel[role] || role || 'No Role'}
         </span>
       </div>
 
       {/* Action Buttons Container */}
-      <div className="flex items-center gap-2 justify-end md:gap-2 md:w-20">
+      <div className="flex items-center gap-2 justify-end md:gap-2 md:w-22">
 
         {/* Edit Button */}
         <button

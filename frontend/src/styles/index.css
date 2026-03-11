@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 @plugin "tailwindcss-animate";
 /* @import "tw-animate-css"; */
 
@@ -206,4 +205,111 @@ html {
 
 body {
   transition: font-family 0.2s ease;
+}
+::selection {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+/* ═══════════ Page Entrance Animation ═══════════ */
+
+@keyframes page-enter {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.page-enter {
+  animation: page-enter 0.35s ease-out both;
+}
+
+/* ═══════════ Row Stagger Animation ═══════════ */
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out;
+}
+
+/* ═══════════ Login Page Animations ═══════════ */
+
+@keyframes login-grid-drift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(48px, 48px); }
+}
+
+@keyframes login-pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(0.95); opacity: 0.5; }
+}
+
+@keyframes login-fade-up {
+  0% { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes login-scanner {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.login-grid-animated {
+  animation: login-grid-drift 12s linear infinite;
+}
+
+.login-fade-up {
+  animation: login-fade-up 0.6s ease-out both;
+}
+
+.login-fade-up-delay-1 {
+  animation: login-fade-up 0.6s ease-out 0.1s both;
+}
+
+.login-fade-up-delay-2 {
+  animation: login-fade-up 0.6s ease-out 0.2s both;
+}
+
+.login-fade-up-delay-3 {
+  animation: login-fade-up 0.6s ease-out 0.35s both;
+}
+
+/* Custom focus ring for login inputs */
+.login-input:focus {
+  border-color: rgba(101, 77, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(101, 77, 255, 0.1), 0 0 20px rgba(101, 77, 255, 0.05);
+}
+
+.login-input::placeholder {
+  color: rgba(100, 116, 139, 0.5);
+}
+
+/* Button shimmer effect */
+@keyframes login-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.login-btn-shimmer {
+  background-size: 200% 100%;
+  background-image: linear-gradient(
+    110deg,
+    var(--brand-primary) 0%,
+    var(--brand-primary) 40%,
+    rgba(255,255,255,0.12) 50%,
+    var(--brand-primary) 60%,
+    var(--brand-primary) 100%
+  );
+}
+
+.login-btn-shimmer:hover:not(:disabled) {
+  animation: login-shimmer 2s ease-in-out infinite;
+}
+button{
+  @apply transition-colors duration-200 ease-in-out;
+  cursor: pointer;
 }

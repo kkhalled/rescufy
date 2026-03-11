@@ -4,6 +4,7 @@ import {
   faTrash,
   faLocationDot,
   faPhone,
+  faBed,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHospital } from "@fortawesome/free-regular-svg-icons";
 import { useTranslation } from "react-i18next";
@@ -11,11 +12,12 @@ import { useTranslation } from "react-i18next";
 interface HospitalCardProps {
   id: string;
   name: string;
-  email: string;
-  status: "NORMAL" | "BUSY" | "CRITICAL" | "FULL";
-  usedBeds: number;
-  totalBeds: number;
   address: string;
+  contactPhone: string;
+  latitude?: number;
+  longitude?: number;
+  availableBeds: number;
+  bedCapacity: number;
   onCall?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
@@ -24,18 +26,26 @@ interface HospitalCardProps {
 export function HospitalCard({
   id,
   name,
-  email,
-  status,
-  usedBeds,
-  totalBeds,
   address,
+  contactPhone,
+  availableBeds,
+  bedCapacity,
   onCall,
   onEdit,
   onDelete,
 }: HospitalCardProps) {
   const { t } = useTranslation('hospitals');
-  const percent = Math.round((usedBeds / totalBeds) * 100);
-  const freeBeds = totalBeds - usedBeds;
+  const usedBeds = bedCapacity - availableBeds;
+  const percent = bedCapacity > 0 ? Math.round((usedBeds / bedCapacity) * 100) : 0;
+
+  // Derive status from occupancy for display
+  const getStatus = () => {
+    if (availableBeds === 0) return "FULL" as const;
+    if (percent >= 90) return "CRITICAL" as const;
+    if (percent >= 70) return "BUSY" as const;
+    return "NORMAL" as const;
+  };
+  const status = getStatus();
 
   const statusColor: Record<typeof status, string> = {
     NORMAL: "text-emerald-600 dark:text-emerald-400",
@@ -119,8 +129,9 @@ export function HospitalCard({
               </div>
 
               <div className="flex items-center gap-2 mt-0.5 text-xs text-neutral-600 dark:text-neutral-400">
-                <span className="truncate" title={email}>
-                  {email}
+                <FontAwesomeIcon icon={faPhone} className="text-[10px]" />
+                <span className="truncate" title={contactPhone}>
+                  {contactPhone}
                 </span>
               </div>
             </div>
@@ -181,7 +192,7 @@ export function HospitalCard({
             {t('card.capacity')}
           </span>
           <span className="text-xs font-bold text-neutral-900 dark:text-neutral-100">
-            {usedBeds}/{totalBeds}
+            {usedBeds}/{bedCapacity}
           </span>
         </div>
 
@@ -208,7 +219,7 @@ export function HospitalCard({
               {t('card.free')}
             </div>
             <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
-              {freeBeds}
+              {availableBeds}
             </div>
           </div>
           <div className="text-center">

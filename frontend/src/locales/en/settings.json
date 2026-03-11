@@ -1,0 +1,47 @@
+{
+  "title": "Settings",
+  "subtitle": "Manage your account settings and security preferences",
+  "profile": {
+    "header": "Profile Information",
+    "description": "Manage your personal information and account details",
+    "fullName": "Full Name",
+    "userName": "Username",
+    "email": "Email Address",
+    "active": "Active",
+    "lastLogin": "Last Login",
+    "accountCreated": "Account Created",
+    "emailStatus": "Email Status",
+    "verified": "Verified",
+    "saveChanges": "Save Changes",
+    "updating": "Updating...",
+    "cancel": "Cancel"
+  },
+  "password": {
+    "header": "Change Password",
+    "description": "Ensure your account is using a strong password to stay secure",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "requirements": "Password Requirements",
+    "requirementList": [
+      "At least 8 characters long",
+      "Contains uppercase and lowercase letters",
+      "Contains at least one number",
+      "Contains at least one special character"
+    ],
+    "updatePassword": "Update Password",
+    "cancel": "Cancel"
+  },
+  "security": {
+    "header": "Account Security",
+    "verified": "Account Verified",
+    "verifiedDesc": "Your email is verified and secure",
+    "lastLogin": "Last Login",
+    "accountCreated": "Account Created",
+    "tip": "Security Tip: Enable two-factor authentication and regularly update your password to keep your account secure."
+  },
+  "tabs": {
+    "profile": "Profile Information",
+    "password": "Change Password"
+  }
+}

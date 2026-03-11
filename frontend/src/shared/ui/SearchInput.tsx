@@ -12,7 +12,7 @@ export default function SearchInput({
   onSearchChange,
 }: SearchInputProps) {
   return (
-    <div className="flex bg-background-second px-3 shadow border border-gray-200 dark:border-gray-800 rounded-md items-center">
+    <div className="flex bg-background-second px-3  shadow border border-gray-200 dark:border-gray-800  focus-within:ring-2 focus-within:ring-primary/50 rounded-md items-center">
       <Search size={16} className="text-gray-500" />
 
           <input

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-type RequestStatus = "pending" | "assigned" | "enRoute" | "completed";
+type RequestStatus = "pending" | "assigned" | "enRoute" | "completed" | "cancelled";
 type RequestPriority = "critical" | "high" | "medium" | "low";
 
 interface StatusBadgeProps {
@@ -13,6 +13,7 @@ const statusStyles: Record<RequestStatus, string> = {
   assigned: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
   enRoute: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
   completed: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+  cancelled: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
 };
 
 const priorityStyles: Record<RequestPriority, string> = {
@@ -29,6 +30,7 @@ export function StatusBadge({ status = "pending", priority }: StatusBadgeProps) 
     assigned: t('status.assigned'),
     enRoute: t('status.enRoute'),
     completed: t('status.completed'),
+    cancelled: t('status.cancelled'),
   };
 
   const priorityLabels: Record<RequestPriority, string> = {

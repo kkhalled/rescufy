@@ -16,10 +16,12 @@ export default function AllHospitals() {
     isModalOpen,
     modalMode,
     selectedHospital,
+    isLoading,
     openAddModal,
     openEditModal,
     closeModal,
     submitHospital,
+    handleDeleteHospital,
   } = useHospitals();
 
   return (
@@ -35,13 +37,22 @@ export default function AllHospitals() {
       </div>
 
       <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        {hospitals.map((hospital) => (
-          <HospitalCard
-            key={hospital.id}
-            {...hospital}
-            onEdit={() => openEditModal(hospital)}
-          />
-        ))}
+        {hospitals.length > 0 ? (
+          hospitals.map((hospital) => (
+            <HospitalCard
+              key={hospital.id}
+              {...hospital}
+              onEdit={() => openEditModal(hospital)}
+              onDelete={() => handleDeleteHospital(hospital.id, hospital.name)}
+            />
+          ))
+        ) : (
+          <div className="col-span-full flex items-center justify-center py-12">
+            <p className="text-muted text-sm">
+              {isLoading ? t('empty.title') : t('empty.title')}
+            </p>
+          </div>
+        )}
       </main>
 
       <button
@@ -57,6 +68,7 @@ export default function AllHospitals() {
         onSubmit={submitHospital}
         hospital={selectedHospital}
         mode={modalMode}
+        isLoading={isLoading}
       />
     </>
   );

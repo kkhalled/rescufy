@@ -13,7 +13,24 @@
         "successRate": "معدل النجاح",
         "activeSessions": "الجلسات النشطة",
         "totalRevenue": "إجمالي الإيرادات",
-        "pendingTasks": "المهام المعلقة"
+        "pendingTasks": "المهام المعلقة",
+        "activeEmergencyRequests": "طلبات الطوارئ النشطة",
+        "ongoingCases": "الحالات الجارية",
+        "newInLastTenMinutes": "جديد في آخر 10 دقائق",
+        "resolvedRecently": "تم حلها مؤخراً",
+        "criticalCases": "الحالات الحرجة",
+        "severityHighCritical": "شدة عالية/حرجة",
+        "avgResponseTime": "متوسط الاستجابة: {{time}}",
+        "availableAmbulances": "سيارات الإسعاف المتاحة",
+        "fleetBusy": "{{percent}}% من الأسطول مشغول",
+        "available": "متاح",
+        "lowAvailabilityWarning": "توفر منخفض",
+        "hospitalCapacity": "سعة المستشفى",
+        "bedsAvailable": "الأسرة المتاحة",
+        "occupancyRate": "نسبة الإشغال {{percent}}%",
+        "highOccupancyWarning": "إشغال عالي",
+        "criticalCapacity": "سعة حرجة",
+        "live": "مباشر"
     },
     "charts": {
         "requestsOverview": "نظرة عامة على الطلبات",
@@ -40,5 +57,13 @@
         "addHospital": "إضافة مستشفى",
         "addAmbulance": "إضافة سيارة إسعاف",
         "viewReports": "عرض التقارير"
+    },
+    "hospital": {
+        "assignedRequests": "الطلبات المُسندة",
+        "newAssigned": "تم إسنادها حديثاً",
+        "completedRecently": "مكتملة مؤخراً",
+        "availableBeds": "الأسرّة المتاحة",
+        "activeCases": "الحالات النشطة",
+        "inTransit": "{{count}} مرضى في الطريق"
     }
 }
