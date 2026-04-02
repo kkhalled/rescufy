@@ -19,13 +19,12 @@ export const useAuthUser = () => {
 
   const getUserName = () => user?.UserName;
 
-  const getUserId = () =>user?.id; /* Assuming `id` is the claim for user ID in the token */
+  const getUserId = () =>
+    user?.id; /* Assuming `id` is the claim for user ID in the token */
 
-  const isAdmin = () => user?.Role === "admin";
+  const isAdmin = () => user?.Role === "SuperAdmin";
 
-  const isHospitalUser = () => user?.Role === "hospital";
-
-  const isAmbulanceUser = () => user?.Role === "ambulance";
+  const isHospitalUser = () => user?.Role === "hospitaladmin";
 
   return {
     user,
@@ -38,6 +37,5 @@ export const useAuthUser = () => {
     getUserId,
     isAdmin,
     isHospitalUser,
-    isAmbulanceUser,
   };
 };

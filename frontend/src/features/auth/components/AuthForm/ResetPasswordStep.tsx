@@ -7,11 +7,13 @@ import type { FormikProps } from "formik";
 
 interface ResetPasswordStepProps {
   formik: FormikProps<{ password: string; confirmPassword: string }>;
+  email: string;
   isLoading: boolean;
 }
 
 export default function ResetPasswordStep({
   formik,
+  email,
   isLoading,
 }: ResetPasswordStepProps) {
   const { t } = useTranslation("auth");
@@ -35,6 +37,26 @@ export default function ResetPasswordStep({
 
       {/* ── Form fields ── */}
       <div className="px-7 pt-5 pb-3 space-y-4">
+        {/* email */}
+        <div>
+          <label htmlFor="fp-email" className="block text-[12px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            {t("auth:forgotPassword.emailLabel")}
+          </label>
+          <div className="relative group">
+            <div className="absolute inset-y-0 ltr:left-0 rtl:right-0 ltr:pl-3.5 rtl:pr-3.5 flex items-center pointer-events-none">
+              <FontAwesomeIcon icon={faLock} className="w-3.5 h-3.5 text-slate-600 group-focus-within:text-primary transition-colors duration-200" />
+            </div>
+            <input
+              type="email"
+              id="fp-email"
+              value={email}
+              readOnly
+              placeholder={t("auth:forgotPassword.emailPlaceholder")}
+              className="login-input w-full ltr:pl-10 rtl:pr-10 ltr:pr-11 rtl:pl-11 py-3 rounded-xl text-sm text-slate-200 bg-white/3 border border-white/7 transition-all duration-200 outline-none"
+            />
+          </div>
+        </div>
+
         {/* New Password */}
         <div>
           <label htmlFor="fp-password" className="block text-[12px] font-semibold text-slate-400 uppercase tracking-wider mb-2">

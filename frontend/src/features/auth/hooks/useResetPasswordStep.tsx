@@ -16,9 +16,14 @@ export default function useResetPasswordStep(email: string, token: string) {
 
   const toastPosition = isRTL ? "top-left" : "top-right";
 
-  async function handleResetPassword(values: { password: string; confirmPassword: string }) {
+  async function handleResetPassword(values: {
+    password: string;
+    confirmPassword: string;
+  }) {
     setIsLoading(true);
     try {
+      console.log(email,token ,values);
+      
       await axios.post(
         getApiUrl(API_CONFIG.ENDPOINTS.AUTH.RESET_PASSWORD),
         {
@@ -30,7 +35,7 @@ export default function useResetPasswordStep(email: string, token: string) {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       toast.success(t("auth:forgotPassword.passwordReset"), {
@@ -69,7 +74,7 @@ export default function useResetPasswordStep(email: string, token: string) {
     } else {
       toast.error(
         error.response?.data?.message || t("auth:forgotPassword.genericError"),
-        { position: toastPosition }
+        { position: toastPosition },
       );
     }
   }
