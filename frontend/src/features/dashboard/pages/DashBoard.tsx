@@ -1,4 +1,3 @@
-import { usersData } from "@/features/users/data/users.data";
 import DashBoardContent from "../components/DashBoardContent";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/app/provider/AuthContext";

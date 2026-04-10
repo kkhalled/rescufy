@@ -50,7 +50,7 @@ export default function NotFound() {
             </p>
 
             {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Button
                 onClick={handleNavigateHome}
                 className="bg-primary hover:bg-primary/90 text-heading font-medium transition-all duration-300 h-10 px-6 text-sm"
@@ -60,7 +60,7 @@ export default function NotFound() {
               <Button
                 onClick={() => navigate(-1)}
                 variant="outline"
-              className="border-border-default dark:border-border-default/50 text-text-heading dark:text-heading hover:bg-surface-muted dark:hover:bg- font-medium h-10 px-6 text-sm"
+                className="border-border-default dark:border-border-default/50 text-text-heading dark:text-heading hover:bg-surface-muted dark:hover:bg- font-medium h-10 px-6 text-sm"
               >
                 {t('pages.notFound.goBack')}
               </Button>

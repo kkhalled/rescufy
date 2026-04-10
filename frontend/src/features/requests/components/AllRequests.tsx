@@ -100,7 +100,10 @@ export default function AllRequests() {
           {/* Quick search (client-side) */}
           <div className="relative flex-1">
             <div className="absolute inset-y-0 ltr:left-0 rtl:right-0 ltr:pl-3 rtl:pr-3 flex items-center pointer-events-none">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="w-3.5 h-3.5 text-muted" />
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className="w-3.5 h-3.5 text-muted"
+              />
             </div>
             <input
               type="text"
@@ -118,8 +121,13 @@ export default function AllRequests() {
               className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border border-border bg-background-second text-body hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer"
             >
               <FontAwesomeIcon icon={faFilter} className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{t("requests:filters.advancedFilters")}</span>
-              <FontAwesomeIcon icon={filtersOpen ? faChevronUp : faChevronDown} className="w-3 h-3 text-muted" />
+              <span className="hidden sm:inline">
+                {t("requests:filters.advancedFilters")}
+              </span>
+              <FontAwesomeIcon
+                icon={filtersOpen ? faChevronUp : faChevronDown}
+                className="w-3 h-3 text-muted"
+              />
             </button>
 
             <button
@@ -127,7 +135,10 @@ export default function AllRequests() {
               disabled={isLoading}
               className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-primary text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all disabled:opacity-50 cursor-pointer"
             >
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="w-3.5 h-3.5" />
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                className="w-3.5 h-3.5"
+              />
               <span>{t("requests:filters.search")}</span>
             </button>
           </div>
@@ -136,7 +147,9 @@ export default function AllRequests() {
         {/* ── Expandable filters panel ── */}
         <div
           className={`grid transition-all duration-300 ease-in-out ${
-            filtersOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+            filtersOpen
+              ? "grid-rows-[1fr] opacity-100"
+              : "grid-rows-[0fr] opacity-0"
           }`}
         >
           <div className="overflow-hidden">
@@ -217,8 +230,6 @@ export default function AllRequests() {
                     className="w-full px-3 py-2.5 rounded-lg text-sm bg-background-second border border-border text-heading focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"
                   />
                 </div>
-
-
               </div>
 
               {/* Reset button */}
@@ -227,7 +238,10 @@ export default function AllRequests() {
                   onClick={handleReset}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-muted hover:text-danger hover:bg-danger/5 border border-transparent hover:border-danger/20 transition-all cursor-pointer"
                 >
-                  <FontAwesomeIcon icon={faRotateRight} className="w-3.5 h-3.5" />
+                  <FontAwesomeIcon
+                    icon={faRotateRight}
+                    className="w-3.5 h-3.5"
+                  />
                   {t("requests:filters.reset")}
                 </button>
               </div>
@@ -239,39 +253,56 @@ export default function AllRequests() {
       {/* ═══════ Results ═══════ */}
       <div className="mt-6">
         <span className="text-body font-medium ltr:ml-1 rtl:mr-1">
-          {t("requests:pagination.showing")} {filteredRequests.length} {t("requests:pagination.of")} {requests.length} {t("requests:pagination.requests")}
+          {t("requests:pagination.showing")} {filteredRequests.length}{" "}
+          {t("requests:pagination.of")} {requests.length}{" "}
+          {t("requests:pagination.requests")}
         </span>
 
         <div className="bg-bg-card mt-4 rounded-xl shadow-card border border-border overflow-x-auto">
           {isLoading ? (
             <Loading />
           ) : filteredRequests.length > 0 ? (
-            filteredRequests.map((request) => (
-              <RequestRow
-                key={request.id}
-                id={String(request.id)}
-                address={request.address}
-                userName={request.userName}
-                userPhone={request.userPhone}
-                status={request.status}
-                timestamp={request.timestamp}
-              />
+            filteredRequests.map((request, index) => (
+              <div
+                key={index}
+                className="animate-fade-in-up"
+                style={{
+                  animationDelay: `${index * 50}ms`,
+                  animationFillMode: "both",
+                }}
+              >
+                <RequestRow
+                  key={request.id}
+                  id={String(request.id)}
+                  address={request.address}
+                  userName={request.userName}
+                  userPhone={request.userPhone}
+                  status={request.status}
+                  timestamp={request.timestamp}
+                />
+              </div>
             ))
           ) : (
             <div className="flex flex-col items-center justify-center py-12">
               <p className="text-muted text-sm">{t("requests:empty.title")}</p>
-              <p className="text-muted text-xs mt-1">{t("requests:empty.description")}</p>
+              <p className="text-muted text-xs mt-1">
+                {t("requests:empty.description")}
+              </p>
             </div>
           )}
 
           <div className="text-sm flex items-center py-4 px-4 justify-between text-muted border-t border-border">
-            <span>{t("requests:pagination.page")} 1 {t("requests:pagination.of")} 1</span>
+            <span>
+              {t("requests:pagination.page")} 1 {t("requests:pagination.of")} 1
+            </span>
             <div className="flex items-center gap-3">
               <button className="px-3 py-1 bg-background-second rounded-md hover:bg-primary/10 text-muted transition cursor-pointer">
                 {t("requests:pagination.previous")}
               </button>
               <button>
-                <span className="px-3 py-1 bg-primary text-white rounded-md">1</span>
+                <span className="px-3 py-1 bg-primary text-white rounded-md">
+                  1
+                </span>
               </button>
               <button className="px-3 py-1 bg-primary text-white rounded-md hover:bg-primary/90 transition cursor-pointer">
                 {t("requests:pagination.next")}
@@ -283,4 +314,3 @@ export default function AllRequests() {
     </>
   );
 }
-
