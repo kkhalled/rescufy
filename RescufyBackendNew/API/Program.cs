@@ -252,9 +252,16 @@ namespace API
 			app.MapHub<NotificationHub>("/hubs/notifications");
 
 			#region Data Seeding
-			using var scope = app.Services.CreateScope();
-			var objectDataSeeding = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
-			objectDataSeeding.DataSeed();
+			try
+			{
+				using var scope = app.Services.CreateScope();
+				var objectDataSeeding = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
+				objectDataSeeding.DataSeed();
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "An error occurred during data seeding");
+			}
 			#endregion
 
 			#region Configure the HTTP request pipeline

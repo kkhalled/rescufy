@@ -9,5 +9,6 @@ namespace ServiceAbstraction
         Task<Request?> GetRequestByIdAsync(int id);
         Task<IEnumerable<Request>> GetDriverRequestsAsync(string driverId);
         Task<IEnumerable<Request>> GetRequestsAsync(RequestFilterDto filter);
-    }
+		Task CreateRequestAsync(string userId, string description, decimal latitude, decimal longitude, string address, bool isSelfCase, int numberOfPeopleAffected);
+	}
 }

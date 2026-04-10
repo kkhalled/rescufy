@@ -19,8 +19,8 @@ namespace API.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null) return Unauthorized();
 
-            var request = await requestService.CreateRequestAsync(userId, dto.Description, dto.Latitude, dto.Longitude, dto.Address, dto.IsSelfCase, dto.NumberOfPeopleAffected);
-            return Ok(request);
+            await requestService.CreateRequestAsync(userId, dto.Description, dto.Latitude, dto.Longitude, dto.Address, dto.IsSelfCase, dto.NumberOfPeopleAffected);
+            return Ok(new { Message = "Request created successfully" });
         }
 
         [HttpGet("driver")]
