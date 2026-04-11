@@ -52,6 +52,7 @@ export default function SignInForm() {
               <input
                 type="email"
                 id="signin-email"
+                
                 name="email"
                 value={formik.values.email}
                 onChange={formik.handleChange}
