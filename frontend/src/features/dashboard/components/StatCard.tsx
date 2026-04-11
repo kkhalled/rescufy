@@ -1,6 +1,7 @@
 import { type LucideIcon } from "lucide-react";
 import { useLanguage } from "@/i18n/useLanguage";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 
 interface StatCardProps {
   title: string;
@@ -28,6 +29,59 @@ export function StatCard({
   chart,
 }: StatCardProps) {
   const { isRTL } = useLanguage();
+  const shouldReduceMotion = useReducedMotion();
+  const isNumericValue = typeof value === "number" && Number.isFinite(value);
+
+  const decimalPlaces = useMemo(() => {
+    if (!isNumericValue) return 0;
+    return Number.isInteger(value) ? 0 : Math.min(2, value.toString().split(".")[1]?.length ?? 0);
+  }, [isNumericValue, value]);
+
+  const [animatedNumber, setAnimatedNumber] = useState<number>(
+    isNumericValue && !shouldReduceMotion ? 0 : isNumericValue ? value : 0,
+  );
+
+  useEffect(() => {
+    if (!isNumericValue) return;
+
+    if (shouldReduceMotion) {
+      setAnimatedNumber(value);
+      return;
+    }
+
+    const startValue = 0;
+    const targetValue = value;
+    const durationMs = 1200;
+    let frameId = 0;
+    const startedAt = performance.now();
+
+    const step = (now: number) => {
+      const progress = Math.min((now - startedAt) / durationMs, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const scaled = startValue + (targetValue - startValue) * eased;
+      const precision = Math.pow(10, decimalPlaces);
+      setAnimatedNumber(Math.round(scaled * precision) / precision);
+
+      if (progress < 1) {
+        frameId = window.requestAnimationFrame(step);
+      }
+    };
+
+    setAnimatedNumber(startValue);
+    frameId = window.requestAnimationFrame(step);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [decimalPlaces, isNumericValue, shouldReduceMotion, value]);
+
+  const displayedValue = isNumericValue
+    ? animatedNumber.toLocaleString(undefined, {
+        minimumFractionDigits: decimalPlaces,
+        maximumFractionDigits: decimalPlaces,
+      })
+    : value;
+
   const variantStyles = {
     default: {
       card: "bg-bg-card dark:bg-bg-card backdrop-blur-sm text-heading ",
@@ -146,7 +200,7 @@ export function StatCard({
       <div
         className={`text-lg md:text-2xl lg:text-[2.5rem] leading-none font-bold mb-2`}
       >
-        {value}
+        {displayedValue}
       </div>
 
       {/* Subtitle (e.g., "2 Critical • 12 High") */}
