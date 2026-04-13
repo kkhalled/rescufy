@@ -26,6 +26,7 @@ import enAmbulances from "../locales/en/ambulances.json";
 import enUsers from "../locales/en/users.json";
 import enValidation from "../locales/en/validation.json";
 import enSettings from "../locales/en/settings.json";
+import enNotifications from "../locales/en/notifications.json";
 
 // Import all Arabic translations
 import arCommon from "../locales/ar/common.json";
@@ -38,6 +39,7 @@ import arAmbulances from "../locales/ar/ambulances.json";
 import arUsers from "../locales/ar/users.json";
 import arValidation from "../locales/ar/validation.json";
 import arSettings from "../locales/ar/settings.json";
+import arNotifications from "../locales/ar/notifications.json";
 
 // Resources object containing all translations
 const resources = {
@@ -52,6 +54,7 @@ const resources = {
     users: enUsers,
     validation: enValidation,
     settings: enSettings,
+    notifications: enNotifications,
   },
   ar: {
     common: arCommon,
@@ -64,6 +67,7 @@ const resources = {
     users: arUsers,
     validation: arValidation,
     settings: arSettings,
+    notifications: arNotifications,
   },
 };
 
@@ -92,6 +96,7 @@ i18n
       "users",
       "validation",
       "settings",
+      "notifications",
     ],
 
     // Language detection options

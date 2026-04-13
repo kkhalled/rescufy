@@ -203,7 +203,8 @@ namespace API
 			#region CORS
 			var allowedOrigins = new[]
 			{
-				"http://localhost:4200",              // Angular frontend
+				"http://localhost:4173",
+				"http://localhost:4200", // Angular frontend
 				"http://localhost:5173",              // dev
 				"https://your-frontend.vercel.app" ,
 				"http://localhost:5174",

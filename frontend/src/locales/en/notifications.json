@@ -1,0 +1,63 @@
+{
+  "title": "Notifications",
+  "subtitle": "Operational updates and alerts",
+  "unreadCounter": "{{count}} unread",
+  "tabs": {
+    "all": "All",
+    "unread": "Unread",
+    "critical": "Critical"
+  },
+  "actions": {
+    "markAllRead": "Mark all as read",
+    "clearRead": "Clear read",
+    "dismiss": "Dismiss",
+    "markRead": "Mark as read",
+    "markUnread": "Mark as unread"
+  },
+  "status": {
+    "read": "Read",
+    "unread": "Unread"
+  },
+  "empty": {
+    "title": "All caught up",
+    "criticalTitle": "No critical alerts right now",
+    "description": "New notifications will appear here"
+  },
+  "categories": {
+    "request": "Request",
+    "hospital": "Hospital",
+    "ambulance": "Ambulance",
+    "user": "User",
+    "system": "System"
+  },
+  "toasts": {
+    "markedAllRead": "All notifications marked as read",
+    "clearedRead": "Read notifications cleared"
+  },
+  "items": {
+    "criticalRequest": {
+      "title": "Critical request escalated",
+      "message": "Request REQ-2025-001 has moved to critical priority."
+    },
+    "newHospitalAdmin": {
+      "title": "New hospital admin assigned",
+      "message": "A new hospital admin was assigned to Al Noor Medical Center."
+    },
+    "ambulanceBackOnline": {
+      "title": "Ambulance back online",
+      "message": "Ambulance AMB-17 returned to AVAILABLE status."
+    },
+    "hospitalCapacityWarning": {
+      "title": "Hospital capacity warning",
+      "message": "King Fahd Hospital is now above 90% bed occupancy."
+    },
+    "systemMaintenance": {
+      "title": "System maintenance notice",
+      "message": "Scheduled maintenance will start tonight at 2:00 AM."
+    },
+    "requestCompleted": {
+      "title": "Request completed",
+      "message": "Emergency request REQ-2025-004 was successfully closed."
+    }
+  }
+}
