@@ -81,7 +81,7 @@ export default function NotificationItemCard({
             <p className="mt-0.5 line-clamp-2 text-xs leading-5 text-muted">
               {t(`notifications:${notification.messageKey}`)}
             </p>
-            <div className="mt-2 flex items-center gap-2 text-[11px] text-muted">
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-muted">
               <CategoryIcon size={12} />
               <span>{t(`notifications:categories.${notification.category}`)}</span>
               <span>•</span>
@@ -90,7 +90,7 @@ export default function NotificationItemCard({
           </div>
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1">
           <button
             type="button"
             onClick={() => onToggleReadState(notification.id)}

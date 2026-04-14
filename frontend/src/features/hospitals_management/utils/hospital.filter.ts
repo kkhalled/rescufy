@@ -1,4 +1,6 @@
 import type { Hospital } from "../types/hospitals.types";
+import { resolveHospitalLoad } from "./hospital.metrics";
+
 type filters = {
   status: string;
   search: string;
@@ -20,14 +22,11 @@ export default function hospitalFilter(
 
     // Derive status from occupancy for filtering
     if (filters.status !== "all") {
-      const usedBeds = h.bedCapacity - h.availableBeds;
-      const percent = h.bedCapacity > 0 ? Math.round((usedBeds / h.bedCapacity) * 100) : 0;
-      let derivedStatus: string;
-      if (h.availableBeds === 0) derivedStatus = "FULL";
-      else if (percent >= 90) derivedStatus = "CRITICAL";
-      else if (percent >= 70) derivedStatus = "BUSY";
-      else derivedStatus = "NORMAL";
-      if (derivedStatus !== filters.status) return false;
+      const { status } = resolveHospitalLoad(h.availableBeds, h.bedCapacity);
+
+      if (status !== filters.status) {
+        return false;
+      }
     }
 
     return matchSearch;

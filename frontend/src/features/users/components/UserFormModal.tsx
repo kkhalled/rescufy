@@ -6,6 +6,9 @@ import { useEffect } from "react";
 import type { User } from "../types/users.types";
 import useModal from "../hooks/useModal";
 import { useGetHospitals } from "@/features/hospitals_management/hooks/useGetHospitals";
+import SelectField from "@/shared/ui/SelectField";
+
+type UserFormRole = "Admin" | "HospitalAdmin" | "Paramedic" | "AmbulanceDriver";
 
 interface UserFormModalProps {
   isOpen: boolean;
@@ -25,7 +28,7 @@ export function UserFormModal({
   isLoading = false,
 }: UserFormModalProps) {
   const { t } = useTranslation("users");
-  const { register, submitHandler, errors, watch } = useModal({
+  const { register, submitHandler, errors, watch, setValue } = useModal({
     onSubmit,
     user,
     mode,
@@ -37,6 +40,7 @@ export function UserFormModal({
     isLoading: isHospitalsLoading,
   } = useGetHospitals();
   const selectedRole = watch("role");
+  const selectedHospitalId = watch("hospitalId") || "";
 
   // Fetch hospitals when the modal opens and role is HospitalAdmin
   useEffect(() => {
@@ -71,6 +75,9 @@ export function UserFormModal({
         {/* Form */}
         <form onSubmit={submitHandler} className="flex-1 overflow-y-auto">
           <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <input type="hidden" {...register("role", { required: true })} />
+            <input type="hidden" {...register("hospitalId")} />
+
             {/* Name */}
             <div>
               <label
@@ -183,65 +190,68 @@ export function UserFormModal({
 
             {/* Role */}
             <div>
-              <label
-                htmlFor="role"
-                className="block text-sm font-medium text-body mb-1.5"
-              >
-                {t("form.role")} <span className="text-danger">*</span>
-              </label>
-              <select
+              <SelectField
                 id="role"
-                {...register("role", { required: true })}
+                label={t("form.role")}
+                required
+                value={selectedRole || ""}
+                onChange={(value) => {
+                  setValue("role", value as UserFormRole, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  });
+
+                  if (value !== "HospitalAdmin") {
+                    setValue("hospitalId", "", {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    });
+                  }
+                }}
+                options={[
+                  { value: "Admin", label: t("roles.Admin") },
+                  { value: "HospitalAdmin", label: t("roles.HospitalAdmin") },
+                  { value: "Paramedic", label: t("roles.Paramedic") },
+                  { value: "AmbulanceDriver", label: t("roles.AmbulanceDriver") },
+                ]}
+                placeholder={t("form.selectRole")}
                 disabled={isLoading}
-                className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading ${
-                  errors.role
-                    ? "border-danger focus:ring-danger/20"
-                    : "border-border focus:ring-primary/30 focus:border-primary"
-                }`}
-              >
-                <option value="">{t("form.selectRole")}</option>
-                <option value="Admin">{t("roles.Admin")}</option>
-                <option value="HospitalAdmin">
-                  {t("roles.HospitalAdmin")}
-                </option>
-                <option value="Paramedic">{t("roles.Paramedic")}</option>
-                <option value="AmbulanceDriver">
-                  {t("roles.AmbulanceDriver")}
-                </option>
-              </select>
-              {errors.role && (
-                <p className="mt-1.5 text-xs text-danger">
-                  {errors.role.message || t("form.role") + " is required"}
-                </p>
-              )}
+                triggerClassName="rounded-xl px-3.5 py-2.5 text-sm"
+                error={
+                  errors.role?.message
+                    ? String(errors.role.message)
+                    : undefined
+                }
+              />
             </div>
 
             {/* Hospital (shown only for HospitalAdmin) */}
             {selectedRole === "HospitalAdmin" && (
               <div>
-                <label
-                  htmlFor="hospitalId"
-                  className="block text-sm font-medium text-body mb-1.5"
-                >
-                  {t("form.hospital")} <span className="text-danger">*</span>
-                </label>
-                <select
+                <SelectField
                   id="hospitalId"
-                  {...register("hospitalId")}
+                  label={t("form.hospital")}
+                  required
+                  value={selectedHospitalId}
+                  onChange={(value) =>
+                    setValue("hospitalId", value, {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    })
+                  }
+                  options={hospitals.map((hospital) => ({
+                    value: String(hospital.id),
+                    label: hospital.name,
+                  }))}
+                  placeholder={t("form.selectHospital")}
                   disabled={isLoading || isHospitalsLoading}
-                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading ${
-                    errors.hospitalId
-                      ? "border-danger focus:ring-danger/20"
-                      : "border-border focus:ring-primary/30 focus:border-primary"
-                  }`}
-                >
-                  <option value="">{t("form.selectHospital")}</option>
-                  {hospitals.map((hospital) => (
-                    <option key={hospital.id} value={hospital.id}>
-                      {hospital.name}
-                    </option>
-                  ))}
-                </select>
+                  triggerClassName="rounded-xl px-3.5 py-2.5 text-sm"
+                  error={
+                    errors.hospitalId?.message
+                      ? String(errors.hospitalId.message)
+                      : undefined
+                  }
+                />
                 {isHospitalsLoading && (
                   <p className="mt-1.5 text-xs text-muted">
                     <FontAwesomeIcon
@@ -249,12 +259,6 @@ export function UserFormModal({
                       className="animate-spin mr-1"
                     />
                     {t("form.loadingHospitals")}
-                  </p>
-                )}
-                {errors.hospitalId && (
-                  <p className="mt-1.5 text-xs text-danger">
-                    {errors.hospitalId.message ||
-                      t("form.hospital") + " is required"}
                   </p>
                 )}
               </div>

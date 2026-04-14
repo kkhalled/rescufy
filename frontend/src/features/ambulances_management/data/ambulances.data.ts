@@ -1,11 +1,4 @@
-export interface Ambulance {
-  id: string;
-  licensePlate: string;
-  hospitalId: string;
-  status: "AVAILABLE" | "IN_TRANSIT" | "BUSY" | "MAINTENANCE";
-  latitude: number;
-  longitude: number;
-}
+import type { Ambulance } from "../types/ambulances.types";
 
 export const ambulancesData: Ambulance[] = [
   {

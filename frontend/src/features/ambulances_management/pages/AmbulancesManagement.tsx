@@ -5,18 +5,16 @@ export default function AmbulancesManagement() {
   const { t } = useTranslation('ambulances');
 
   return (
-    <>
-      <section className="w-full xl:px-12">
-        <header>
-          <h1 className="text-heading mb-2 text-4xl font-semibold">
-            {t('pageHeader.title')}
-          </h1>
-          <p className="text-muted text-sm mt-1">
-            {t('pageHeader.subtitle')}
-          </p>
-        </header>
-        <AllAmbulances />
-      </section>
-    </>
+    <section className="w-full xl:px-12">
+      <header className="rounded-2xl border border-border bg-[radial-gradient(circle_at_top_right,rgba(101,77,255,0.14),transparent_48%),radial-gradient(circle_at_top_left,rgba(230,57,70,0.10),transparent_40%),var(--background-card)] px-5 py-6 md:px-6 md:py-7 shadow-card">
+        <h1 className="mb-2 text-3xl font-semibold text-heading md:text-4xl">
+          {t('pageHeader.title')}
+        </h1>
+        <p className="mt-1 max-w-2xl text-sm text-muted">
+          {t('pageHeader.subtitle')}
+        </p>
+      </header>
+      <AllAmbulances />
+    </section>
   );
 }

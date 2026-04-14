@@ -23,6 +23,7 @@ export default function useModal({ onSubmit, user, mode }: UserFormModalProps) {
     formState: { errors },
     reset,
     watch,
+    setValue,
   } = useForm<UserFormData>({
     resolver: zodResolver(mode === "edit" ? userEditSchema : userSchema) as any,
     defaultValues: {
@@ -76,5 +77,6 @@ export default function useModal({ onSubmit, user, mode }: UserFormModalProps) {
     errors,
     reset,
     watch,
+    setValue,
   };
 }

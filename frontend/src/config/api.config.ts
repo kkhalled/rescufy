@@ -31,6 +31,13 @@ export const API_CONFIG = {
       GET_STATS: (id: string) => `/api/Hospital/${id}/stats`,
       GET_REQUESTS: (id: string) => `/api/Hospital/${id}/requests`,
     },
+    AMBULANCES: {
+      GET_ALL: "/api/Ambulance",
+      GET_BY_ID: (id: string) => `/api/Ambulance/${id}`,
+      CREATE: "/api/Ambulance",
+      UPDATE: (id: string) => `/api/Ambulance/${id}`,
+      DELETE: (id: string) => `/api/Ambulance/${id}`,
+    },
     REQUESTS: {
       GET_ALL: "/api/Request",
       GET_BY_ID: (id: string) => `/api/Request/${id}`,

@@ -42,12 +42,12 @@ export default function NotificationFilterTabs({
             onClick={() => onChange(filter)}
             className={
               isActive
-                ? "rounded-lg bg-primary text-white px-2 py-1.5 text-xs font-semibold transition-colors"
-                : "rounded-lg text-xs text-muted hover:text-heading px-2 py-1.5 transition-colors"
+                ? "flex min-w-0 flex-col items-center justify-center rounded-lg bg-primary px-1.5 py-1.5 text-[11px] font-semibold leading-tight text-white transition-colors sm:flex-row sm:gap-1 sm:px-2 sm:text-xs"
+                : "flex min-w-0 flex-col items-center justify-center rounded-lg px-1.5 py-1.5 text-[11px] leading-tight text-muted transition-colors hover:text-heading sm:flex-row sm:gap-1 sm:px-2 sm:text-xs"
             }
           >
-            <span>{t(`tabs.${filter}`)}</span>
-            <span className={isActive ? "ms-1 text-white/90" : "ms-1 text-muted"}>
+            <span className="truncate">{t(`tabs.${filter}`)}</span>
+            <span className={isActive ? "text-white/90 sm:ms-1" : "text-muted sm:ms-1"}>
               {filterMeta[filter]}
             </span>
           </button>

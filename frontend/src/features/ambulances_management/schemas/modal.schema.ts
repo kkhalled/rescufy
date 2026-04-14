@@ -7,7 +7,7 @@ export const ambulanceSchema = z
       .string()
       .min(1, "License plate is required")
       .regex(
-        /^[A-Z]{1,3}[-]?[0-9]{3,4}$/,
+        /^[A-Za-z]{1,3}[-]?[0-9]{3,4}$/,
         "Invalid license plate format (e.g., ABC-1234)"
       ),
     hospitalId: z.string().min(1, "Hospital selection is required"),

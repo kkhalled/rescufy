@@ -6,37 +6,44 @@ import HospitalUserLayout from "../layouts/HospitalUserLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import AuthRoute from "./AuthRoute";
 import Loading from "@/shared/common/Loading";
+import Analytics from "@/features/analytics/pages/Analytics";
 
 const DashBoard = lazy(() => import("@/features/dashboard/pages/DashBoard"));
 const HospitalDashboard = lazy(
-  () => import("@/features/dashboard/pages/HospitalDashboard")
+  () => import("@/features/dashboard/pages/HospitalDashboard"),
 );
 const Request = lazy(() => import("@/features/requests/pages/Request"));
 const HospitalRequests = lazy(
-  () => import("@/features/requests/pages/HospitalRequests")
+  () => import("@/features/requests/pages/HospitalRequests"),
 );
 const HospitalRequestDetails = lazy(
-  () => import("@/features/request-details/pages/HospitalRequestDetails")
+  () => import("@/features/request-details/pages/HospitalRequestDetails"),
 );
 const HospitalProfile = lazy(
-  () => import("@/features/hospitals_management/pages/HospitalProfile")
+  () => import("@/features/hospitals_management/pages/HospitalProfile"),
+);
+const AdminHospitalProfile = lazy(
+  () => import("@/features/hospitals_management/pages/AdminHospitalProfile"),
 );
 const Users = lazy(() => import("@/features/users/pages/Users"));
 const SignIn = lazy(() => import("@/features/auth/pages/SignIn"));
 const ForgotPassword = lazy(
-  () => import("@/features/auth/pages/ForgotPassword")
+  () => import("@/features/auth/pages/ForgotPassword"),
 );
 const ResetPassword = lazy(() => import("@/features/auth/pages/ResetPassword"));
 const Settings = lazy(() => import("@/features/settings/pages/Settings"));
 const HospitalsManagement = lazy(
-  () => import("@/features/hospitals_management/pages/HospitalsManagement")
+  () => import("@/features/hospitals_management/pages/HospitalsManagement"),
 );
 const AmbulancesManagement = lazy(
-  () => import("@/features/ambulances_management/pages/AmbulancesManagement")
+  () => import("@/features/ambulances_management/pages/AmbulancesManagement"),
 );
-const Audits = lazy(() => import("@/features/audits/Audits"));
+const AmbulanceProfile = lazy(
+  () => import("@/features/ambulances_management/pages/AmbulanceProfile"),
+);
+
 const RequestDetails = lazy(
-  () => import("@/features/request-details/pages/RequestDetails")
+  () => import("@/features/request-details/pages/RequestDetails"),
 );
 const NotFound = lazy(() => import("@/shared/common/NotFound"));
 
@@ -60,12 +67,21 @@ const router = createBrowserRouter([
         element: withLoading(<HospitalsManagement />),
       },
       {
+        path: "hospitals_management/:id",
+        element: withLoading(<AdminHospitalProfile />),
+      },
+      {
         path: "ambulances_management",
         element: withLoading(<AmbulancesManagement />),
       },
+      {
+        path: "ambulances_management/:id",
+        element: withLoading(<AmbulanceProfile />),
+      },
       { path: "users", element: withLoading(<Users />) },
-      { path: "audits", element: withLoading(<Audits />) },
+
       { path: "settings", element: withLoading(<Settings />) },
+      { path: "analytics", element: withLoading(<Analytics />) },
       {
         path: "request_details/:id",
         element: withLoading(<RequestDetails />),
@@ -94,13 +110,9 @@ const router = createBrowserRouter([
 
   {
     path: "/signin",
-    element: (
-      <AuthRoute>
-        {withLoading(<SignIn />)}
-      </AuthRoute>
-    ),
+    element: <AuthRoute>{withLoading(<SignIn />)}</AuthRoute>,
   },
-  
+
   {
     path: "/forgot-password",
     element: withLoading(<ForgotPassword />),
@@ -111,11 +123,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: (
-      <AuthRoute>
-        {withLoading(<SignIn />)}
-      </AuthRoute>
-    ),
+    element: <AuthRoute>{withLoading(<SignIn />)}</AuthRoute>,
   },
   {
     path: "*",

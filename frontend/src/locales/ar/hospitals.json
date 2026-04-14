@@ -44,6 +44,7 @@
         "free": "متاح",
         "usage": "الاستخدام",
         "call": "اتصال",
+        "viewTooltip": "عرض الملف الشخصي",
         "editTooltip": "تعديل المستشفى",
         "deleteTooltip": "حذف المستشفى"
     },
@@ -58,6 +59,51 @@
     "filters": {
         "allStates": "جميع الحالات",
         "searchPlaceholder": "البحث بالاسم أو العنوان أو المعرّف"
+    },
+    "operations": {
+        "liveMonitoring": "مراقبة السعة",
+        "loading": "جارٍ تحميل المستشفيات...",
+        "kpi": {
+            "total": "إجمالي المستشفيات",
+            "normal": "عبء طبيعي",
+            "busyCritical": "مشغول أو حرج",
+            "full": "سعة مكتملة"
+        },
+        "filters": {
+            "title": "مرشحات التشغيل",
+            "searchLabel": "البحث",
+            "statusLabel": "حالة العبء",
+            "sortLabel": "الترتيب",
+            "sort": {
+                "criticalFirst": "الحرج أولاً",
+                "occupancyHigh": "أعلى إشغال",
+                "availableHigh": "أكثر أسرّة متاحة"
+            }
+        },
+        "list": {
+            "title": "لوحة سعة المستشفيات",
+            "subtitle": "{{count}} منشأة ضمن العرض"
+        },
+        "insights": {
+            "title": "رؤى السعة",
+            "subtitle": "ضغط التشغيل وتوفر الأسرّة",
+            "totalHospitals": "{{count}} مستشفيات",
+            "avgOccupancy": "متوسط الإشغال",
+            "availableBeds": "الأسرّة المتاحة",
+            "usedBeds": "الأسرّة المستخدمة",
+            "stressedFacilities": "المنشآت المضغوطة",
+            "noStressed": "لا توجد مستشفيات حرجة حالياً",
+            "facilityStatus": "{{status}} - إشغال {{occupancy}}%",
+            "monitoring": "رؤية لحظية للإشغال",
+            "hint": "استخدم المرشحات والترتيب لتحديد أولويات التدخل"
+        }
+    },
+    "deleteDialog": {
+        "title": "حذف المستشفى",
+        "description": "هل أنت متأكد من حذف {{name}}؟ لا يمكن التراجع عن هذا الإجراء.",
+        "cancel": "إلغاء",
+        "confirm": "حذف",
+        "deleting": "جارٍ الحذف..."
     },
     "buttons": {
         "cancel": "إلغاء",
@@ -77,8 +123,27 @@
         "saveChanges": "حفظ التغييرات",
         "cancel": "إلغاء"
     },
+    "adminProfile": {
+        "title": "ملف المستشفى",
+        "subtitle": "ملف تشغيلي للعرض فقط لمراجعة المشرف العام",
+        "backToList": "العودة إلى المستشفيات",
+        "notFoundTitle": "المستشفى غير موجود",
+        "notFoundSubtitle": "تعذر تحميل ملف المستشفى المطلوب.",
+        "id": "معرّف المستشفى",
+        "address": "العنوان",
+        "contactPhone": "هاتف التواصل",
+        "coordinates": "الإحداثيات",
+        "openInMaps": "فتح في الخرائط",
+        "bedCapacity": "سعة الأسرّة",
+        "availableBeds": "الأسرّة المتاحة",
+        "usedBeds": "الأسرّة المستخدمة",
+        "occupancyRate": "نسبة الإشغال",
+        "createdAt": "تاريخ الإنشاء",
+        "updatedAt": "آخر تحديث"
+    },
     "api": {
         "fetchError": "فشل في جلب المستشفيات",
+        "fetchProfileError": "فشل في جلب ملف المستشفى",
         "addSuccess": "تمت إضافة المستشفى \"{{name}}\" بنجاح",
         "addError": "فشل في إضافة المستشفى",
         "updateSuccess": "تم تحديث المستشفى \"{{name}}\" بنجاح",

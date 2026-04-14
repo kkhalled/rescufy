@@ -6,7 +6,9 @@
         "ambulances": "Ambulances",
         "users": "Users",
         "audit": "Audit",
-        "settings": "Settings"
+        "settings": "Settings",
+        "analytics": "Analytics"
+
     },
     "navbar": {
         "search": "Search...",

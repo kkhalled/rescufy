@@ -1,7 +1,7 @@
 {
     "pageHeader": {
         "title": "Ambulances Management",
-        "subtitle": "Manage ambulance information and locations"
+        "subtitle": "Real-time command center for dispatch, tracking, and critical response readiness"
     },
     "title": "Ambulances",
     "subtitle": "Manage ambulance fleet",
@@ -40,11 +40,76 @@
         "offline": "Offline"
     },
     "card": {
+        "viewTooltip": "View profile",
         "editTooltip": "Edit ambulance",
         "deleteTooltip": "Delete ambulance"
     },
     "filters": {
         "searchPlaceholder": "Search ambulances by plate number or ID"
+    },
+    "controlCenter": {
+        "liveMonitoring": "Live Monitoring",
+        "signalReady": "SignalR-ready event pipeline",
+        "signalHint": "Wire real hub events to applyRealtimeUpdate() for instant sync",
+        "lastUpdate": "Last update",
+        "updatedSeconds": "{{value}}s ago",
+        "distanceFromCenter": "Distance from HQ",
+        "actions": {
+            "assign": "Assign",
+            "track": "Track",
+            "changeStatus": "Status"
+        },
+        "kpi": {
+            "total": "Total ambulances",
+            "available": "Available",
+            "busy": "Busy",
+            "maintenance": "Maintenance"
+        },
+        "filters": {
+            "title": "Operational Filters",
+            "searchLabel": "Search",
+            "searchPlaceholder": "Search by plate, unit ID, or hospital",
+            "hospitalAll": "All hospitals",
+            "proximity": {
+                "label": "Proximity",
+                "all": "All zones",
+                "near": "Near (<3 km)",
+                "mid": "Mid (3-8 km)",
+                "far": "Far (>8 km)"
+            },
+            "sort": {
+                "label": "Sort",
+                "available": "Available first",
+                "nearest": "Nearest first",
+                "lastUpdated": "Recently updated"
+            }
+        },
+        "list": {
+            "title": "Dispatch Queue",
+            "subtitle": "{{count}} units under supervision"
+        },
+        "loading": "Loading ambulances...",
+        "empty": {
+            "title": "No units match current filters",
+            "subtitle": "Adjust status, hospital, or proximity filters to widen results."
+        },
+        "alerts": {
+            "title": "Live Alerts",
+            "subtitle": "Mission activity and heartbeat stream",
+            "critical": "Critical",
+            "heartbeat": "Heartbeat",
+            "seconds": "{{value}}s",
+            "empty": "No live alerts yet",
+            "statusChanged": "Status changed from {{from}} to {{to}}",
+            "deletedFromRoster": "Removed from dispatch roster",
+            "unitLabel": "Unit: {{unit}}"
+        },
+        "connection": {
+            "connected": "Connected",
+            "reconnecting": "Reconnecting",
+            "disconnected": "Disconnected",
+            "simulation": "Simulation"
+        }
     },
     "types": {
         "basic": "Basic Life Support",
@@ -54,5 +119,46 @@
     "empty": {
         "title": "No ambulances found",
         "description": "Start by adding a new ambulance."
+    },
+    "deleteDialog": {
+        "title": "Delete ambulance",
+        "description": "Are you sure you want to delete {{name}}? This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Delete",
+        "deleting": "Deleting..."
+    },
+    "profile": {
+        "title": "Ambulance Profile",
+        "subtitle": "Detailed operational information for this ambulance",
+        "backToList": "Back to Ambulances",
+        "notFoundTitle": "Ambulance not found",
+        "notFoundSubtitle": "The requested ambulance profile could not be loaded.",
+        "id": "Ambulance ID",
+        "vehicleName": "Vehicle Name",
+        "vehicleInfo": "Vehicle Information",
+        "driverName": "Driver Name",
+        "driverId": "Driver ID",
+        "driverPhone": "Driver Phone",
+        "status": "Current Status",
+        "location": "SIM Location",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "openInMaps": "Open in Maps",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At"
+    },
+    "api": {
+        "notFound": "Ambulance not found",
+        "fetchProfileError": "Failed to fetch ambulance profile",
+        "fetchAllError": "Failed to load ambulances",
+        "addSuccess": "Ambulance added successfully",
+        "addError": "Failed to add ambulance",
+        "updateSuccess": "Ambulance updated successfully",
+        "updateError": "Failed to update ambulance",
+        "deleteSuccess": "Ambulance deleted successfully",
+        "deleteError": "Failed to delete ambulance",
+        "deleteConfirm": "Delete ambulance {{name}}?",
+        "deleteCanceled": "Delete operation canceled",
+        "statusUpdateError": "Failed to update ambulance status"
     }
 }

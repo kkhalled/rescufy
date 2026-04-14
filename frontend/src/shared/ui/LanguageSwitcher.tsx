@@ -4,7 +4,6 @@
  */
 
 import { useLanguage } from '@/i18n/useLanguage';
-import { Languages } from 'lucide-react';
 
 interface LanguageSwitcherProps {
     showLabel?: boolean;
@@ -31,7 +30,7 @@ export function LanguageSwitcher({ showLabel = false, className = '' }: Language
             aria-label={`Switch to ${switchToLabel}`}
             title={`Switch to ${switchToLabel}`}
         >
-            <Languages size={18} className="text-heading" />
+            
             {showLabel && (
                 <span className="text-sm font-medium text-heading">
                     {languageConfig.nativeName}

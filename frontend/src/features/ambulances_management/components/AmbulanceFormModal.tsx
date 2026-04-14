@@ -1,13 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { createPortal } from "react-dom";
-import type { Ambulance } from "../data/ambulances.data";
+import type { Ambulance } from "../types/ambulances.types";
 import useModal from "../hooks/useModal";
+import SelectField from "@/shared/ui/SelectField";
 
 interface AmbulanceFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (ambulance: Ambulance) => void;
+  onSubmit: (ambulance: Ambulance) => void | Promise<void>;
   ambulance?: Ambulance;
   mode: "add" | "edit";
 }
@@ -19,11 +20,13 @@ export function AmbulanceFormModal({
   ambulance,
   mode,
 }: AmbulanceFormModalProps) {
-  const { register, submitHandler, errors } = useModal({
+  const { register, submitHandler, errors, watch, setValue } = useModal({
     onSubmit,
     ambulance,
     mode,
   });
+
+  const selectedStatus = watch("status") || "AVAILABLE";
 
   if (!isOpen) return null;
 
@@ -52,6 +55,7 @@ export function AmbulanceFormModal({
           <div className="px-6 py-5 space-y-5">
             {/* Hidden ID field */}
             <input type="hidden" {...register("id")} />
+            <input type="hidden" {...register("status")} />
 
             {/* Row 1: License Plate & Hospital ID */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -112,31 +116,26 @@ export function AmbulanceFormModal({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Status */}
               <div>
-                <label
-                  htmlFor="status"
-                  className="block text-sm font-medium text-body mb-1.5"
-                >
-                  Status <span className="text-danger">*</span>
-                </label>
-                <select
+                <SelectField
                   id="status"
-                  {...register("status")}
-                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading ${
-                    errors.status
-                      ? "border-danger focus:ring-danger/20"
-                      : "border-border focus:ring-primary/30 focus:border-primary"
-                  }`}
-                >
-                  <option value="AVAILABLE">Available</option>
-                  <option value="IN_TRANSIT">In Transit</option>
-                  <option value="BUSY">Busy</option>
-                  <option value="MAINTENANCE">Maintenance</option>
-                </select>
-                {errors.status && (
-                  <p className="mt-1.5 text-xs text-danger">
-                    {errors.status.message}
-                  </p>
-                )}
+                  label="Status"
+                  required
+                  value={selectedStatus}
+                  onChange={(value) =>
+                    setValue("status", value as Ambulance["status"], {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    })
+                  }
+                  options={[
+                    { value: "AVAILABLE", label: "Available" },
+                    { value: "IN_TRANSIT", label: "In Transit" },
+                    { value: "BUSY", label: "Busy" },
+                    { value: "MAINTENANCE", label: "Maintenance" },
+                  ]}
+                  triggerClassName="h-auto rounded-xl px-3.5 py-2.5 text-sm"
+                  error={errors.status?.message}
+                />
               </div>
 
               {/* Latitude */}

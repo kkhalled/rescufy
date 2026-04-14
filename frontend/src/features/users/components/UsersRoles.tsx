@@ -12,6 +12,7 @@ export default function UsersRoles({
 
   const AllRoles = [
     { label: t("roles.all"), value: "all" },
+    { label: t("roles.SuperAdmin"), value: "SuperAdmin" },
     { label: t("roles.Admin"), value: "Admin" },
     { label: t("roles.HospitalAdmin"), value: "HospitalAdmin" },
     { label: t("roles.Paramedic"), value: "Paramedic" },
@@ -26,6 +27,7 @@ export default function UsersRoles({
         value={value}
         onChange={onChange}
         options={AllRoles}
+        triggerClassName="h-10"
       />
     </>
   );

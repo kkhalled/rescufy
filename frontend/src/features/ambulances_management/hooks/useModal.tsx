@@ -8,7 +8,7 @@ import type { z } from "zod";
 type AmbulanceFormData = z.infer<typeof ambulanceSchema>;
 
 interface AmbulanceFormModalProps {
-  onSubmit: (ambulance: Ambulance) => void;
+  onSubmit: (ambulance: Ambulance) => void | Promise<void>;
   ambulance?: Ambulance;
   mode: "add" | "edit";
 }
@@ -22,6 +22,8 @@ export default function useModal({
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<AmbulanceFormData>({
     resolver: zodResolver(ambulanceSchema),
@@ -50,13 +52,20 @@ export default function useModal({
     }
   }, [ambulance, mode, reset]);
 
-  const submitHandler = handleSubmit((data) => {
-    onSubmit(data as Ambulance);
+  const submitHandler = handleSubmit(async (data) => {
+    await onSubmit({
+      ...(data as Ambulance),
+      id: data.id?.trim() || `AMB-${Date.now()}`,
+      licensePlate: data.licensePlate.trim().toUpperCase(),
+      hospitalId: data.hospitalId.trim(),
+    });
   });
 
   return {
     register,
     submitHandler,
     errors,
+    watch,
+    setValue,
   };
 }

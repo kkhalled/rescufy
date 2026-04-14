@@ -3,6 +3,14 @@
         "title": "Users Management",
         "subtitle": "Manage user accounts and role assignments"
     },
+    "overview": {
+        "totalUsers": "Total Users",
+        "adminTeam": "Admin Team",
+        "hospitalAdmins": "Hospital Admins",
+        "fieldTeam": "Field Team",
+        "usersFound": "{{count}} users found",
+        "activeFilters": "Filters Active"
+    },
     "title": "Users",
     "subtitle": "Manage system users",
 
@@ -10,7 +18,7 @@
         "name": "Name",
         "email": "Email", 
         "password": "Password",
-        "phoneNumber": "Phone Number",
+        "phone": "Phone Number",
         "role": "Role",
         "hospital": "Hospital",
         "namePlaceholder": "Enter user name",

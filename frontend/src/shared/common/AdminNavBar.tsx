@@ -38,9 +38,6 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
           >
             <Menu size={22} className="text-heading" />
           </button>
-
-          {/* Desktop Search */}
-          <div className="hidden md:flex items-center flex-1 max-w-md"></div>
         </div>
 
         {/* Right Section - Actions */}

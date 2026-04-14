@@ -3,6 +3,14 @@
         "title": "إدارة المستخدمين",
         "subtitle": "إدارة حسابات المستخدمين وتعيينات الأدوار"
     },
+    "overview": {
+        "totalUsers": "إجمالي المستخدمين",
+        "adminTeam": "فريق الإدارة",
+        "hospitalAdmins": "مديرو المستشفيات",
+        "fieldTeam": "الفرق الميدانية",
+        "usersFound": "تم العثور على {{count}} مستخدم",
+        "activeFilters": "فلاتر نشطة"
+    },
     "title": "المستخدمون",
     "subtitle": "إدارة مستخدمي النظام",
     "addUser": "إضافة مستخدم",
@@ -11,6 +19,7 @@
     "search": "بحث عن مستخدمين...",
     "roles": {
         "all": "جميع الأدوار",
+        "SuperAdmin": "مدير عام",
         "System SuperAdmin": "مدير عام",
         "Admin": "مدير النظام",
         "HospitalAdmin": "مدير المستشفى",

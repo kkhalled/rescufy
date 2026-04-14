@@ -1,16 +1,13 @@
-export default function Logo({ text }: { text?: string }) {
-  return (
-    <div className="flex mx-auto items-center justify-center gap-2 mb-8">
-      <div className="h-12 w-12 md:h-14 md:w-14 rounded-2xl bg-primary shadow-[0_0_15px_rgba(37,99,235,0.3)] flex items-center justify-center border border-white/20">
-        <span className="text-xl md:text-2xl font-bold text-white">⌁</span>
-      </div>
+import logo from "@/assets/Rescufy-Logo.svg";
 
-      {text && <div>
-        {/* Text colors adapt: Dark Blue in light mode, White in dark mode */}
-        <h2 className="text-[28px] md:text-[32px] font-bold leading-tight text-indigo-600 dark:text-white tracking-tight transition-colors">
-          {text}
-        </h2>
-      </div>}
+export default function Logo() {
+  return (
+    <div className="flex mx-auto items-center justify-center gap-2 mb-1">
+      <img
+        src={logo}
+        alt="Rescufy Logo"
+        className="h-auto w-[190px] object-contain md:w-full md:scale-[2.05] md:object-center"
+      />
     </div>
   );
 }
