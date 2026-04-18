@@ -55,9 +55,11 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
+      
       <ProtectedRoute requiredRole="Admin">
         <AdminLayout />
       </ProtectedRoute>
+     
     ),
     children: [
       { index: true, element: withLoading(<DashBoard />) },

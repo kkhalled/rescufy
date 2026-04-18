@@ -29,15 +29,52 @@ export function useUpdateUser() {
         return null;
       }
 
+      const resolvedRole =
+        userdata.role ||
+        (Array.isArray(userdata.roles) && userdata.roles.length > 0
+          ? userdata.roles[0]
+          : undefined);
+
+      const payload: Record<string, unknown> = {
+        id: userId,
+        email: userdata.email,
+        name: userdata.name,
+      };
+
+      if (resolvedRole) {
+        payload.role = resolvedRole;
+        payload.roles = [resolvedRole];
+      }
+
+      if (typeof userdata.password === "string" && userdata.password.trim()) {
+        payload.password = userdata.password;
+      }
+
+      if (typeof userdata.phoneNumber === "string") {
+        payload.phoneNumber = userdata.phoneNumber;
+      } else if (userdata.phoneNumber === null) {
+        payload.phoneNumber = null;
+      }
+
+      if (typeof userdata.nationalId === "string") {
+        payload.nationalId = userdata.nationalId;
+      }
+
+      if (userdata.gender) {
+        payload.gender = userdata.gender;
+      }
+
+      if (typeof userdata.age === "number" && Number.isFinite(userdata.age)) {
+        payload.age = userdata.age;
+      }
+
+      if (typeof userdata.isBanned === "boolean") {
+        payload.isBanned = userdata.isBanned;
+      }
+
       const response = await axios.put(
         getApiUrl(API_CONFIG.ENDPOINTS.USERS.UPDATE(userId)),
-        {
-          email: userdata.email,
-          password: userdata.password,
-          name: userdata.name,
-          phoneNumber: userdata.phoneNumber,
-          role: userdata.role, // Sends "Admin" | "HospitalAdmin" | "Paramedic" | "SuperAdmin"
-        },
+        payload,
         {
           headers: {
             "Content-Type": "application/json",

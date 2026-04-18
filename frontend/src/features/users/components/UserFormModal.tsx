@@ -8,7 +8,36 @@ import useModal from "../hooks/useModal";
 import { useGetHospitals } from "@/features/hospitals_management/hooks/useGetHospitals";
 import SelectField from "@/shared/ui/SelectField";
 
-type UserFormRole = "Admin" | "HospitalAdmin" | "Paramedic" | "AmbulanceDriver";
+type UserFormRole =
+  | "Admin"
+  | "HospitalAdmin"
+  | "Paramedic"
+  | "AmbulanceDriver"
+  | "SuperAdmin";
+type UserFormGender = "Male" | "Female";
+
+const ROLE_SELECT_VALUE_MAP: Record<string, UserFormRole> = {
+  admin: "Admin",
+  hospitaladmin: "HospitalAdmin",
+  paramedic: "Paramedic",
+  ambulancedriver: "AmbulanceDriver",
+  superadmin: "SuperAdmin",
+  "system superadmin": "SuperAdmin",
+};
+
+const normalizeRoleForSelect = (value: unknown): UserFormRole | "" => {
+  if (typeof value !== "string") return "";
+  const normalized = value.trim().toLowerCase();
+  return ROLE_SELECT_VALUE_MAP[normalized] || "";
+};
+
+const normalizeGenderForSelect = (value: unknown): UserFormGender | "" => {
+  if (typeof value !== "string") return "";
+  const normalized = value.trim().toLowerCase();
+  if (normalized === "male") return "Male";
+  if (normalized === "female") return "Female";
+  return "";
+};
 
 interface UserFormModalProps {
   isOpen: boolean;
@@ -39,7 +68,16 @@ export function UserFormModal({
     fetchHospitals,
     isLoading: isHospitalsLoading,
   } = useGetHospitals();
-  const selectedRole = watch("role");
+  const selectedRole =
+    normalizeRoleForSelect(watch("role")) ||
+    (mode === "edit"
+      ? normalizeRoleForSelect(
+          user?.roles && user.roles.length > 0 ? user.roles[0] : user?.role,
+        )
+      : "");
+  const selectedGender =
+    normalizeGenderForSelect(watch("gender")) ||
+    (mode === "edit" ? normalizeGenderForSelect(user?.gender) : "");
   const selectedHospitalId = watch("hospitalId") || "";
 
   // Fetch hospitals when the modal opens and role is HospitalAdmin
@@ -47,7 +85,7 @@ export function UserFormModal({
     if (isOpen && selectedRole === "HospitalAdmin") {
       fetchHospitals();
     }
-  }, [isOpen, selectedRole]);
+  }, [isOpen, selectedRole, fetchHospitals]);
 
   if (!isOpen) return null;
 
@@ -76,6 +114,7 @@ export function UserFormModal({
         <form onSubmit={submitHandler} className="flex-1 overflow-y-auto">
           <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
             <input type="hidden" {...register("role", { required: true })} />
+            <input type="hidden" {...register("gender", { required: mode === "add" })} />
             <input type="hidden" {...register("hospitalId")} />
 
             {/* Name */}
@@ -132,13 +171,107 @@ export function UserFormModal({
               )}
             </div>
 
+            {/* Additional user profile fields */}
+            <>
+              {/* National ID */}
+              <div>
+                <label
+                  htmlFor="nationalId"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  {t("form.nationalId")} {mode === "add" && <span className="text-danger">*</span>}
+                </label>
+                <input
+                  type="text"
+                  id="nationalId"
+                  {...register("nationalId", { required: mode === "add" })}
+                  disabled={isLoading}
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${
+                    errors.nationalId
+                      ? "border-danger focus:ring-danger/20"
+                      : "border-border focus:ring-primary/30 focus:border-primary"
+                  }`}
+                  placeholder={t("form.nationalIdPlaceholder")}
+                />
+                {errors.nationalId && (
+                  <p className="mt-1.5 text-xs text-danger">
+                    {errors.nationalId.message ||
+                      t("form.nationalId") + " is required"}
+                  </p>
+                )}
+              </div>
+
+              {/* Gender */}
+              <div>
+                <SelectField
+                  id="gender"
+                  label={t("form.gender")}
+                  required={mode === "add"}
+                  value={selectedGender}
+                  onChange={(value) =>
+                    setValue("gender", value as UserFormGender, {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    })
+                  }
+                  options={[
+                    { value: "Male", label: t("genders.Male") },
+                    { value: "Female", label: t("genders.Female") },
+                  ]}
+                  placeholder={t("form.selectGender")}
+                  disabled={isLoading}
+                  triggerClassName="rounded-xl px-3.5 py-2.5 text-sm"
+                  error={
+                    errors.gender?.message
+                      ? String(errors.gender.message)
+                      : undefined
+                  }
+                />
+              </div>
+
+              {/* Age */}
+              <div>
+                <label
+                  htmlFor="age"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  {t("form.age")} {mode === "add" && <span className="text-danger">*</span>}
+                </label>
+                <input
+                  type="number"
+                  id="age"
+                  min={mode === "add" ? 1 : 0}
+                  max={120}
+                  {...register("age", {
+                    required: mode === "add",
+                    setValueAs: (value) =>
+                      value === "" || value === null || value === undefined
+                        ? undefined
+                        : Number(value),
+                  })}
+                  disabled={isLoading}
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${
+                    errors.age
+                      ? "border-danger focus:ring-danger/20"
+                      : "border-border focus:ring-primary/30 focus:border-primary"
+                  }`}
+                  placeholder={t("form.agePlaceholder")}
+                />
+                {errors.age && (
+                  <p className="mt-1.5 text-xs text-danger">
+                    {errors.age.message || t("form.age") + " is required"}
+                  </p>
+                )}
+              </div>
+            </>
+
             {/* Password */}
             <div>
               <label
                 htmlFor="password"
                 className="block text-sm font-medium text-body mb-1.5"
               >
-                {t("form.password")} <span className="text-danger">*</span>
+                {t("form.password")} {mode === "add" && <span className="text-danger">*</span>}
               </label>
               <input
                 type="password"
@@ -166,12 +299,12 @@ export function UserFormModal({
                 htmlFor="phoneNumber"
                 className="block text-sm font-medium text-body mb-1.5"
               >
-                {t("form.phone")} <span className="text-danger">*</span>
+                {t("form.phone")} {mode === "add" && <span className="text-danger">*</span>}
               </label>
               <input
                 type="tel"
                 id="phoneNumber"
-                {...register("phoneNumber", { required: true })}
+                {...register("phoneNumber", { required: mode === "add" })}
                 disabled={isLoading}
                 className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${
                   errors.phoneNumber
@@ -182,8 +315,7 @@ export function UserFormModal({
               />
               {errors.phoneNumber && (
                 <p className="mt-1.5 text-xs text-danger">
-                  {errors.phoneNumber.message ||
-                    t("form.phone") + " is required"}
+                  {errors.phoneNumber.message || t("form.phone") + " is required"}
                 </p>
               )}
             </div>
@@ -209,6 +341,9 @@ export function UserFormModal({
                   }
                 }}
                 options={[
+                  ...(mode === "edit"
+                    ? [{ value: "SuperAdmin", label: t("roles.SuperAdmin") }]
+                    : []),
                   { value: "Admin", label: t("roles.Admin") },
                   { value: "HospitalAdmin", label: t("roles.HospitalAdmin") },
                   { value: "Paramedic", label: t("roles.Paramedic") },
@@ -261,6 +396,9 @@ export function UserFormModal({
                     {t("form.loadingHospitals")}
                   </p>
                 )}
+                <p className="mt-1.5 text-xs text-muted">
+                  {t("form.hospitalAdminHint")}
+                </p>
               </div>
             )}
           </div>

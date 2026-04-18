@@ -1,20 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEnvelope,
-  faEye,
-  faEyeSlash,
   faPenToSquare,
   faPhone,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 interface UserRowProps {
   id: string;
   name: string;
   email: string;
-  password: string;
   role: string;
   phoneNumber?: string | null;
   isBanned?: boolean;
@@ -26,14 +23,12 @@ export function UserRow({
   id,
   name,
   email,
-  password,
   role,
   phoneNumber,
   isBanned,
   onEdit,
   onDelete,
 }: UserRowProps) {
-  const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation(["users", "common"]);
 
   const initials = useMemo(() => {
@@ -88,9 +83,6 @@ export function UserRow({
     ? "border-danger/25 bg-danger/10 text-danger"
     : "border-success/25 bg-success/10 text-success";
 
-  const maskedPassword = password || "••••••••";
-  const shownPassword = showPassword ? maskedPassword : "••••••••";
-
   return (
     <>
       <div className="hidden items-center gap-3 px-5 py-4 transition-colors hover:bg-surface-muted/40 md:grid md:grid-cols-[2.2fr_1.3fr_1.2fr_0.9fr_auto]">
@@ -128,18 +120,9 @@ export function UserRow({
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-sm text-body">{shownPassword}</span>
-          <button
-            onClick={() => setShowPassword((prev) => !prev)}
-            className="rounded-lg p-1 text-muted transition-colors hover:bg-surface-muted hover:text-heading"
-            aria-label={showPassword ? "Hide password" : "Show password"}
-          >
-            <FontAwesomeIcon
-              icon={showPassword ? faEyeSlash : faEye}
-              className="h-3.5 w-3.5"
-            />
-          </button>
+        <div className="flex min-w-0 items-center gap-2" dir="ltr">
+          <FontAwesomeIcon icon={faPhone} className="h-3.5 w-3.5 shrink-0 text-muted" />
+          <span className="truncate text-sm text-body">{phoneNumber || "N/A"}</span>
         </div>
 
         <div className="flex items-center justify-end gap-1">
@@ -195,29 +178,10 @@ export function UserRow({
               <span className="truncate">{email}</span>
             </p>
 
-            {phoneNumber ? (
-              <p className="flex items-center gap-2 text-xs text-body" dir="ltr">
-                <FontAwesomeIcon icon={faPhone} className="h-3 w-3 text-muted" />
-                <span className="truncate">{phoneNumber}</span>
-              </p>
-            ) : null}
-
-            <div className="flex items-center justify-between rounded-lg border border-border/70 bg-surface-muted/40 px-2.5 py-2">
-              <p className="text-xs text-muted">{t("users:row.password")}</p>
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-xs text-body">{shownPassword}</span>
-                <button
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="rounded p-1 text-muted transition-colors hover:bg-surface-muted hover:text-heading"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  <FontAwesomeIcon
-                    icon={showPassword ? faEyeSlash : faEye}
-                    className="h-3 w-3"
-                  />
-                </button>
-              </div>
-            </div>
+            <p className="flex items-center gap-2 text-xs text-body" dir="ltr">
+              <FontAwesomeIcon icon={faPhone} className="h-3 w-3 text-muted" />
+              <span className="truncate">{phoneNumber || "N/A"}</span>
+            </p>
           </div>
 
           <div className="mt-3 flex items-center justify-end gap-2 border-t border-border/70 pt-3">

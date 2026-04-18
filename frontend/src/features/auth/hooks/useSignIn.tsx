@@ -150,7 +150,7 @@ export default function useSignIn() {
 
   const formik = useFormik({
     initialValues: {
-      email: "superadmin@mohayaa.com",
+      email: "superadmin@rescufy.com",
       password: "P@ssword12",
     },
     onSubmit: handleSubmit,

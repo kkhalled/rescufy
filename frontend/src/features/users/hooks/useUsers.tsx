@@ -1,10 +1,11 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import type { User } from "../types/users.types";
 import { useAddUser } from "./useAddUser";
 import { useGetUsers } from "./useGetUsers";
 import { useUpdateUser } from "./useUpdateUser";
 import { useDeleteUser } from "./useDeleteUser";
 import { useAssignHospital } from "./useAssignHospital";
+import { useGetUserById } from "./useGetUserById";
 
 export function useUsers() {
   const [search, setSearch] = useState("");
@@ -12,9 +13,11 @@ export function useUsers() {
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [selectedUser, setSelectedUser] = useState<User | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const editRequestIdRef = useRef(0);
 
   const { addUser, isLoading: isAddLoading } = useAddUser();
   const { users, isLoading: isFetchLoading, fetchUsers } = useGetUsers();
+  const { fetchUserById } = useGetUserById();
   const { updateUser, isLoading: isUpdateLoading } = useUpdateUser();
   const { deleteUser, isLoading: isDeleteLoading } = useDeleteUser();
   const { assignHospital, isLoading: isAssignLoading } = useAssignHospital();
@@ -38,18 +41,38 @@ export function useUsers() {
   }, [users, search]);
 
   const openAddModal = useCallback(() => {
+    editRequestIdRef.current += 1;
     setSelectedUser(undefined);
     setModalMode("add");
     setIsModalOpen(true);
   }, []);
 
   const openEditModal = useCallback((user: User) => {
+    editRequestIdRef.current += 1;
+    const requestId = editRequestIdRef.current;
+
     setSelectedUser(user);
     setModalMode("edit");
-    setIsModalOpen(true);
-  }, []);
+    const userId = user.id;
+    if (!userId) {
+      setIsModalOpen(true);
+      return;
+    }
+
+    void (async () => {
+      const fetchedUser = await fetchUserById(userId);
+
+      if (requestId !== editRequestIdRef.current) {
+        return;
+      }
+
+      setSelectedUser(fetchedUser || user);
+      setIsModalOpen(true);
+    })();
+  }, [fetchUserById]);
 
   const closeModal = useCallback(() => {
+    editRequestIdRef.current += 1;
     setIsModalOpen(false);
     setSelectedUser(undefined);
   }, []);

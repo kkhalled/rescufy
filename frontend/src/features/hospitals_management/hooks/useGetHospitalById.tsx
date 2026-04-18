@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { getApiUrl, API_CONFIG } from "@/config/api.config";
@@ -22,14 +22,21 @@ export type AdminHospitalProfile = {
 export function useGetHospitalById() {
   const [hospital, setHospital] = useState<AdminHospitalProfile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const inFlightHospitalIdRef = useRef<string | null>(null);
   const { t } = useTranslation(["hospitals", "auth"]);
   const { isRTL } = useLanguage();
 
   const fetchHospitalById = useCallback(
     async (hospitalId: string): Promise<AdminHospitalProfile | null> => {
+      if (inFlightHospitalIdRef.current === hospitalId) {
+        return null;
+      }
+
+      inFlightHospitalIdRef.current = hospitalId;
       setIsLoading(true);
       setHospital(null);
       const toastPosition = isRTL ? "top-left" : "top-right";
+      const toastId = `hospital-profile-fetch-error-${hospitalId}`;
 
       try {
         const token = getAuthToken();
@@ -37,6 +44,7 @@ export function useGetHospitalById() {
         if (!token) {
           toast.error(t("auth:signIn.tokenNotFound"), {
             position: toastPosition,
+            id: toastId,
           });
           return null;
         }
@@ -58,20 +66,35 @@ export function useGetHospitalById() {
         console.error("Fetch hospital profile error:", error);
 
         if (error.response?.status === 401) {
-          toast.error(t("auth:signIn.unauthorized"), { position: toastPosition });
+          toast.error(t("auth:signIn.unauthorized"), {
+            position: toastPosition,
+            id: toastId,
+          });
         } else if (error.response?.status === 404) {
-          toast.error(t("hospitals:api.notFound"), { position: toastPosition });
+          toast.error(t("hospitals:api.notFound"), {
+            position: toastPosition,
+            id: toastId,
+          });
         } else if (error.message === "Network Error") {
-          toast.error(t("auth:signIn.networkError"), { position: toastPosition });
+          toast.error(t("auth:signIn.networkError"), {
+            position: toastPosition,
+            id: toastId,
+          });
         } else {
           toast.error(
             error.response?.data?.message || t("hospitals:api.fetchProfileError"),
-            { position: toastPosition },
+            {
+              position: toastPosition,
+              id: toastId,
+            },
           );
         }
 
         return null;
       } finally {
+        if (inFlightHospitalIdRef.current === hospitalId) {
+          inFlightHospitalIdRef.current = null;
+        }
         setIsLoading(false);
       }
     },

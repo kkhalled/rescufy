@@ -186,7 +186,7 @@ export default function AllUsers() {
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.name")}</p>
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.email")}</p>
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.role")}</p>
-          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("form.password")}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("form.phone")}</p>
           <p className="text-end text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.actions")}</p>
         </div>
 
@@ -207,7 +207,6 @@ export default function AllUsers() {
                     id={user.id || ""}
                     name={user.name}
                     email={user.email}
-                    password={user.password || "••••••••"}
                     role={userRole}
                     phoneNumber={user.phoneNumber}
                     isBanned={user.isBanned}
@@ -227,6 +226,7 @@ export default function AllUsers() {
       </main>
 
       <UserFormModal
+        key={`${modalMode}-${selectedUser?.id ?? "new"}`}
         isOpen={isModalOpen}
         onClose={closeModal}
         onSubmit={submitUser}

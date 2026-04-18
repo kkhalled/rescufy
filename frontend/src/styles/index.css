@@ -87,25 +87,25 @@
   --text-muted: #6b7280;
 
   /* Backgrounds */
-  --background: #f7f8fa;
-  --background-card: #ffffff;
-  --background-second: #f3f3f4;
+  --background: #f2f4f7;
+  --background-card: #f8fafc;
+  --background-second: #eceff3;
 
   /* Surfaces */
-  --surface-card: #ffffff;
-  --surface-soft: #f3f4f6;
-  --surface-muted: #f9fafb;
+  --surface-card: #f8fafc;
+  --surface-soft: #eaf0f5;
+  --surface-muted: #f1f4f8;
 
   /* Borders */
-  --border-default: #e5e7eb;
+  --border-default: #d7dde6;
 
   /* Radius */
   --radius-card: 16px;
   --radius: 0.625rem;
 
   /* Shadows */
-  --shadow-soft: 0 2px 10px rgba(0, 0, 0, 0.06);
-  --shadow-card: 0 4px 18px rgba(0, 0, 0, 0.08);
+  --shadow-soft: 0 2px 10px rgba(15, 23, 42, 0.05);
+  --shadow-card: 0 4px 18px rgba(15, 23, 42, 0.07);
 
   /* ⚠️ Alert shadow (خفيف في اللايت) */
   --shadow-alert: 0 0 20px rgba(230, 57, 70, 0.25);

@@ -31,6 +31,12 @@
         "namePlaceholder": "أدخل الاسم الكامل",
         "email": "البريد الإلكتروني",
         "emailPlaceholder": "أدخل البريد الإلكتروني",
+        "nationalId": "الرقم القومي",
+        "nationalIdPlaceholder": "أدخل الرقم القومي المكوّن من 14 رقمًا",
+        "gender": "النوع",
+        "selectGender": "اختر النوع",
+        "age": "العمر",
+        "agePlaceholder": "أدخل العمر",
         "password": "كلمة المرور",
         "passwordPlaceholder": "أدخل كلمة المرور",
         "phone": "رقم الهاتف",
@@ -39,7 +45,12 @@
         "selectRole": "اختر دوراً",
         "hospital": "المستشفى",
         "selectHospital": "اختر مستشفى",
-        "loadingHospitals": "جاري تحميل المستشفيات..."
+        "loadingHospitals": "جاري تحميل المستشفيات...",
+        "hospitalAdminHint": "اختر المستشفى التي سيديرها مدير المستشفى هذا."
+    },
+    "genders": {
+        "Male": "ذكر",
+        "Female": "أنثى"
     },
     "actions": {
         "add": "إضافة مستخدم",

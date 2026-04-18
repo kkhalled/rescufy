@@ -408,24 +408,28 @@ export function useAmbulances() {
   const [selectedAmbulance, setSelectedAmbulance] = useState<Ambulance | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const ambulancesRef = useRef<AmbulanceControlItem[]>(ambulances);
+  const hasFetchedInitiallyRef = useRef(false);
+  const fetchInFlightRef = useRef(false);
 
   const appendAlert = useCallback((alert: AmbulanceRealtimeAlert) => {
     setAlerts((prev) => [alert, ...prev].slice(0, 12));
   }, []);
 
   const showApiError = useCallback(
-    (error: unknown, fallbackKey: string) => {
+    (error: unknown, fallbackKey: string, toastId?: string) => {
       const fallbackMessage = t(fallbackKey);
 
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         toast.error(t("auth:signIn.unauthorized"), {
           position: toastPosition,
+          id: toastId,
         });
         return;
       }
 
       toast.error(getApiErrorMessage(error) ?? fallbackMessage, {
         position: toastPosition,
+        id: toastId,
       });
     },
     [t, toastPosition],
@@ -457,6 +461,11 @@ export function useAmbulances() {
   }, []);
 
   const fetchAmbulances = useCallback(async () => {
+    if (fetchInFlightRef.current) {
+      return false;
+    }
+
+    fetchInFlightRef.current = true;
     setIsLoading(true);
 
     const headers = getAuthHeaders();
@@ -484,9 +493,10 @@ export function useAmbulances() {
       return true;
     } catch (error) {
       setConnectionState("disconnected");
-      showApiError(error, "ambulances:api.fetchAllError");
+      showApiError(error, "ambulances:api.fetchAllError", "ambulances-fetch-error");
       return false;
     } finally {
+      fetchInFlightRef.current = false;
       setIsLoading(false);
     }
   }, [getAuthHeaders, hydrateAmbulances, isSignalREnabled, showApiError]);
@@ -496,6 +506,11 @@ export function useAmbulances() {
   }, [ambulances]);
 
   useEffect(() => {
+    if (hasFetchedInitiallyRef.current) {
+      return;
+    }
+
+    hasFetchedInitiallyRef.current = true;
     void fetchAmbulances();
   }, [fetchAmbulances]);
 

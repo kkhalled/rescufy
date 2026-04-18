@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { getApiUrl, API_CONFIG } from "@/config/api.config";
@@ -14,12 +14,19 @@ import { getAuthToken } from "@/features/auth/utils/auth.utils";
 export function useGetMyHospital() {
   const [hospital, setHospital] = useState<Hospital | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const fetchInFlightRef = useRef(false);
   const { t } = useTranslation(["hospitals", "auth"]);
   const { isRTL } = useLanguage();
 
   const fetchMyHospital = useCallback(async (): Promise<Hospital | null> => {
+    if (fetchInFlightRef.current) {
+      return null;
+    }
+
+    fetchInFlightRef.current = true;
     setIsLoading(true);
     const toastPosition = isRTL ? "top-left" : "top-right";
+    const toastId = "my-hospital-fetch-error";
 
     try {
       const token = getAuthToken();
@@ -27,6 +34,7 @@ export function useGetMyHospital() {
       if (!token) {
         toast.error(t("auth:signIn.tokenNotFound"), {
           position: toastPosition,
+          id: toastId,
         });
         return null;
       }
@@ -48,19 +56,32 @@ export function useGetMyHospital() {
       console.error("Fetch my hospital error:", error);
 
       if (error.response?.status === 401) {
-        toast.error(t("auth:signIn.unauthorized"), { position: toastPosition });
+        toast.error(t("auth:signIn.unauthorized"), {
+          position: toastPosition,
+          id: toastId,
+        });
       } else if (error.response?.status === 404) {
-        toast.error(t("hospitals:api.notFound"), { position: toastPosition });
+        toast.error(t("hospitals:api.notFound"), {
+          position: toastPosition,
+          id: toastId,
+        });
       } else if (error.message === "Network Error") {
-        toast.error(t("auth:signIn.networkError"), { position: toastPosition });
+        toast.error(t("auth:signIn.networkError"), {
+          position: toastPosition,
+          id: toastId,
+        });
       } else {
         toast.error(
           error.response?.data?.message || t("hospitals:api.fetchError"),
-          { position: toastPosition }
+          {
+            position: toastPosition,
+            id: toastId,
+          }
         );
       }
       return null;
     } finally {
+      fetchInFlightRef.current = false;
       setIsLoading(false);
     }
   }, [isRTL, t]);

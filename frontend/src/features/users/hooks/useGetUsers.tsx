@@ -7,6 +7,29 @@ import type { User } from "../types/users.types";
 import { useLanguage } from "@/i18n/useLanguage";
 import { getAuthToken } from "@/features/auth/utils/auth.utils";
 
+const ROLE_VALUE_MAP: Record<string, User["role"]> = {
+  admin: "Admin",
+  hospitaladmin: "HospitalAdmin",
+  paramedic: "Paramedic",
+  ambulancedriver: "AmbulanceDriver",
+  superadmin: "SuperAdmin",
+  "system superadmin": "SuperAdmin",
+};
+
+const normalizeRoleValue = (value: unknown): User["role"] | undefined => {
+  if (typeof value !== "string") return undefined;
+  const normalized = value.trim().toLowerCase();
+  return ROLE_VALUE_MAP[normalized];
+};
+
+const normalizeGenderValue = (value: unknown): User["gender"] | undefined => {
+  if (typeof value !== "string") return undefined;
+  const normalized = value.trim().toLowerCase();
+  if (normalized === "male") return "Male";
+  if (normalized === "female") return "Female";
+  return undefined;
+};
+
 /**
  * Hook for fetching users with optional role filtering
  * Always includes Admin users regardless of role filter
@@ -44,13 +67,35 @@ export function useGetUsers() {
         },
       });
 
-      let fetchedUsers: User[] = response.data;
+      const responseUsers = Array.isArray(response.data) ? response.data : [];
 
-      // Ensure password field exists (APIs typically don't return actual passwords)
-      fetchedUsers = fetchedUsers.map((user: any) => ({
-        ...user,
-        password: user.password || '••••••••'  // Placeholder for password display
-      }));
+      // Normalize backend users to a stable UI shape for list + edit modal.
+      const fetchedUsers: User[] = responseUsers.map((user: any) => {
+        const normalizedRoles = Array.isArray(user.roles)
+          ? user.roles.flatMap((role: unknown) => {
+              const normalizedRole = normalizeRoleValue(role);
+              return normalizedRole ? [normalizedRole] : [];
+            })
+          : [];
+
+        const normalizedRole =
+          normalizedRoles[0] || normalizeRoleValue(user.role);
+
+        return {
+          ...user,
+          role: normalizedRole,
+          roles: normalizedRoles.length
+            ? normalizedRoles
+            : normalizedRole
+              ? [normalizedRole]
+              : [],
+          nationalId: typeof user.nationalId === "string" ? user.nationalId : "",
+          gender: normalizeGenderValue(user.gender),
+          age: typeof user.age === "number" && Number.isFinite(user.age) ? user.age : undefined,
+          phoneNumber:
+            typeof user.phoneNumber === "string" ? user.phoneNumber : null,
+        };
+      });
 
       // If filtering by a specific role (not Admin), also fetch Admin users
       // if (roleFilter && roleFilter !== "all" && roleFilter !== "Admin") {

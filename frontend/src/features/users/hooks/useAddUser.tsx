@@ -33,15 +33,13 @@ export function useAddUser() {
         getApiUrl(API_CONFIG.ENDPOINTS.USERS.CREATE),
         {
           email: userdata.email,
+          nationalId: userdata.nationalId,
+          gender: userdata.gender,
+          age: userdata.age,
           password: userdata.password,
           name: userdata.name,
           phoneNumber: userdata.phoneNumber,
-          role: userdata.role, 
-          nationalId: "12345678901112", // Placeholder national ID
-          age:"20",
-          gender:"Male",
-          hospitalId: userdata.hospitalId || null, // Optional hospital assignment for roles like "HospitalAdmin"
-           // Sends "Admin" | "HospitalAdmin" | "Paramedic" | "SuperAdmin"
+          role: userdata.role,
         },
         {
           headers: {
