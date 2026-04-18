@@ -1,8 +1,6 @@
 <div align="center">
-
-<img src="assets/Rescufy-Logo.svg" alt="Rescufy Logo" width="180" />
-
-# RESCUFY
+<img src="assets/Rescufy-Logo.svg" alt="Rescufy Logo" width="280" />
+  
 ### *AI-Powered Emergency Intelligence & Response Platform*
 
 <p>
@@ -300,6 +298,6 @@ Rescufy demonstrates:
 ---
 
 <div align="center">
-  <img src="assets/Rescufy-Logo.svg" alt="Rescufy Footer Logo" width="95" />
+  <img src="assets/Rescufy-Logo.svg" alt="Rescufy Footer Logo" width="150" />
   <p><i>Built to prioritize urgency. Built to protect lives.</i></p>
 </div>
