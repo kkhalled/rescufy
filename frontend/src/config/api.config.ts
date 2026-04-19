@@ -4,7 +4,7 @@
  */
 
 export const API_CONFIG = {
-  BASE_URL: "https://rescuffy.runasp.net",
+  BASE_URL: "http://umedical.runasp.net",
   ENDPOINTS: {
     AUTH: {
       LOGIN: "/api/Auth/login",
@@ -42,6 +42,11 @@ export const API_CONFIG = {
       GET_ALL: "/api/Request",
       GET_BY_ID: (id: string) => `/api/Request/${id}`,
     },
+    DASHBOARD: {
+      GET_STATS: "/api/Dashboard/stats",
+      GET_CRITICAL:"/api/Dashboard/critical",
+    },
+
   },
 } as const;
 

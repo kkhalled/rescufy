@@ -29,8 +29,13 @@ export default function useModal({
     resolver: zodResolver(ambulanceSchema),
     defaultValues: {
       id: "",
-      licensePlate: "",
-      hospitalId: "",
+      name: "",
+      ambulanceNumber: "",
+      vehicleInfo: "",
+      driverPhone: "",
+      driverName: "",
+      ambulancePointId: "",
+      startingPrice: 0,
       status: "AVAILABLE",
       latitude: 0,
       longitude: 0,
@@ -39,12 +44,30 @@ export default function useModal({
 
   useEffect(() => {
     if (ambulance && mode === "edit") {
-      reset(ambulance);
+      reset({
+        id: ambulance.id,
+        name: ambulance.name,
+        ambulanceNumber: ambulance.ambulanceNumber,
+        vehicleInfo: ambulance.vehicleInfo,
+        driverPhone: ambulance.driverPhone,
+        driverName: ambulance.driverName ?? "",
+        ambulancePointId:
+          ambulance.ambulancePointId === null ? "" : String(ambulance.ambulancePointId),
+        startingPrice: ambulance.startingPrice,
+        status: ambulance.status,
+        latitude: ambulance.latitude,
+        longitude: ambulance.longitude,
+      });
     } else {
       reset({
-        id: `AMB-${Date.now()}`,
-        licensePlate: "",
-        hospitalId: "",
+        id: String(Date.now()),
+        name: "",
+        ambulanceNumber: "",
+        vehicleInfo: "",
+        driverPhone: "",
+        driverName: "",
+        ambulancePointId: "",
+        startingPrice: 0,
         status: "AVAILABLE",
         latitude: 0,
         longitude: 0,
@@ -53,11 +76,28 @@ export default function useModal({
   }, [ambulance, mode, reset]);
 
   const submitHandler = handleSubmit(async (data) => {
+    const normalizedName = data.name.trim();
+    const normalizedNumber = data.ambulanceNumber.trim().toUpperCase();
+    const normalizedPointId = data.ambulancePointId?.trim() || "";
+    const parsedPointId = Number(normalizedPointId);
+    const ambulancePointId =
+      normalizedPointId && Number.isFinite(parsedPointId) ? parsedPointId : null;
+
     await onSubmit({
-      ...(data as Ambulance),
-      id: data.id?.trim() || `AMB-${Date.now()}`,
-      licensePlate: data.licensePlate.trim().toUpperCase(),
-      hospitalId: data.hospitalId.trim(),
+      id: data.id?.trim() || String(Date.now()),
+      name: normalizedName,
+      ambulanceNumber: normalizedNumber,
+      vehicleInfo: data.vehicleInfo.trim(),
+      driverPhone: data.driverPhone.trim(),
+      driverId: ambulance?.driverId ?? null,
+      driverName: data.driverName?.trim() || null,
+      startingPrice: Number.isFinite(data.startingPrice) ? data.startingPrice : 0,
+      ambulancePointId,
+      licensePlate: normalizedNumber,
+      hospitalId: ambulancePointId === null ? "0" : String(ambulancePointId),
+      status: data.status,
+      latitude: data.latitude,
+      longitude: data.longitude,
     });
   });
 

@@ -7,6 +7,10 @@ export type Hospital = {
   longitude: number;
   availableBeds: number;
   bedCapacity: number;
+  availableICU: number;
+  icuCapacity: number;
+  apiStatus: number;
+  startingPrice: number;
   createdAt?: string;
   updatedAt?: string;
 };

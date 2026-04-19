@@ -6,6 +6,7 @@ import { getApiUrl, API_CONFIG } from "@/config/api.config";
 import type { Hospital } from "../types/hospitals.types";
 import { useLanguage } from "@/i18n/useLanguage";
 import { getAuthToken } from "@/features/auth/utils/auth.utils";
+import { extractHospitalCollection, getApiErrorMessage, normalizeHospital } from "../utils/hospital.api.ts";
 
 /**
  * Hook for fetching hospitals from the API
@@ -48,7 +49,9 @@ export function useGetHospitals() {
         }
       );
 
-      const fetchedHospitals: Hospital[] = response.data;
+      const fetchedHospitals = extractHospitalCollection(response.data)
+        .map(normalizeHospital)
+        .filter((item): item is Hospital => item !== null);
       setHospitals(fetchedHospitals);
       return fetchedHospitals;
     } catch (error: any) {
@@ -65,13 +68,10 @@ export function useGetHospitals() {
           id: toastId,
         });
       } else {
-        toast.error(
-          error.response?.data?.message || t("hospitals:api.fetchError"),
-          {
-            position: toastPosition,
-            id: toastId,
-          }
-        );
+        toast.error(getApiErrorMessage(error) ?? t("hospitals:api.fetchError"), {
+          position: toastPosition,
+          id: toastId,
+        });
       }
       return [];
     } finally {

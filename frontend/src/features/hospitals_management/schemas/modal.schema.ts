@@ -13,8 +13,16 @@ export const hospitalSchema = z
     longitude: z.number().min(-180).max(180, "Longitude must be between -180 and 180"),
     availableBeds: z.number().int().min(0, "Available beds cannot be negative"),
     bedCapacity: z.number().int().positive("Bed capacity must be greater than 0"),
+    availableICU: z.number().int().min(0, "Available ICU beds cannot be negative"),
+    icuCapacity: z.number().int().min(0, "ICU capacity cannot be negative"),
+    apiStatus: z.number().int().min(0),
+    startingPrice: z.number().min(0, "Starting price cannot be negative"),
   })
   .refine((data) => data.availableBeds <= data.bedCapacity, {
     message: "Available beds cannot exceed bed capacity",
     path: ["availableBeds"],
+  })
+  .refine((data) => data.availableICU <= data.icuCapacity, {
+    message: "Available ICU cannot exceed ICU capacity",
+    path: ["availableICU"],
   });

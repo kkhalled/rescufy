@@ -1,4 +1,4 @@
-import HospitalAllRequests from "../components/HospitalAllRequests";
+import HospitalAllRequests from "../components/hospital/HospitalAllRequests";
 import { useTranslation } from "react-i18next";
 
 export default function HospitalRequests() {

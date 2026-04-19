@@ -3,14 +3,13 @@ import z from "zod";
 export const ambulanceSchema = z
   .object({
     id: z.string(),
-    licensePlate: z
-      .string()
-      .min(1, "License plate is required")
-      .regex(
-        /^[A-Za-z]{1,3}[-]?[0-9]{3,4}$/,
-        "Invalid license plate format (e.g., ABC-1234)"
-      ),
-    hospitalId: z.string().min(1, "Hospital selection is required"),
+    name: z.string().min(1, "Name is required"),
+    ambulanceNumber: z.string().min(1, "Ambulance number is required"),
+    vehicleInfo: z.string().min(1, "Vehicle info is required"),
+    driverPhone: z.string().min(1, "Driver phone is required"),
+    driverName: z.string().optional(),
+    ambulancePointId: z.string().optional(),
+    startingPrice: z.number().min(0, "Starting price must be 0 or more"),
     status: z.enum(["AVAILABLE", "IN_TRANSIT", "BUSY", "MAINTENANCE"]),
     latitude: z
       .number()

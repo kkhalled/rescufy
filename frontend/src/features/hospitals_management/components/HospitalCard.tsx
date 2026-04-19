@@ -20,6 +20,9 @@ interface HospitalCardProps {
   longitude?: number;
   availableBeds: number;
   bedCapacity: number;
+  availableICU: number;
+  icuCapacity: number;
+  startingPrice: number;
   onCall?: () => void;
   onViewProfile?: () => void;
   onEdit?: () => void;
@@ -72,6 +75,9 @@ export function HospitalCard({
   contactPhone,
   availableBeds,
   bedCapacity,
+  availableICU,
+  icuCapacity,
+  startingPrice,
   onCall,
   onViewProfile,
   onEdit,
@@ -88,6 +94,7 @@ export function HospitalCard({
   };
   const theme = STATUS_THEME[status];
   const isEmergency = status === "CRITICAL" || status === "FULL";
+  const formattedPrice = Number.isFinite(startingPrice) ? startingPrice.toLocaleString() : "-";
 
   return (
     <motion.article
@@ -134,6 +141,17 @@ export function HospitalCard({
             {address}
           </span>
         </p>
+
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <p className="text-body">
+            <span className="text-muted">{t("card.icu")}: </span>
+            <span className="font-semibold text-heading">{availableICU}/{icuCapacity}</span>
+          </p>
+          <p className="text-body text-right">
+            <span className="text-muted">{t("card.startingPrice")}: </span>
+            <span className="font-semibold text-heading">{formattedPrice}</span>
+          </p>
+        </div>
       </div>
 
       <div className={`mt-3 rounded-xl border px-3 py-3 ${theme.panelClass}`}>

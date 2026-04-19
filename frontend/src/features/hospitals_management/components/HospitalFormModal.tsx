@@ -58,6 +58,7 @@ export function HospitalFormModal({
           <div className="px-6 py-5 space-y-5">
             {/* Hidden ID field */}
             <input type="hidden" {...register("id")} />
+            <input type="hidden" {...register("apiStatus", { valueAsNumber: true })} />
 
             {/* Row 1: Hospital Name & Phone */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -245,6 +246,85 @@ export function HospitalFormModal({
                   </p>
                 )}
               </div>
+            </div>
+
+            {/* Row 5: ICU Capacity & Available ICU */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor="icuCapacity"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  {t('hospitals:form.icuCapacity')} <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="icuCapacity"
+                  {...register("icuCapacity", { valueAsNumber: true })}
+                  min="0"
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.icuCapacity
+                      ? "border-danger focus:ring-danger/20"
+                      : "border-border focus:ring-primary/30 focus:border-primary"
+                    }`}
+                  placeholder="0"
+                />
+                {errors.icuCapacity && (
+                  <p className="mt-1.5 text-xs text-danger">
+                    {errors.icuCapacity.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="availableICU"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  {t('hospitals:form.availableICU')} <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="availableICU"
+                  {...register("availableICU", { valueAsNumber: true })}
+                  min="0"
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.availableICU
+                      ? "border-danger focus:ring-danger/20"
+                      : "border-border focus:ring-primary/30 focus:border-primary"
+                    }`}
+                  placeholder="0"
+                />
+                {errors.availableICU && (
+                  <p className="mt-1.5 text-xs text-danger">
+                    {errors.availableICU.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Row 6: Starting Price */}
+            <div>
+              <label
+                htmlFor="startingPrice"
+                className="block text-sm font-medium text-body mb-1.5"
+              >
+                {t('hospitals:form.startingPrice')} <span className="text-danger">*</span>
+              </label>
+              <input
+                type="number"
+                id="startingPrice"
+                {...register("startingPrice", { valueAsNumber: true })}
+                min="0"
+                className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${errors.startingPrice
+                    ? "border-danger focus:ring-danger/20"
+                    : "border-border focus:ring-primary/30 focus:border-primary"
+                  }`}
+                placeholder="0"
+              />
+              {errors.startingPrice && (
+                <p className="mt-1.5 text-xs text-danger">
+                  {errors.startingPrice.message}
+                </p>
+              )}
             </div>
           </div>
 

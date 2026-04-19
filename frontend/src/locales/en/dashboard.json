@@ -8,6 +8,9 @@
     },
     "stats": {
         "totalRequests": "Total Requests",
+        "completedRequests": "Completed Requests",
+        "failedCancelledRequests": "Failed/Cancelled Requests",
+        "ofTotalRequests": "{{percent}}% of total requests",
         "activeAmbulances": "Active Ambulances",
         "totalHospitals": "Total Hospitals",
         "totalUsers": "Total Users",

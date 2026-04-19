@@ -8,6 +8,9 @@
     },
     "stats": {
         "totalRequests": "إجمالي الطلبات",
+        "completedRequests": "الطلبات المكتملة",
+        "failedCancelledRequests": "الطلبات الفاشلة/الملغاة",
+        "ofTotalRequests": "{{percent}}% من إجمالي الطلبات",
         "activeAmbulances": "سيارات الإسعاف النشطة",
         "totalHospitals": "إجمالي المستشفيات",
         "totalUsers": "إجمالي المستخدمين",

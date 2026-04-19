@@ -1,8 +1,8 @@
 import { MapPin } from "lucide-react";
-import type { RequestStatus, RequestPriority } from "../types/request.types";
-import { StatusBadge } from "../../../shared/ui/StatusBadge";
+import type { RequestStatus, RequestPriority } from "../../types/request.types";
+import { StatusBadge } from "../../../../shared/ui/StatusBadge";
 import { useNavigate } from "react-router-dom";
-import { useLanguage } from "../../../i18n/useLanguage";
+import { useLanguage } from "../../../../i18n/useLanguage";
 
 interface HospitalRequestRowProps {
   id?: string;

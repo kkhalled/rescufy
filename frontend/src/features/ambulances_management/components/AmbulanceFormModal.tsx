@@ -33,7 +33,6 @@ export function AmbulanceFormModal({
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-surface-card w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col rounded-2xl shadow-card border border-border">
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <h2 className="text-xl font-semibold text-heading">
             {mode === "add" ? "Add New Ambulance" : "Edit Ambulance"}
@@ -50,71 +49,175 @@ export function AmbulanceFormModal({
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={submitHandler} className="flex-1 overflow-y-auto">
           <div className="px-6 py-5 space-y-5">
-            {/* Hidden ID field */}
             <input type="hidden" {...register("id")} />
             <input type="hidden" {...register("status")} />
 
-            {/* Row 1: License Plate & Hospital ID */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* License Plate */}
               <div>
                 <label
-                  htmlFor="licensePlate"
+                  htmlFor="name"
                   className="block text-sm font-medium text-body mb-1.5"
                 >
-                  License Plate <span className="text-danger">*</span>
+                  Name <span className="text-danger">*</span>
                 </label>
                 <input
                   type="text"
-                  id="licensePlate"
-                  {...register("licensePlate")}
+                  id="name"
+                  {...register("name")}
                   className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${
-                    errors.licensePlate
+                    errors.name
                       ? "border-danger focus:ring-danger/20"
                       : "border-border focus:ring-primary/30 focus:border-primary"
                   }`}
-                  placeholder="ABC-1234"
+                  placeholder="Ambulance Alpha"
                 />
-                {errors.licensePlate && (
+                {errors.name && (
                   <p className="mt-1.5 text-xs text-danger">
-                    {errors.licensePlate.message}
+                    {errors.name.message}
                   </p>
                 )}
               </div>
 
-              {/* Hospital ID */}
               <div>
                 <label
-                  htmlFor="hospitalId"
+                  htmlFor="ambulanceNumber"
                   className="block text-sm font-medium text-body mb-1.5"
                 >
-                  Hospital ID <span className="text-danger">*</span>
+                  Ambulance Number <span className="text-danger">*</span>
                 </label>
                 <input
                   type="text"
-                  id="hospitalId"
-                  {...register("hospitalId")}
+                  id="ambulanceNumber"
+                  {...register("ambulanceNumber")}
                   className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${
-                    errors.hospitalId
+                    errors.ambulanceNumber
                       ? "border-danger focus:ring-danger/20"
                       : "border-border focus:ring-primary/30 focus:border-primary"
                   }`}
-                  placeholder="Hospital ID"
+                  placeholder="AMB-14"
                 />
-                {errors.hospitalId && (
+                {errors.ambulanceNumber && (
                   <p className="mt-1.5 text-xs text-danger">
-                    {errors.hospitalId.message}
+                    {errors.ambulanceNumber.message}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Row 2: Status & Latitude */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Status */}
+              <div>
+                <label
+                  htmlFor="vehicleInfo"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  Vehicle Info <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="vehicleInfo"
+                  {...register("vehicleInfo")}
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${
+                    errors.vehicleInfo
+                      ? "border-danger focus:ring-danger/20"
+                      : "border-border focus:ring-primary/30 focus:border-primary"
+                  }`}
+                  placeholder="Mercedes-Benz Sprinter 2022"
+                />
+                {errors.vehicleInfo && (
+                  <p className="mt-1.5 text-xs text-danger">
+                    {errors.vehicleInfo.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="driverPhone"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  Driver Phone <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="driverPhone"
+                  {...register("driverPhone")}
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${
+                    errors.driverPhone
+                      ? "border-danger focus:ring-danger/20"
+                      : "border-border focus:ring-primary/30 focus:border-primary"
+                  }`}
+                  placeholder="011-87654321"
+                />
+                {errors.driverPhone && (
+                  <p className="mt-1.5 text-xs text-danger">
+                    {errors.driverPhone.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label
+                  htmlFor="driverName"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  Driver Name
+                </label>
+                <input
+                  type="text"
+                  id="driverName"
+                  {...register("driverName")}
+                  className="w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted border-border focus:ring-primary/30 focus:border-primary"
+                  placeholder="Driver 14"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="startingPrice"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  Starting Price <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="startingPrice"
+                  {...register("startingPrice", { valueAsNumber: true })}
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${
+                    errors.startingPrice
+                      ? "border-danger focus:ring-danger/20"
+                      : "border-border focus:ring-primary/30 focus:border-primary"
+                  }`}
+                  placeholder="800"
+                />
+                {errors.startingPrice && (
+                  <p className="mt-1.5 text-xs text-danger">
+                    {errors.startingPrice.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="ambulancePointId"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  Point ID
+                </label>
+                <input
+                  type="text"
+                  id="ambulancePointId"
+                  {...register("ambulancePointId")}
+                  className="w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted border-border focus:ring-primary/30 focus:border-primary"
+                  placeholder="2"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <SelectField
                   id="status"
@@ -138,7 +241,6 @@ export function AmbulanceFormModal({
                 />
               </div>
 
-              {/* Latitude */}
               <div>
                 <label
                   htmlFor="latitude"
@@ -156,7 +258,7 @@ export function AmbulanceFormModal({
                       ? "border-danger focus:ring-danger/20"
                       : "border-border focus:ring-primary/30 focus:border-primary"
                   }`}
-                  placeholder="31.2454"
+                  placeholder="30.0500"
                 />
                 {errors.latitude && (
                   <p className="mt-1.5 text-xs text-danger">
@@ -164,37 +266,35 @@ export function AmbulanceFormModal({
                   </p>
                 )}
               </div>
-            </div>
 
-            {/* Row 3: Longitude */}
-            <div>
-              <label
-                htmlFor="longitude"
-                className="block text-sm font-medium text-body mb-1.5"
-              >
-                Longitude <span className="text-danger">*</span>
-              </label>
-              <input
-                type="number"
-                id="longitude"
-                step="0.0001"
-                {...register("longitude", { valueAsNumber: true })}
-                className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${
-                  errors.longitude
-                    ? "border-danger focus:ring-danger/20"
-                    : "border-border focus:ring-primary/30 focus:border-primary"
-                }`}
-                placeholder="30.0454"
-              />
-              {errors.longitude && (
-                <p className="mt-1.5 text-xs text-danger">
-                  {errors.longitude.message}
-                </p>
-              )}
+              <div>
+                <label
+                  htmlFor="longitude"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  Longitude <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="longitude"
+                  step="0.0001"
+                  {...register("longitude", { valueAsNumber: true })}
+                  className={`w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted ${
+                    errors.longitude
+                      ? "border-danger focus:ring-danger/20"
+                      : "border-border focus:ring-primary/30 focus:border-primary"
+                  }`}
+                  placeholder="31.0298"
+                />
+                {errors.longitude && (
+                  <p className="mt-1.5 text-xs text-danger">
+                    {errors.longitude.message}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Footer */}
           <div className="flex gap-3 justify-end px-6 py-4 border-t border-border bg-surface-muted">
             <button
               type="button"

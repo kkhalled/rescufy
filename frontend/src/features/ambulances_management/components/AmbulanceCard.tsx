@@ -3,11 +3,9 @@ import { useTranslation } from "react-i18next";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   AlertTriangle,
-  Building2,
   CheckCircle2,
   Clock3,
   Eye,
-  MapPin,
   Navigation,
   Pencil,
   Siren,
@@ -54,11 +52,9 @@ const STATUS_THEME: Record<AmbulanceStatus, StatusTheme> = {
 
 interface AmbulanceCardProps {
   id: string;
-  licensePlate: string;
-  hospitalName: string;
+  name: string;
+  ambulanceNumber: string;
   status: AmbulanceStatus;
-  latitude: number;
-  longitude: number;
   distanceKm: number;
   updatedSecondsAgo: number;
   isRecentlyUpdated: boolean;
@@ -72,11 +68,9 @@ interface AmbulanceCardProps {
 
 export const AmbulanceCard = memo(function AmbulanceCard({
   id,
-  licensePlate,
-  hospitalName,
+  name,
+  ambulanceNumber,
   status,
-  latitude,
-  longitude,
   distanceKm,
   updatedSecondsAgo,
   isRecentlyUpdated,
@@ -161,8 +155,9 @@ export const AmbulanceCard = memo(function AmbulanceCard({
 
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[11px] uppercase tracking-[0.08em] text-muted">{id}</p>
-          <h3 className="mt-1 truncate text-base font-semibold text-heading">{licensePlate}</h3>
+          <p className="text-[11px] uppercase tracking-[0.08em] text-muted">#{id}</p>
+          <h3 className="mt-1 truncate text-base font-semibold text-heading">{name}</h3>
+          <p className="mt-1 text-[11px] uppercase tracking-[0.08em] text-muted">{ambulanceNumber}</p>
         </div>
 
         <span
@@ -217,26 +212,6 @@ export const AmbulanceCard = memo(function AmbulanceCard({
             {t("controlCenter.distanceFromCenter")}
           </span>
           <span className="font-medium text-info">{formattedDistance}</span>
-        </div>
-
-        <div className="flex items-center justify-between rounded-lg bg-surface-muted/40 px-3 py-2 border border-border/50">
-          <span className="inline-flex items-center gap-1.5 text-muted">
-            <Building2 className="h-3.5 w-3.5" />
-            {t("table.hospital")}
-          </span>
-          <span className="max-w-[58%] truncate text-right font-medium text-heading">
-            {hospitalName}
-          </span>
-        </div>
-
-        <div className="rounded-lg bg-surface-muted/40 px-3 py-2 border border-border/50">
-          <span className="inline-flex items-center gap-1.5 text-muted">
-            <MapPin className="h-3.5 w-3.5" />
-            {t("table.location")}
-          </span>
-          <p className="mt-1 font-medium text-heading" dir="ltr">
-            {latitude.toFixed(4)}, {longitude.toFixed(4)}
-          </p>
         </div>
       </div>
 

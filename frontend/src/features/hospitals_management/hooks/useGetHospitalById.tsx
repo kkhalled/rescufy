@@ -5,29 +5,18 @@ import { useTranslation } from "react-i18next";
 import { getApiUrl, API_CONFIG } from "@/config/api.config";
 import { useLanguage } from "@/i18n/useLanguage";
 import { getAuthToken } from "@/features/auth/utils/auth.utils";
-
-export type AdminHospitalProfile = {
-  id: number;
-  name: string;
-  address: string;
-  contactPhone: string;
-  latitude: number;
-  longitude: number;
-  availableBeds: number;
-  bedCapacity: number;
-  createdAt: string;
-  updatedAt: string;
-};
+import type { Hospital } from "../types/hospitals.types";
+import { getApiErrorMessage, normalizeHospital } from "../utils/hospital.api.ts";
 
 export function useGetHospitalById() {
-  const [hospital, setHospital] = useState<AdminHospitalProfile | null>(null);
+  const [hospital, setHospital] = useState<Hospital | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const inFlightHospitalIdRef = useRef<string | null>(null);
   const { t } = useTranslation(["hospitals", "auth"]);
   const { isRTL } = useLanguage();
 
   const fetchHospitalById = useCallback(
-    async (hospitalId: string): Promise<AdminHospitalProfile | null> => {
+    async (hospitalId: string): Promise<Hospital | null> => {
       if (inFlightHospitalIdRef.current === hospitalId) {
         return null;
       }
@@ -59,7 +48,16 @@ export function useGetHospitalById() {
           },
         );
 
-        const data = response.data as AdminHospitalProfile;
+        const data = normalizeHospital(response.data);
+
+        if (!data) {
+          toast.error(t("hospitals:api.fetchProfileError"), {
+            position: toastPosition,
+            id: toastId,
+          });
+          return null;
+        }
+
         setHospital(data);
         return data;
       } catch (error: any) {
@@ -81,13 +79,10 @@ export function useGetHospitalById() {
             id: toastId,
           });
         } else {
-          toast.error(
-            error.response?.data?.message || t("hospitals:api.fetchProfileError"),
-            {
-              position: toastPosition,
-              id: toastId,
-            },
-          );
+          toast.error(getApiErrorMessage(error) ?? t("hospitals:api.fetchProfileError"), {
+            position: toastPosition,
+            id: toastId,
+          });
         }
 
         return null;

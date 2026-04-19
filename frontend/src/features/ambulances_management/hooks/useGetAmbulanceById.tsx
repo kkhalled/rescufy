@@ -6,23 +6,52 @@ import { getApiUrl, API_CONFIG } from "@/config/api.config";
 import { useLanguage } from "@/i18n/useLanguage";
 import { getAuthToken } from "@/features/auth/utils/auth.utils";
 import type { AmbulanceProfile } from "../types/ambulances.types";
+import { normalizeAmbulanceProfile } from "../utils/ambulance.api.ts";
+
+type ProfileCacheEntry = {
+  value: AmbulanceProfile;
+  cachedAt: number;
+};
+
+const PROFILE_CACHE_TTL_MS = 30_000;
+const profileCache = new Map<string, ProfileCacheEntry>();
 
 export function useGetAmbulanceById() {
   const [ambulance, setAmbulance] = useState<AmbulanceProfile | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const inFlightAmbulanceIdRef = useRef<string | null>(null);
+  const loadedAmbulanceIdRef = useRef<string | null>(null);
   const { t } = useTranslation(["ambulances", "auth"]);
   const { isRTL } = useLanguage();
 
   const fetchAmbulanceById = useCallback(
     async (ambulanceId: string): Promise<AmbulanceProfile | null> => {
+      if (!ambulanceId) {
+        return null;
+      }
+
+      const cachedEntry = profileCache.get(ambulanceId);
+      const cachedProfile = cachedEntry?.value;
+
+      if (cachedProfile) {
+        loadedAmbulanceIdRef.current = ambulanceId;
+        setAmbulance(cachedProfile);
+
+        if (Date.now() - cachedEntry.cachedAt < PROFILE_CACHE_TTL_MS) {
+          return cachedProfile;
+        }
+      }
+
       if (inFlightAmbulanceIdRef.current === ambulanceId) {
-        return ambulance;
+        return cachedProfile ?? null;
+      }
+
+      if (loadedAmbulanceIdRef.current !== ambulanceId) {
+        setAmbulance(null);
       }
 
       inFlightAmbulanceIdRef.current = ambulanceId;
       setIsLoading(true);
-      setAmbulance(null);
       const toastPosition = isRTL ? "top-left" : "top-right";
       const toastId = `ambulance-profile-fetch-error-${ambulanceId}`;
 
@@ -47,9 +76,23 @@ export function useGetAmbulanceById() {
           },
         );
 
-        const data = response.data as AmbulanceProfile;
-        setAmbulance(data);
-        return data;
+        const normalizedProfile = normalizeAmbulanceProfile(response.data);
+
+        if (!normalizedProfile) {
+          toast.error(t("ambulances:api.fetchProfileError"), {
+            position: toastPosition,
+            id: toastId,
+          });
+          return null;
+        }
+
+        profileCache.set(ambulanceId, {
+          value: normalizedProfile,
+          cachedAt: Date.now(),
+        });
+        loadedAmbulanceIdRef.current = ambulanceId;
+        setAmbulance(normalizedProfile);
+        return normalizedProfile;
       } catch (error: any) {
         console.error("Fetch ambulance profile error:", error);
 
@@ -86,7 +129,7 @@ export function useGetAmbulanceById() {
         setIsLoading(false);
       }
     },
-    [ambulance, isRTL, t],
+    [isRTL, t],
   );
 
   return {

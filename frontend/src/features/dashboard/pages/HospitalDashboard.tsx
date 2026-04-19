@@ -1,4 +1,4 @@
-import HospitalDashboardContent from "../components/HospitalDashboardContent";
+import HospitalDashboardContent from "../components/hospital/HospitalDashboardContent";
 
 export default function HospitalDashboard() {
   return (

@@ -1,10 +1,10 @@
 import { HospitalRequestRow } from "./HospitalRequestRow";
 import { useState, useMemo } from "react";
-import { requests } from "../data/request.data";
+import { requests } from "../../data/request.data";
 import SearchBar from "@/shared/common/SearchBar";
-import RequestsStateMenu from "./RequestsStateMenu";
-import RequestsTypesMenu from "./RequestsPriorityMenu";
-import { filterRequests } from "../utils/requests.filter";
+import RequestsStateMenu from "../RequestsStateMenu";
+import RequestsTypesMenu from "../RequestsPriorityMenu";
+import { filterRequests } from "../../utils/requests.filter";
 import { useTranslation } from "react-i18next";
 
 export default function HospitalAllRequests() {

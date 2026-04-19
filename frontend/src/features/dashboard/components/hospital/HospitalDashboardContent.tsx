@@ -1,4 +1,4 @@
-import { StatCard } from "./StatCard";
+import { StatCard } from "../StatCard";
 import { PhoneCall, AlertTriangle, Bed, Activity } from "lucide-react";
 import HospitalRecentRequests from "./HospitalRecentRequests";
 import { useTranslation } from "react-i18next";

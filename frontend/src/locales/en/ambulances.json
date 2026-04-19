@@ -68,7 +68,7 @@
         "filters": {
             "title": "Operational Filters",
             "searchLabel": "Search",
-            "searchPlaceholder": "Search by plate, unit ID, or hospital",
+            "searchPlaceholder": "Search by name, ambulance number, driver, or phone",
             "hospitalAll": "All hospitals",
             "proximity": {
                 "label": "Proximity",
@@ -91,7 +91,7 @@
         "loading": "Loading ambulances...",
         "empty": {
             "title": "No units match current filters",
-            "subtitle": "Adjust status, hospital, or proximity filters to widen results."
+            "subtitle": "Adjust status, sort, or proximity filters to widen results."
         },
         "alerts": {
             "title": "Live Alerts",
@@ -134,8 +134,11 @@
         "notFoundTitle": "Ambulance not found",
         "notFoundSubtitle": "The requested ambulance profile could not be loaded.",
         "id": "Ambulance ID",
+        "ambulanceNumber": "Ambulance Number",
         "vehicleName": "Vehicle Name",
         "vehicleInfo": "Vehicle Information",
+        "startingPrice": "Starting Price",
+        "ambulancePointId": "Ambulance Point ID",
         "driverName": "Driver Name",
         "driverId": "Driver ID",
         "driverPhone": "Driver Phone",

@@ -6,6 +6,14 @@ export type AmbulanceStatus =
 
 export type Ambulance = {
   id: string;
+  name: string;
+  ambulanceNumber: string;
+  vehicleInfo: string;
+  driverPhone: string;
+  driverId: string | null;
+  driverName: string | null;
+  startingPrice: number;
+  ambulancePointId: number | null;
   licensePlate: string;
   hospitalId: string;
   status: AmbulanceStatus;
@@ -13,30 +21,12 @@ export type Ambulance = {
   longitude: number;
 };
 
-export type AmbulanceSort = "nearest" | "available" | "lastUpdated";
-
-export type AmbulanceProximity = "all" | "near" | "mid" | "far";
-
 export type AmbulanceConnectionState =
   | "connected"
   | "reconnecting"
-  | "disconnected"
-  | "simulation";
-
-export type AmbulanceRealtimeSeverity = "critical" | "warning" | "info" | "success";
-
-export type AmbulanceRealtimeAlert = {
-  id: string;
-  ambulanceId: string;
-  ambulanceLabel: string;
-  severity: AmbulanceRealtimeSeverity;
-  title: string;
-  message: string;
-  occurredAt: number;
-};
+  | "disconnected";
 
 export type AmbulanceControlItem = Ambulance & {
-  hospitalName: string;
   distanceKm: number;
   lastUpdatedAt: number;
   updatedSecondsAgo: number;
@@ -49,14 +39,17 @@ export type AmbulanceProfile = {
   id: number;
   name: string;
   vehicleInfo: string;
-  driverPhone: string;
-  ambulanceStatus: number;
+  driverPhone: string | null;
+  ambulanceStatus: AmbulanceApiStatus;
   simLatitude: number;
   simLongitude: number;
-  driverId: string;
-  driverName: string;
-  createdAt: string;
-  updatedAt: string;
+  driverId: string | null;
+  driverName: string | null;
+  startingPrice: number;
+  ambulanceNumber: string;
+  ambulancePointId: number | null;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export const AMBULANCE_STATUS_TRANSLATION_KEY: Record<AmbulanceApiStatus, string> = {

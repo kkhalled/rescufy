@@ -6,6 +6,7 @@ import { getApiUrl, API_CONFIG } from "@/config/api.config";
 import type { Hospital } from "../types/hospitals.types";
 import { useLanguage } from "@/i18n/useLanguage";
 import { getAuthToken } from "@/features/auth/utils/auth.utils";
+import { buildHospitalPayload, getApiErrorMessage, normalizeHospital } from "../utils/hospital.api.ts";
 
 /**
  * Hook for updating an existing hospital
@@ -34,15 +35,7 @@ export function useUpdateHospital() {
 
       const response = await axios.put(
         getApiUrl(API_CONFIG.ENDPOINTS.HOSPITALS.UPDATE(hospitalId)),
-        {
-          name: hospital.name,
-          address: hospital.address,
-          contactPhone: hospital.contactPhone,
-          latitude: hospital.latitude,
-          longitude: hospital.longitude,
-          availableBeds: hospital.availableBeds,
-          bedCapacity: hospital.bedCapacity,
-        },
+        buildHospitalPayload(hospital),
         {
           headers: {
             "Content-Type": "application/json",
@@ -56,7 +49,10 @@ export function useUpdateHospital() {
         { position: toastPosition }
       );
 
-      return response.data?.hospital || response.data || { ...hospital, id: hospitalId };
+      return normalizeHospital(response.data?.hospital || response.data) ?? {
+        ...hospital,
+        id: hospitalId,
+      };
     } catch (error: any) {
       console.error("Update hospital error:", error);
       handleError(error, toastPosition);
@@ -83,10 +79,9 @@ export function useUpdateHospital() {
     } else if (error.message === "Network Error") {
       toast.error(t("auth:signIn.networkError"), { position: toastPosition });
     } else {
-      toast.error(
-        error.response?.data?.message || t("hospitals:api.updateError"),
-        { position: toastPosition }
-      );
+      toast.error(getApiErrorMessage(error) ?? t("hospitals:api.updateError"), {
+        position: toastPosition,
+      });
     }
   };
 

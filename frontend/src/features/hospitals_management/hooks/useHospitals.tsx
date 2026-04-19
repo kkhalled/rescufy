@@ -1,14 +1,11 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { Hospital } from "../types/hospitals.types";
 import { useGetHospitals } from "./useGetHospitals";
 import { useAddHospital } from "./useAddHospital";
 import { useUpdateHospital } from "./useUpdateHospital";
 import { useDeleteHospital } from "./useDeleteHospital";
-import hospitalFilter from "../utils/hospital.filter";
 
 export function useHospitals() {
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("all");
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [selectedHospital, setSelectedHospital] = useState<
     Hospital | undefined
@@ -24,11 +21,6 @@ export function useHospitals() {
   useEffect(() => {
     fetchHospitals();
   }, []);
-
-  // Apply local search + status filtering
-  const filteredHospitals = useMemo(() => {
-    return hospitalFilter(hospitals, { search, status });
-  }, [hospitals, search, status]);
 
   const openAddModal = useCallback(() => {
     setSelectedHospital(undefined);
@@ -82,11 +74,7 @@ export function useHospitals() {
   );
 
   return {
-    hospitals: filteredHospitals,
-    search,
-    status,
-    setSearch,
-    setStatus,
+    hospitals,
     isModalOpen,
     modalMode,
     selectedHospital,

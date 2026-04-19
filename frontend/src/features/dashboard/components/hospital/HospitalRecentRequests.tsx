@@ -1,4 +1,4 @@
-import { HospitalRequestRow } from "../../requests/components/HospitalRequestRow";
+import { HospitalRequestRow } from "../../../requests/components/hospital/HospitalRequestRow";
 import CriticalRequests from "./CriticalRequests";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";

@@ -177,6 +177,22 @@ function formatDate(value: string | undefined, locale: string) {
   });
 }
 
+function getStatusTranslationKey(statusCode: number): "normal" | "busy" | "critical" | "full" {
+  if (statusCode === 1) {
+    return "busy";
+  }
+
+  if (statusCode === 2) {
+    return "critical";
+  }
+
+  if (statusCode === 3) {
+    return "full";
+  }
+
+  return "normal";
+}
+
 export default function AdminHospitalProfile() {
   const { id } = useParams<{ id: string }>();
   const { t, i18n } = useTranslation("hospitals");
@@ -224,14 +240,7 @@ export default function AdminHospitalProfile() {
       ? Math.round((usedBeds / hospital.bedCapacity) * 100)
       : 0;
 
-  const statusKey =
-    hospital.availableBeds <= 0
-      ? "full"
-      : occupancy >= 90
-        ? "critical"
-        : occupancy >= 70
-          ? "busy"
-          : "normal";
+  const statusKey = getStatusTranslationKey(hospital.apiStatus);
 
   const barColorClass =
     occupancy >= 90
@@ -241,6 +250,9 @@ export default function AdminHospitalProfile() {
         : "bg-emerald-500";
 
   const locationHref = `https://www.google.com/maps?q=${hospital.latitude},${hospital.longitude}`;
+  const formattedStartingPrice = Number.isFinite(hospital.startingPrice)
+    ? hospital.startingPrice.toLocaleString(i18n.language)
+    : "-";
 
   return (
     <section className="w-full xl:px-12 py-6">
@@ -301,6 +313,10 @@ export default function AdminHospitalProfile() {
               label={t("adminProfile.coordinates")}
               value={`${hospital.latitude.toFixed(6)}, ${hospital.longitude.toFixed(6)}`}
             />
+            <ProfileFieldCard
+              label={t("adminProfile.startingPrice")}
+              value={formattedStartingPrice}
+            />
           </div>
 
           <a
@@ -334,6 +350,15 @@ export default function AdminHospitalProfile() {
               label={t("adminProfile.usedBeds")}
               value={String(usedBeds)}
             />
+            <MetricCard
+              label={t("adminProfile.icuCapacity")}
+              value={String(hospital.icuCapacity)}
+            />
+            <MetricCard
+              label={t("adminProfile.availableICU")}
+              value={String(hospital.availableICU)}
+              valueClassName="text-sm font-semibold text-emerald-600 dark:text-emerald-400"
+            />
 
             <div className="rounded-xl border border-border/70 bg-surface-muted/20 p-4">
               <div className="flex items-center justify-between mb-2">
@@ -363,7 +388,9 @@ export default function AdminHospitalProfile() {
               <FontAwesomeIcon icon={faLocationDot} className="text-[11px]" />
               {t("table.status")}
             </p>
-            <p className="text-sm font-semibold text-heading">{t(`status.${statusKey}`)}</p>
+            <p className="text-sm font-semibold text-heading">
+              {t(`status.${statusKey}`)} ({hospital.apiStatus})
+            </p>
           </div>
         </aside>
       </div>

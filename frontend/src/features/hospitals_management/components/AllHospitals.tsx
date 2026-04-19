@@ -7,19 +7,8 @@ import { useHospitals } from "../hooks/useHospitals";
 import { useTranslation } from "react-i18next";
 import { motion, useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router";
-import { ListFilter, Plus, ShieldAlert } from "lucide-react";
-import type { HospitalLoadStatus } from "../utils/hospital.metrics";
+import { Plus, ShieldAlert } from "lucide-react";
 import { resolveHospitalLoad } from "../utils/hospital.metrics";
-import SelectField from "@/shared/ui/SelectField";
-
-type HospitalSort = "criticalFirst" | "occupancyHigh" | "availableHigh";
-
-const STATUS_PRIORITY: Record<HospitalLoadStatus, number> = {
-  FULL: 0,
-  CRITICAL: 1,
-  BUSY: 2,
-  NORMAL: 3,
-};
 
 function sanitizePhoneNumber(phone: string) {
   return phone.replace(/\s+/g, "");
@@ -29,7 +18,6 @@ export default function AllHospitals() {
   const { t } = useTranslation("hospitals");
   const shouldReduceMotion = useReducedMotion();
   const navigate = useNavigate();
-  const [sortBy, setSortBy] = useState<HospitalSort>("criticalFirst");
   const [deleteCandidate, setDeleteCandidate] = useState<{
     id: string;
     name: string;
@@ -37,10 +25,6 @@ export default function AllHospitals() {
 
   const {
     hospitals,
-    search,
-    status,
-    setSearch,
-    setStatus,
     isModalOpen,
     modalMode,
     selectedHospital,
@@ -64,28 +48,6 @@ export default function AllHospitals() {
       }),
     [hospitals],
   );
-
-  const sortedHospitals = useMemo(() => {
-    const items = [...operationalHospitals];
-
-    if (sortBy === "occupancyHigh") {
-      return items.sort((a, b) => b.occupancyPercent - a.occupancyPercent);
-    }
-
-    if (sortBy === "availableHigh") {
-      return items.sort((a, b) => b.availableBeds - a.availableBeds);
-    }
-
-    return items.sort((a, b) => {
-      const priorityDelta = STATUS_PRIORITY[a.status] - STATUS_PRIORITY[b.status];
-
-      if (priorityDelta !== 0) {
-        return priorityDelta;
-      }
-
-      return b.occupancyPercent - a.occupancyPercent;
-    });
-  }, [operationalHospitals, sortBy]);
 
   const kpis = useMemo(() => {
     const total = operationalHospitals.length;
@@ -135,26 +97,6 @@ export default function AllHospitals() {
       stressedHospitals,
     };
   }, [operationalHospitals]);
-
-  const statusOptions = useMemo(
-    () => [
-      { label: t("filters.allStates"), value: "all" },
-      { label: t("status.full"), value: "FULL" },
-      { label: t("status.critical"), value: "CRITICAL" },
-      { label: t("status.busy"), value: "BUSY" },
-      { label: t("status.normal"), value: "NORMAL" },
-    ],
-    [t],
-  );
-
-  const sortOptions = useMemo(
-    () => [
-      { label: t("operations.filters.sort.criticalFirst"), value: "criticalFirst" },
-      { label: t("operations.filters.sort.occupancyHigh"), value: "occupancyHigh" },
-      { label: t("operations.filters.sort.availableHigh"), value: "availableHigh" },
-    ],
-    [t],
-  );
 
   const controlTone =
     kpis.full > 0
@@ -231,59 +173,13 @@ export default function AllHospitals() {
         full={kpis.full}
       />
 
-      <section className="rounded-2xl border border-border bg-bg-card p-4 md:p-5 shadow-card">
-        <div className="mb-4 flex items-center gap-2 text-heading">
-          <ListFilter className="h-4 w-4 text-primary" />
-          <p className="text-sm font-semibold">{t("operations.filters.title")}</p>
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
-          <div className="xl:col-span-2">
-            <label className="mb-1 block text-xs uppercase tracking-[0.08em] text-muted">
-              {t("operations.filters.searchLabel")}
-            </label>
-            <input
-              type="text"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder={t("filters.searchPlaceholder")}
-              className="h-11 w-full rounded-lg border border-border bg-background-second px-3 text-sm text-heading outline-none transition focus:border-primary/60 focus:ring-2 focus:ring-primary/20"
-            />
-          </div>
-
-          <div>
-            <SelectField
-              label={t("operations.filters.statusLabel")}
-              placeholder={t("operations.filters.statusLabel")}
-              value={status}
-              onChange={setStatus}
-              options={statusOptions}
-              labelClassName="mb-1 block text-xs uppercase tracking-[0.08em] text-muted"
-              triggerClassName="h-11 rounded-lg text-sm"
-            />
-          </div>
-
-          <div>
-            <SelectField
-              label={t("operations.filters.sortLabel")}
-              placeholder={t("operations.filters.sortLabel")}
-              value={sortBy}
-              onChange={(value) => setSortBy(value as HospitalSort)}
-              options={sortOptions}
-              labelClassName="mb-1 block text-xs uppercase tracking-[0.08em] text-muted"
-              triggerClassName="h-11 rounded-lg text-sm"
-            />
-          </div>
-        </div>
-      </section>
-
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
         <section className="rounded-2xl border border-border bg-background-second/60 p-4 md:p-5 shadow-card">
           <header className="mb-4 flex flex-col gap-2 border-b border-border pb-4 md:flex-row md:items-center md:justify-between">
             <div>
               <h3 className="text-base font-semibold text-heading">{t("operations.list.title")}</h3>
               <p className="text-xs text-muted">
-                {t("operations.list.subtitle", { count: sortedHospitals.length })}
+                {t("operations.list.subtitle", { count: operationalHospitals.length })}
               </p>
             </div>
 
@@ -298,7 +194,7 @@ export default function AllHospitals() {
               <ShieldAlert className="mx-auto h-7 w-7 text-muted" />
               <p className="mt-3 text-sm font-medium text-heading">{t("operations.loading")}</p>
             </div>
-          ) : sortedHospitals.length === 0 ? (
+          ) : operationalHospitals.length === 0 ? (
             <div className="rounded-xl border border-dashed border-border bg-surface-muted/40 px-4 py-8 text-center">
               <ShieldAlert className="mx-auto h-7 w-7 text-muted" />
               <p className="mt-3 text-sm font-medium text-heading">{t("empty.title")}</p>
@@ -311,7 +207,7 @@ export default function AllHospitals() {
               initial="hidden"
               animate="visible"
             >
-              {sortedHospitals.map((hospital) => (
+              {operationalHospitals.map((hospital) => (
                 <motion.div key={hospital.id} variants={itemVariants}>
                   <HospitalCard
                     {...hospital}

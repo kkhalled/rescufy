@@ -34,6 +34,10 @@ export default function useModal({
       longitude: 0,
       availableBeds: 0,
       bedCapacity: 0,
+      availableICU: 0,
+      icuCapacity: 0,
+      apiStatus: 0,
+      startingPrice: 0,
     },
   });
 
@@ -50,6 +54,10 @@ export default function useModal({
         longitude: 0,
         availableBeds: 0,
         bedCapacity: 0,
+        availableICU: 0,
+        icuCapacity: 0,
+        apiStatus: 0,
+        startingPrice: 0,
       });
     }
   }, [hospital, mode, reset]);
