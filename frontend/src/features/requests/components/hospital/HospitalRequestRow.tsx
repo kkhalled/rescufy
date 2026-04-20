@@ -1,19 +1,7 @@
 import { MapPin } from "lucide-react";
-import type { RequestStatus, RequestPriority } from "../../types/request.types";
 import { StatusBadge } from "../../../../shared/ui/StatusBadge";
-import { useNavigate } from "react-router-dom";
-import { useLanguage } from "../../../../i18n/useLanguage";
-
-interface HospitalRequestRowProps {
-  id?: string;
-  userName?: string;
-  userPhone?: number | string;
-  location?: string;
-  priority?: RequestPriority;
-  status?: RequestStatus;
-  timestamp?: string;
-  compact?: boolean;
-}
+import { useHospitalRequestRow } from "../../hooks/useHospitalRequestRow";
+import type { HospitalRequestRowProps } from "../../types/request-ui.types";
 
 export function HospitalRequestRow({
   id,
@@ -25,20 +13,14 @@ export function HospitalRequestRow({
   timestamp,
   compact = false,
 }: HospitalRequestRowProps) {
-  const priorityColorMap: Record<string, string> = {
-    critical: "#ef4444",
-    high: "#f97316",
-    medium: "#f59e0b",
-    low: "#3b82f6",
-  };
-
-  const priorityColor = priorityColorMap[priority || "low"] || "#3b82f6";
-  const navigate = useNavigate();
-  const { isRTL } = useLanguage();
+  const { isRTL, priorityColor, openRequestDetails } = useHospitalRequestRow({
+    id,
+    priority,
+  });
 
   return (
     <button
-      onClick={() => navigate(`/hospital_user/request_details/${id}`)}
+      onClick={openRequestDetails}
       className="w-full text-left bg-transparent border-none p-0 cursor-pointer hover:opacity-80 transition-opacity"
     >
       <div

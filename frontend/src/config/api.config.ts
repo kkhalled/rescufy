@@ -4,7 +4,7 @@
  */
 
 export const API_CONFIG = {
-  BASE_URL: "http://umedical.runasp.net",
+  BASE_URL: "http://newback111.runasp.net",
   ENDPOINTS: {
     AUTH: {
       LOGIN: "/api/Auth/login",
@@ -24,7 +24,7 @@ export const API_CONFIG = {
     HOSPITALS: {
       GET_ALL: "/api/Hospital",
       CREATE: "/api/Hospital",
-      MY_HOSPITAL: "/api/Hospital/my-hospital",
+      MY_HOSPITAL: "/api/Hospital/my",
       GET_BY_ID: (id: string) => `/api/Hospital/${id}`,
       UPDATE: (id: string) => `/api/Hospital/${id}`,
       DELETE: (id: string) => `/api/Hospital/${id}`,
@@ -40,7 +40,10 @@ export const API_CONFIG = {
     },
     REQUESTS: {
       GET_ALL: "/api/Request",
+      GET_ADMIN_STREAM: "/api/request/admin-stream",
+      GET_ADMIN_REQUESTS: "/api/request/admin-stream",
       GET_BY_ID: (id: string) => `/api/Request/${id}`,
+      CANCEL_REQUEST: (id: string) => `/api/Request/${id}/cancel`,
     },
     DASHBOARD: {
       GET_STATS: "/api/Dashboard/stats",

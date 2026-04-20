@@ -6,15 +6,25 @@ import { useTranslation } from "react-i18next";
 interface AIAnalysisCardProps {
   diagnosis: string;
   confidence: number;
+  urgency?: string;
+  condition?: string;
 }
 
-const AIAnalysisCard = ({ diagnosis, confidence }: AIAnalysisCardProps) => {
+const AIAnalysisCard = ({ diagnosis, confidence, urgency, condition }: AIAnalysisCardProps) => {
   const { t } = useTranslation("requests");
   return (
     <InfoCard title={t("details.aiAnalysis")} icon={<FontAwesomeIcon icon={faBrain} />}>
       <p style={{ color: "var(--text-heading)" }} className="font-medium">
         {diagnosis}
       </p>
+
+      {(urgency || condition) ? (
+        <p style={{ color: "var(--text-body)" }} className="text-sm">
+          {urgency ? `Urgency: ${urgency}` : ""}
+          {urgency && condition ? " • " : ""}
+          {condition ? `Condition: ${condition}` : ""}
+        </p>
+      ) : null}
 
       <div className="space-y-1">
         <div className="flex justify-between text-sm">

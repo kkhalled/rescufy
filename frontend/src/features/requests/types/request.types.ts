@@ -111,7 +111,7 @@ export type Request = {
   logs?: DispatchLogEntry[];
   selectionReasons?: string[];
   createdAt?: string;
-  applicationUser: ApiApplicationUser;
+  applicationUser?: ApiApplicationUser | null;
 };
 
 export type MockDispatchRequest = {

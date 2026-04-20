@@ -44,6 +44,7 @@
         "enRoute": "En Route",
         "inProgress": "In Progress",
         "dispatched": "Dispatched",
+        "closed": "Closed",
         "completed": "Completed",
         "cancelled": "Cancelled"
     },
@@ -114,6 +115,82 @@
             "enRoute": {
                 "title": "En Route",
                 "desc": "Currently 3 minutes away from patient location"
+            }
+        },
+        "adminLayout": {
+            "statusFallback": "Status {{code}}",
+            "yes": "Yes",
+            "no": "No",
+            "noDescription": "No description",
+            "noComment": "No comment",
+            "noHospital": "No hospital",
+            "noAi": "No AI analysis available.",
+            "noTripReport": "No trip report yet.",
+            "noAssignments": "No assignments yet.",
+            "tripReportAvailable": "Available",
+            "tripReportNotYet": "Not yet",
+            "openInMaps": "Open in Maps",
+            "quick": {
+                "peopleAffected": "People Affected",
+                "assignments": "Assignments",
+                "aiConfidence": "AI Confidence",
+                "tripReport": "Trip Report"
+            },
+            "fields": {
+                "patientName": "Patient Name",
+                "patientPhone": "Patient Phone",
+                "userId": "User ID",
+                "selfCase": "Self Case",
+                "comment": "Comment",
+                "summary": "Summary",
+                "urgency": "Urgency",
+                "condition": "Condition",
+                "address": "Address",
+                "latitude": "Latitude",
+                "longitude": "Longitude"
+            },
+            "sections": {
+                "patientRequest": {
+                    "title": "Patient and Request",
+                    "subtitle": "Core request identity and patient contact"
+                },
+                "caseDescription": {
+                    "title": "Case Description",
+                    "subtitle": "Description and operator notes"
+                },
+                "ai": {
+                    "subtitle": "Summary, urgency, condition, and confidence"
+                },
+                "tripReport": {
+                    "title": "Trip Report",
+                    "subtitle": "Raw trip report payload"
+                },
+                "location": {
+                    "title": "Location",
+                    "subtitle": "Address and map coordinates"
+                },
+                "assignments": {
+                    "title": "Assignments",
+                    "subtitle": "All assignment records from backend"
+                },
+                "timeline": {
+                    "subtitle": "Important request events"
+                }
+            },
+            "assignments": {
+                "assignmentPrefix": "Assignment #{{id}}",
+                "statusCode": "Status {{code}}",
+                "ambulancePlate": "Ambulance Plate",
+                "driverName": "Driver Name",
+                "hospitalId": "Hospital ID",
+                "hospitalName": "Hospital Name",
+                "assignedAt": "Assigned At",
+                "completedAt": "Completed At"
+            },
+            "timeline": {
+                "requestCreated": "Request Created",
+                "assignmentCreated": "Assignment #{{id}}",
+                "requestUpdated": "Request Updated"
             }
         }
     },

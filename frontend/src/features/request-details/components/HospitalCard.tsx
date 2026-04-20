@@ -7,7 +7,7 @@ interface HospitalCardProps {
   name: string;
   address: string;
   department: string;
-  beds: number;
+  beds?: number | null;
   distance: string;
 }
 
@@ -34,7 +34,7 @@ const HospitalCard = ({ name, address, department, beds, distance }: HospitalCar
         <div>
           <p style={{ color: "var(--text-muted)" }}>{t("details.distance")}</p>
           <p style={{ color: "var(--success)" }} className="font-semibold">
-            {beds}
+            {beds == null ? "-" : beds}
           </p>
         </div>
       </div>

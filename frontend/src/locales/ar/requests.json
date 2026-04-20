@@ -44,6 +44,7 @@
         "enRoute": "في الطريق",
         "inProgress": "قيد التنفيذ",
         "dispatched": "تم الإرسال",
+        "closed": "مغلق",
         "completed": "مكتمل",
         "cancelled": "ملغى"
     },
@@ -114,6 +115,82 @@
             "enRoute": {
                 "title": "في الطريق",
                 "desc": "حالياً تبقى 3 دقائق للوصول إلى موقع المريض"
+            }
+        },
+        "adminLayout": {
+            "statusFallback": "حالة {{code}}",
+            "yes": "نعم",
+            "no": "لا",
+            "noDescription": "لا يوجد وصف",
+            "noComment": "لا توجد ملاحظة",
+            "noHospital": "بدون مستشفى",
+            "noAi": "لا يوجد تحليل ذكاء اصطناعي.",
+            "noTripReport": "لا يوجد تقرير رحلة بعد.",
+            "noAssignments": "لا توجد إسنادات بعد.",
+            "tripReportAvailable": "متوفر",
+            "tripReportNotYet": "غير متوفر بعد",
+            "openInMaps": "فتح في الخرائط",
+            "quick": {
+                "peopleAffected": "عدد المتأثرين",
+                "assignments": "الإسنادات",
+                "aiConfidence": "ثقة الذكاء الاصطناعي",
+                "tripReport": "تقرير الرحلة"
+            },
+            "fields": {
+                "patientName": "اسم المريض",
+                "patientPhone": "هاتف المريض",
+                "userId": "معرّف المستخدم",
+                "selfCase": "حالة شخصية",
+                "comment": "ملاحظة",
+                "summary": "الملخص",
+                "urgency": "مستوى الخطورة",
+                "condition": "الحالة",
+                "address": "العنوان",
+                "latitude": "خط العرض",
+                "longitude": "خط الطول"
+            },
+            "sections": {
+                "patientRequest": {
+                    "title": "المريض والطلب",
+                    "subtitle": "بيانات الطلب الأساسية ووسائل التواصل"
+                },
+                "caseDescription": {
+                    "title": "وصف الحالة",
+                    "subtitle": "الوصف وملاحظات المشغل"
+                },
+                "ai": {
+                    "subtitle": "ملخص الذكاء الاصطناعي والخطورة والحالة والثقة"
+                },
+                "tripReport": {
+                    "title": "تقرير الرحلة",
+                    "subtitle": "البيانات الخام لتقرير الرحلة"
+                },
+                "location": {
+                    "title": "الموقع",
+                    "subtitle": "العنوان وإحداثيات الخريطة"
+                },
+                "assignments": {
+                    "title": "الإسنادات",
+                    "subtitle": "كل سجلات الإسناد القادمة من الخادم"
+                },
+                "timeline": {
+                    "subtitle": "أهم أحداث الطلب"
+                }
+            },
+            "assignments": {
+                "assignmentPrefix": "الإسناد رقم {{id}}",
+                "statusCode": "الحالة {{code}}",
+                "ambulancePlate": "لوحة الإسعاف",
+                "driverName": "اسم السائق",
+                "hospitalId": "معرّف المستشفى",
+                "hospitalName": "اسم المستشفى",
+                "assignedAt": "وقت الإسناد",
+                "completedAt": "وقت الإكمال"
+            },
+            "timeline": {
+                "requestCreated": "تم إنشاء الطلب",
+                "assignmentCreated": "الإسناد رقم {{id}}",
+                "requestUpdated": "تم تحديث الطلب"
             }
         }
     },

@@ -85,7 +85,7 @@ const router = createBrowserRouter([
       { path: "settings", element: withLoading(<Settings />) },
       { path: "analytics", element: withLoading(<Analytics />) },
       {
-        path: "request_details/:id",
+        path: "requests/:id",
         element: withLoading(<RequestDetails />),
       },
     ],
@@ -102,7 +102,7 @@ const router = createBrowserRouter([
       { index: true, element: withLoading(<HospitalDashboard />) },
       { path: "requests", element: withLoading(<HospitalRequests />) },
       {
-        path: "request_details/:id",
+        path: "requests/:id",
         element: withLoading(<HospitalRequestDetails />),
       },
       { path: "profile", element: withLoading(<HospitalProfile />) },

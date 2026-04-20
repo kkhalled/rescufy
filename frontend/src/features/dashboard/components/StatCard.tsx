@@ -34,7 +34,9 @@ export function StatCard({
 
   const decimalPlaces = useMemo(() => {
     if (!isNumericValue) return 0;
-    return Number.isInteger(value) ? 0 : Math.min(2, value.toString().split(".")[1]?.length ?? 0);
+    return Number.isInteger(value)
+      ? 0
+      : Math.min(2, value.toString().split(".")[1]?.length ?? 0);
   }, [isNumericValue, value]);
 
   const [animatedNumber, setAnimatedNumber] = useState<number>(
@@ -115,7 +117,7 @@ export function StatCard({
   return (
     <div
       className={`
-        relative flex h-[210px] w-full flex-col rounded-lg px-4 py-4 md:h-[220px] md:rounded-2xl md:px-6 md:py-5
+        relative flex h-52.5 w-full flex-col rounded-lg px-4 py-4 md:h-55 md:rounded-2xl md:px-6 md:py-5
         transition-all duration-300
         shadow-card
         backdrop-blur-sm
@@ -129,7 +131,10 @@ export function StatCard({
             ${styles.iconBg}
           `}
         >
-          <Icon className={`h-4 w-4 md:h-5 md:w-5 ${styles.iconColor}`} strokeWidth={2} />
+          <Icon
+            className={`h-4 w-4 md:h-5 md:w-5 ${styles.iconColor}`}
+            strokeWidth={2}
+          />
         </div>
 
         {badge && (
@@ -199,7 +204,9 @@ export function StatCard({
       </div>
 
       <div className="space-y-2">
-        {subtitle && <div className="min-h-[34px] text-sm font-medium">{subtitle}</div>}
+        {subtitle && (
+          <div className="min-h-8.5 text-sm font-medium">{subtitle}</div>
+        )}
         {chart && <div>{chart}</div>}
       </div>
     </div>

@@ -1,47 +1,7 @@
 import { MapPin, Phone, Clock } from "lucide-react";
-import type { RequestStatus, RequestPriority } from "../../types/request.types";
 import { StatusBadge } from "../../../../shared/ui/StatusBadge";
-import { useNavigate } from "react-router";
-import { useLanguage } from "../../../../i18n/useLanguage";
-
-interface RequestRowProps {
-  id?: string;
-  userName?: string;
-  userPhone?: string;
-  address?: string;
-  priority?: RequestPriority;
-  status?: RequestStatus;
-  timestamp?: string;
-  compact?: boolean;
-}
-
-/** Returns a human-readable relative time string like "3 min ago" */
-function timeAgo(dateStr: string | undefined): string {
-  if (!dateStr) return "";
-  const now = new Date();
-  const then = new Date(dateStr);
-  const diffMs = now.getTime() - then.getTime();
-
-  if (diffMs < 0) return "";
-
-  const mins = Math.floor(diffMs / 60_000);
-  const hours = Math.floor(diffMs / 3_600_000);
-  const days = Math.floor(diffMs / 86_400_000);
-
-  if (mins < 1) return "Just now";
-  if (mins < 60) return `${mins} min ago`;
-  if (hours < 24) return `${hours}h ago`;
-  if (days < 30) return `${days}d ago`;
-
-  return then.toLocaleDateString();
-}
-
-const PRIORITY_COLORS: Record<string, string> = {
-  critical: "#ef4444",
-  high: "#f97316",
-  medium: "#f59e0b",
-  low: "#3b82f6",
-};
+import { useRequestRow } from "../../hooks/useRequestRow";
+import type { RequestRowProps } from "../../types/request-ui.types";
 
 export function RequestRow({
   id,
@@ -54,14 +14,15 @@ export function RequestRow({
   address,
   compact = false,
 }: RequestRowProps) {
-  const navigate = useNavigate();
-  const { isRTL } = useLanguage();
-  const indicatorColor = priority ? (PRIORITY_COLORS[priority] || "#3b82f6") : "#3b82f6";
-  const relativeTime = timeAgo(timestamp);
+  const { isRTL, indicatorColor, relativeTime, openRequestDetails } = useRequestRow({
+    id,
+    priority,
+    timestamp,
+  });
 
   return (
     <button
-      onClick={() => navigate(`/admin/request_details/${id}`)}
+      onClick={openRequestDetails}
       className="w-full text-left rtl:text-right bg-transparent border-none p-0 cursor-pointer group"
     >
       <div

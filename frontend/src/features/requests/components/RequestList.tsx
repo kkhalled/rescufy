@@ -1,13 +1,7 @@
 import { ShieldAlert } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { RequestItem, type QueueRequestItem } from "./RequestItem";
-
-type RequestListProps = {
-  requests: QueueRequestItem[];
-  selectedId: number | null;
-  isLoading: boolean;
-  onSelect: (requestId: number) => void;
-};
+import { RequestItem } from "./RequestItem";
+import type { RequestListProps } from "../types/request-ui.types";
 
 export function RequestList({ requests, selectedId, isLoading, onSelect }: RequestListProps) {
   const { t } = useTranslation("requests");

@@ -1,11 +1,6 @@
 import { HospitalRequestRow } from "./HospitalRequestRow";
-import { useState, useMemo } from "react";
-import { requests } from "../../data/request.data";
-import SearchBar from "@/shared/common/SearchBar";
-import RequestsStateMenu from "../RequestsStateMenu";
-import RequestsTypesMenu from "../RequestsPriorityMenu";
-import { filterRequests } from "../../utils/requests.filter";
 import { useTranslation } from "react-i18next";
+import type { HospitalRequestItem } from "../../types/request-ui.types";
 
 export default function HospitalAllRequests() {
   const { t } = useTranslation(["requests", "common"]);
@@ -13,53 +8,21 @@ export default function HospitalAllRequests() {
   // TODO: Fetch requests from API filtered by user.HospitalId
   // Example: const { data: requestsData } = useQuery(['hospitalRequests', user?.HospitalId], ...)
   
-  // For now, filter mock data by hospital (when you connect to API, backend should filter)
-  // Mock: Assuming requests have a 'hospitalId' property
-  const hospitalRequests = useMemo(() => {
-    // In production, this filtering happens on the backend
-    // For now, show all mock data (replace with API call filtered by user.HospitalId)
-    return requests;
-  }, []);
-
-  const [status, setStatus] = useState<string>("all");
-  const [priority, setPriority] = useState<string>("all");
-  const [searchValue, setSearchValue] = useState<string>("");
-
-  const filters = {
-    status,
-    priority,
-    search: searchValue,
-  };
-
-  const filteredRequests = filterRequests(hospitalRequests, filters);
+  // Keep this list local for now until hospital requests API is wired.
+  const hospitalRequests: HospitalRequestItem[] = [];
 
   return (
     <>
-      <SearchBar
-        value={searchValue}
-        onSearchChange={setSearchValue}
-        placeholder={t("requests:filters.searchPlaceholder")}
-      >
-        <div className="flex flex-col md:flex-row gap-4 w-full">
-          <div className="flex-1">
-            <RequestsStateMenu value={status} onChange={setStatus} />
-          </div>
-          <div className="flex-1 w-full md:w-auto">
-            <RequestsTypesMenu value={priority} onChange={setPriority} />
-          </div>
-        </div>
-      </SearchBar>
-
       <div className="mt-6">
         <span className="text-body font-medium ml-1 rtl:ml-0 rtl:mr-1">
-          {t("requests:pagination.showing")} {filteredRequests.length}{" "}
+          {t("requests:pagination.showing")} {hospitalRequests.length}{" "}
           {t("requests:pagination.of")} {hospitalRequests.length}{" "}
           {t("requests:pagination.requests")}
         </span>
 
         <div className="bg-bg-card mt-6 rounded-lg shadow-card overflow-x-auto">
           <div>
-            {filteredRequests.map((request) => (
+            {hospitalRequests.map((request) => (
               <HospitalRequestRow
                 key={request.id}
                 id={request.id}
