@@ -10,6 +10,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { useLanguage } from "@/i18n/useLanguage";
 import { getApiUrl, API_CONFIG } from "@/config/api.config";
+import { setAuthToken } from "../utils/auth.utils";
 
 export default function useSignIn() {
   const navigate = useNavigate();
@@ -57,8 +58,8 @@ export default function useSignIn() {
           primaryRole = "hospitaladmin"; // fallback
         }
 
-        // Store the token
-        localStorage.setItem("auth_token", data.token);
+        // Store the token in cookie
+        setAuthToken(data.token, decoded.exp);
 
         // Store user data in context
         setUser({
@@ -149,8 +150,8 @@ export default function useSignIn() {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: "superadmin@rescufy.com",
+      password: "P@ssword12",
     },
     onSubmit: handleSubmit,
     validationSchema: validationSchema,

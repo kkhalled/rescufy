@@ -6,16 +6,11 @@ import {
   UsersIcon,
   FileText,
   Settings,
-  X,
+  
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
 import Logo from "../../shared/common/Logo";
-
-interface SideBarProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
 
 const navItems = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/" },
@@ -25,38 +20,16 @@ const navItems = [
   { name: "Users", icon: UsersIcon, path: "/users" },
   { name: "Audit", icon: FileText, path: "/audit" },
   { name: "Settings", icon: Settings, path: "/settings" },
+  
 ];
 
-export default function SideBar({ isOpen, onClose }: SideBarProps) {
+export default function SideBar() {
   return (
-    <aside
-      className={`
-        fixed left-0 top-0 h-screen z-50
-        w-64 md:w-22
-        bg-white dark:bg-background 
-        border-r border-border 
-        px-3 md:px-2 py-6 
-        flex flex-col
-        text-sm md:text-[10px] font-medium
-        transform transition-transform duration-300 ease-in-out
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-        md:translate-x-0
-      `}
-    >
-      {/* Mobile Header */}
-      <div className="flex items-center justify-between mb-6 md:mb-0">
-        <Logo text={null} />
-        <button
-          onClick={onClose}
-          className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
-          aria-label="Close sidebar"
-        >
-          <X size={20} className="text-muted" />
-        </button>
-      </div>
+    <>
+    <aside className="fixed left-0 top-0 w-22 h-screen bg-white dark:bg-background border-r border-border px-2 py-6 grid grid-cols-1   text-[10px] font-medium z-40 md:sticky md:top-0">
+      <div><Logo   /></div>
 
-      {/* Navigation */}
-      <nav className="flex flex-col gap-2 md:gap-5 mt-4 md:mt-6">
+      <nav className="flex flex-col  gap-5">
         {navItems.map((item, index) => {
           const Icon = item.icon;
 
@@ -64,24 +37,22 @@ export default function SideBar({ isOpen, onClose }: SideBarProps) {
             <NavLink
               key={index}
               to={item.path}
-              onClick={onClose}
               className={({ isActive }) =>
-                `flex items-center md:flex-col md:items-center justify-start md:justify-center 
-                 gap-3 md:gap-1 
-                 px-4 md:px-0 py-3 
-                 rounded-xl transition-all duration-200
-                 ${isActive
-                  ? "bg-primary text-gray-100 shadow-md shadow-primary/25"
-                  : "text-gray-600/90 dark:text-gray-300 hover:bg-primary/10 hover:text-primary"
+                `flex flex-col items-center justify-center gap-1 py-3 rounded-xl transition
+              
+                ${
+                  isActive
+                    ? "bg-primary text-gray-100"
+                    : "text-gray-600/90 dark:text-gray-300 hover:bg-primary/20"
                 }`
               }
             >
               <Icon size={20} />
-              <span className="leading-tight font-medium">{item.name}</span>
+              <span className="leading-tight">{item.name}</span>
             </NavLink>
           );
         })}
       </nav>
     </aside>
-  );
+  </>);
 }

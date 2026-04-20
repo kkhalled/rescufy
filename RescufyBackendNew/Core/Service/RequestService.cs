@@ -9,7 +9,22 @@ namespace Service
 {
     public class RequestService(IUnitOfWork unitOfWork) : IRequestService
     {
+        public async Task<Request> CreateRequestAsync(string userId, string description, decimal latitude, decimal longitude, string address, bool isSelfCase)
+        {
+            return await CreateRequestAsync(userId, description, latitude, longitude, address, isSelfCase, numberOfPeopleAffected: 1);
+        }
+
+        async Task IRequestService.CreateRequestAsync(string userId, string description, decimal latitude, decimal longitude, string address, bool isSelfCase, int numberOfPeopleAffected)
+        {
+            await CreateRequestInternalAsync(userId, description, latitude, longitude, address, isSelfCase, numberOfPeopleAffected);
+        }
+
         public async Task<Request> CreateRequestAsync(string userId, string description, decimal latitude, decimal longitude, string address, bool isSelfCase, int numberOfPeopleAffected)
+        {
+            return await CreateRequestInternalAsync(userId, description, latitude, longitude, address, isSelfCase, numberOfPeopleAffected);
+        }
+
+        private async Task<Request> CreateRequestInternalAsync(string userId, string description, decimal latitude, decimal longitude, string address, bool isSelfCase, int numberOfPeopleAffected)
         {
             var request = new Request
             {
@@ -29,9 +44,9 @@ namespace Service
             {
                 await unitOfWork.GetRepository<Request, int>().AddAsync(request);
 
-            await unitOfWork.SaveChangesAsync(); // Save to get RequestId
+                await unitOfWork.SaveChangesAsync(); // Save to get RequestId
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 throw;
@@ -88,7 +103,7 @@ namespace Service
                 {
                     await unitOfWork.SaveChangesAsync();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                     throw;
@@ -103,7 +118,7 @@ namespace Service
             var assignments = await unitOfWork.GetRepository<Assignment, int>()
                 .GetAllAsync(
                     predicate: a => a.Ambulance.DriverId == driverId,
-                    includes: [a => a.Request, a => a.Ambulance]
+                    includes: [a => a.Request, a => a.Request.ApplicationUser, a => a.Ambulance]
                 );
 
             return assignments.Select(a => a.Request);
@@ -131,14 +146,16 @@ namespace Service
 
         public async Task<IEnumerable<Request>> GetRequestsAsync(RequestFilterDto filter)
         {
-            return await unitOfWork.GetRepository<Request, int>()
-                .GetAllAsync(predicate: r =>
+            return await unitOfWork.Context.Set<Request>()
+                .Include(r => r.ApplicationUser)
+                .Where(r =>
                     (string.IsNullOrEmpty(filter.UserId) || r.UserId == filter.UserId) &&
                     (!filter.RequestStatus.HasValue || r.RequestStatus == filter.RequestStatus) &&
                     (!filter.IsSelfCase.HasValue || r.IsSelfCase == filter.IsSelfCase) &&
                     (!filter.StartDate.HasValue || r.CreatedAt >= filter.StartDate) &&
                     (!filter.EndDate.HasValue || r.CreatedAt <= filter.EndDate)
-                );
+                )
+                .ToListAsync();
         }
 
         public async Task<Request?> GetRequestByIdAsync(int id)

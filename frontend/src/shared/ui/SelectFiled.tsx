@@ -1,68 +1,55 @@
 import {
-  Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/ui/select";
+} from "../../shared/ui/select";
+import { faBriefcase } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import useLanguage from "@/i18n/useLanguage";
+import { Select } from "@radix-ui/react-select";
+// import { useState } from "react";
 
-type SelectOption = {
-  label: string;
-  value: string;
-};
-
-type SelectFieldProps = {
-  label: string;
-  placeholder: string;
-  icon?: IconDefinition;
-  value: string;
-  onChange: (value: string) => void;
-  options: SelectOption[];
-};
-
-export default function SelectField({
+export default function SelectFiled({
   label,
-  placeholder,
-  icon,
-  value,
-  onChange,
-  options,
-}: SelectFieldProps) {
-  return (
-    <div className="text-sm ">
-      <label className=" font-medium text-gray-600 block">{label}</label>
+  id,
+  role,
+}: {
+  label: string;
+  id: string;
+  role: string;
+}) {
+  // const [selectValue, setSelectValue] = useState<string>("");
 
-      <Select
-        dir="auto"
-        value={value}
-        onValueChange={(value) => {
-          onChange(value);
-        }}
-      >
-        <SelectTrigger className="w-full   rounded-md bg-background-second  data-placeholder:text-gray-700   border-gray-200  dark:border-gray-800   dark:text-white  transition">
-          <div className="flex items-center gap-3">
-            {icon && <FontAwesomeIcon icon={icon} className="text-gray-400" />}
+  // setSelectItemArr(selectItems.toString());
+  return (
+    <div className="text-sm mb-4">
+      <label className="mb-1 font-medium text-gray-600 block">{label}</label>
+
+      <Select   >
+        <SelectTrigger 
+          className="w-full pl-4 pr-4 py-4 rounded-lg bg-gray-100 dark:bg-background-second border border-gray-200 dark:border-gray-300/10 text-gray-900 dark:text-white
+            placeholder:text-gray-400 
+            focus:outline-none focus:ring-1 focus:ring-gray-300/50 dark:focus:ring-gray-300/50
+            transition"
+        >
+          <div className="flex items-center space-x-3">
+            <FontAwesomeIcon className="text-gray-400" icon={faBriefcase} />
             <SelectValue
-              className="placeholder-shown:text-2xl"
-              placeholder={placeholder}
+              className="text-gray-400 font-medium"
+              placeholder={id}
             />
           </div>
         </SelectTrigger>
-
-        <SelectContent dir="auto" className=" bg-background-second">
-          {options.map((option) => (
-            <SelectItem
-              dir="auto"
-              className="text-heading focus:bg-blue-100 dark:hover:bg-gray-500 dark:text-white"
-              key={option.value}
-              value={option.value}
-            >
-              {option.label}
-            </SelectItem>
-          ))}
+        <SelectContent className="">
+          {/* map{selectItemArr.split(",").map((item , index) => (
+            <SelectItem key={index} value={item}>{item}</SelectItem>
+          ))} */}
+          <SelectItem id="role" value="admin" className="text-gray-500">
+            Admin
+          </SelectItem>
+          <SelectItem id="role" value="Dispatcher">
+            Dispatcher
+          </SelectItem>
         </SelectContent>
       </Select>
     </div>

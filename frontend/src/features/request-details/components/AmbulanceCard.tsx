@@ -3,7 +3,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InfoCard from "./InfoCard";
 import { useTranslation } from "react-i18next";
 
-const AmbulanceCard = ({ vehicle, type, eta, location, crew }) => {
+interface AmbulanceCardProps {
+  vehicle: string;
+  type: string;
+  eta: string;
+  location: string;
+  crew: string[];
+}
+
+const AmbulanceCard = ({ vehicle, type, eta, location, crew }: AmbulanceCardProps) => {
   const { t } = useTranslation("requests");
   return (
     <InfoCard title={t("details.ambulance")} icon={<FontAwesomeIcon icon={faTruckMedical} />}>

@@ -203,7 +203,8 @@ namespace API
 			#region CORS
 			var allowedOrigins = new[]
 			{
-				"http://localhost:4200",              // Angular frontend
+				"http://localhost:4173",
+				"http://localhost:4200", // Angular frontend
 				"http://localhost:5173",              // dev
 				"https://your-frontend.vercel.app" ,
 				"http://localhost:5174",
@@ -252,9 +253,16 @@ namespace API
 			app.MapHub<NotificationHub>("/hubs/notifications");
 
 			#region Data Seeding
-			using var scope = app.Services.CreateScope();
-			var objectDataSeeding = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
-			objectDataSeeding.DataSeed();
+			try
+			{
+				using var scope = app.Services.CreateScope();
+				var objectDataSeeding = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
+				objectDataSeeding.DataSeed();
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "An error occurred during data seeding");
+			}
 			#endregion
 
 			#region Configure the HTTP request pipeline

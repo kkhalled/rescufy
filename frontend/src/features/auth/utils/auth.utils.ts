@@ -5,11 +5,56 @@ import type { JwtPayload } from "../types/auth.types";
  * Auth utility functions for token and user data management
  */
 
+const AUTH_TOKEN_COOKIE_KEY = "auth_token";
+
+const getSecureCookieFlag = (): string => {
+  if (typeof window !== "undefined" && window.location.protocol === "https:") {
+    return "; Secure";
+  }
+  return "";
+};
+
 /**
- * Get the auth token from localStorage
+ * Set auth token in cookie
+ */
+export const setAuthToken = (token: string, tokenExpiryUnixSeconds?: number): void => {
+  if (typeof document === "undefined") return;
+
+  const secureFlag = getSecureCookieFlag();
+  const expires =
+    typeof tokenExpiryUnixSeconds === "number"
+      ? `; Expires=${new Date(tokenExpiryUnixSeconds * 1000).toUTCString()}`
+      : "";
+
+  document.cookie = `${AUTH_TOKEN_COOKIE_KEY}=${encodeURIComponent(token)}; Path=/; SameSite=Strict${expires}${secureFlag}`;
+};
+
+/**
+ * Get the auth token from cookies
  */
 export const getAuthToken = (): string | null => {
-  return localStorage.getItem("auth_token");
+  if (typeof document === "undefined") return null;
+
+  const keyWithEquals = `${AUTH_TOKEN_COOKIE_KEY}=`;
+  const cookies = document.cookie ? document.cookie.split("; ") : [];
+
+  for (const cookie of cookies) {
+    if (cookie.startsWith(keyWithEquals)) {
+      return decodeURIComponent(cookie.substring(keyWithEquals.length));
+    }
+  }
+
+  return null;
+};
+
+/**
+ * Clear auth token cookie
+ */
+export const clearAuthToken = (): void => {
+  if (typeof document === "undefined") return;
+
+  const secureFlag = getSecureCookieFlag();
+  document.cookie = `${AUTH_TOKEN_COOKIE_KEY}=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict${secureFlag}`;
 };
 
 /**
@@ -42,7 +87,7 @@ export const isTokenExpired = (): boolean => {
  * Clear authentication data
  */
 export const clearAuthData = (): void => {
-  localStorage.removeItem("auth_token");
+  clearAuthToken();
   localStorage.removeItem("auth_user");
 };
 

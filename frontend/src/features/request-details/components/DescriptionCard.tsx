@@ -3,7 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InfoCard from "./InfoCard";
 import { useTranslation } from "react-i18next";
 
-const DescriptionCard = ({ description, additionalNotes }) => {
+interface DescriptionCardProps {
+  description: string;
+  additionalNotes?: string | null;
+}
+
+const DescriptionCard = ({ description, additionalNotes }: DescriptionCardProps) => {
   const { t } = useTranslation("requests");
   return (
     <InfoCard title={t("details.description")} icon={<FontAwesomeIcon icon={faClipboard} />}>

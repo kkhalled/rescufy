@@ -1,7 +1,7 @@
 {
     "pageHeader": {
         "title": "إدارة سيارات الإسعاف",
-        "subtitle": "إدارة معلومات سيارات الإسعاف والمواقع"
+        "subtitle": "مركز قيادة لحظي للتوزيع والتتبع والاستجابة للحالات الحرجة"
     },
     "title": "سيارات الإسعاف",
     "subtitle": "إدارة أسطول سيارات الإسعاف",
@@ -40,11 +40,76 @@
         "offline": "غير متصل"
     },
     "card": {
+        "viewTooltip": "عرض الملف الشخصي",
         "editTooltip": "تعديل سيارة الإسعاف",
         "deleteTooltip": "حذف سيارة الإسعاف"
     },
     "filters": {
         "searchPlaceholder": "البحث برقم اللوحة أو المعرّف"
+    },
+    "controlCenter": {
+        "liveMonitoring": "مراقبة مباشرة",
+        "signalReady": "خط الأحداث جاهز لـ SignalR",
+        "signalHint": "اربط أحداث الهب الحقيقية مع applyRealtimeUpdate() للمزامنة الفورية",
+        "lastUpdate": "آخر تحديث",
+        "updatedSeconds": "منذ {{value}} ث",
+        "distanceFromCenter": "المسافة من مركز القيادة",
+        "actions": {
+            "assign": "تعيين",
+            "track": "تتبع",
+            "changeStatus": "الحالة"
+        },
+        "kpi": {
+            "total": "إجمالي سيارات الإسعاف",
+            "available": "متاح",
+            "busy": "مشغول",
+            "maintenance": "صيانة"
+        },
+        "filters": {
+            "title": "مرشحات التشغيل",
+            "searchLabel": "البحث",
+            "searchPlaceholder": "ابحث برقم اللوحة أو المعرّف أو اسم المستشفى",
+            "hospitalAll": "جميع المستشفيات",
+            "proximity": {
+                "label": "القرب",
+                "all": "كل النطاقات",
+                "near": "قريب (<3 كم)",
+                "mid": "متوسط (3-8 كم)",
+                "far": "بعيد (>8 كم)"
+            },
+            "sort": {
+                "label": "الترتيب",
+                "available": "المتاح أولاً",
+                "nearest": "الأقرب أولاً",
+                "lastUpdated": "الأحدث تحديثاً"
+            }
+        },
+        "list": {
+            "title": "قائمة التوزيع",
+            "subtitle": "{{count}} وحدة تحت المتابعة"
+        },
+        "loading": "جارٍ تحميل سيارات الإسعاف...",
+        "empty": {
+            "title": "لا توجد وحدات مطابقة للمرشحات الحالية",
+            "subtitle": "عدّل مرشحات الحالة أو المستشفى أو القرب لتوسيع النتائج."
+        },
+        "alerts": {
+            "title": "تنبيهات مباشرة",
+            "subtitle": "سجل النشاط والنبض اللحظي",
+            "critical": "حرج",
+            "heartbeat": "النبض",
+            "seconds": "{{value}} ث",
+            "empty": "لا توجد تنبيهات مباشرة حالياً",
+            "statusChanged": "تم تغيير الحالة من {{from}} إلى {{to}}",
+            "deletedFromRoster": "تمت الإزالة من قائمة التوزيع",
+            "unitLabel": "الوحدة: {{unit}}"
+        },
+        "connection": {
+            "connected": "متصل",
+            "reconnecting": "إعادة اتصال",
+            "disconnected": "غير متصل",
+            "simulation": "محاكاة"
+        }
     },
     "types": {
         "basic": "دعم الحياة الأساسي",
@@ -54,5 +119,46 @@
     "empty": {
         "title": "لم يتم العثور على سيارات إسعاف",
         "description": "ابدأ بإضافة سيارة إسعاف جديدة."
+    },
+    "deleteDialog": {
+        "title": "حذف سيارة الإسعاف",
+        "description": "هل أنت متأكد من حذف {{name}}؟ لا يمكن التراجع عن هذا الإجراء.",
+        "cancel": "إلغاء",
+        "confirm": "حذف",
+        "deleting": "جارٍ الحذف..."
+    },
+    "profile": {
+        "title": "ملف سيارة الإسعاف",
+        "subtitle": "معلومات تشغيلية تفصيلية لسيارة الإسعاف",
+        "backToList": "العودة إلى سيارات الإسعاف",
+        "notFoundTitle": "سيارة الإسعاف غير موجودة",
+        "notFoundSubtitle": "تعذر تحميل ملف سيارة الإسعاف المطلوبة.",
+        "id": "معرّف سيارة الإسعاف",
+        "vehicleName": "اسم المركبة",
+        "vehicleInfo": "معلومات المركبة",
+        "driverName": "اسم السائق",
+        "driverId": "معرّف السائق",
+        "driverPhone": "هاتف السائق",
+        "status": "الحالة الحالية",
+        "location": "موقع الشريحة",
+        "latitude": "خط العرض",
+        "longitude": "خط الطول",
+        "openInMaps": "فتح في الخرائط",
+        "createdAt": "تاريخ الإنشاء",
+        "updatedAt": "آخر تحديث"
+    },
+    "api": {
+        "notFound": "سيارة الإسعاف غير موجودة",
+        "fetchProfileError": "فشل في جلب ملف سيارة الإسعاف",
+        "fetchAllError": "فشل في تحميل سيارات الإسعاف",
+        "addSuccess": "تمت إضافة سيارة الإسعاف بنجاح",
+        "addError": "فشل في إضافة سيارة الإسعاف",
+        "updateSuccess": "تم تحديث سيارة الإسعاف بنجاح",
+        "updateError": "فشل في تحديث سيارة الإسعاف",
+        "deleteSuccess": "تم حذف سيارة الإسعاف بنجاح",
+        "deleteError": "فشل في حذف سيارة الإسعاف",
+        "deleteConfirm": "هل تريد حذف سيارة الإسعاف {{name}}؟",
+        "deleteCanceled": "تم إلغاء عملية الحذف",
+        "statusUpdateError": "فشل في تحديث حالة سيارة الإسعاف"
     }
 }

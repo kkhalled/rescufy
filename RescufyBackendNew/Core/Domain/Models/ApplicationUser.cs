@@ -11,6 +11,11 @@ namespace Domain.Models
         public string NationalId { get; set; } = default!;
         public string Gender { get; set; } = default!;
         public int Age { get; set; }
+
+        // Hospital relationship for HospitalAdmin
+        public int? HospitalId { get; set; }
+        public Hospital? Hospital { get; set; }
+
         public EmailVerificationCode EmailVerificationCode { get; set; } = default!;
 
         public UserProfile UserProfile { get; set; } = default!;

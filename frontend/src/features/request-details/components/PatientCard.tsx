@@ -3,10 +3,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InfoCard from "./InfoCard";
 import { useTranslation } from "react-i18next";
 
-const PatientCard = ({ name, age, gender, blood, conditions, history }) => {
+interface PatientCardProps {
+  name: string;
+  age: number | null;
+  gender: string;
+  blood: string;
+  conditions: string[];
+  history: string;
+}
+
+const PatientCard = ({ name, age, gender, blood, conditions, history }: PatientCardProps) => {
   const { t } = useTranslation("requests");
   const genderKey = typeof gender === 'string' ? gender.toLowerCase() : '';
   const displayGender = genderKey ? t(`details.gender.${genderKey}`, { defaultValue: gender }) : gender;
+  const ageLabel = age == null ? "-" : `${age}yo`;
 
   return (
     <InfoCard title={t("details.patient")} icon={<FontAwesomeIcon icon={faUser} />}>
@@ -14,7 +24,7 @@ const PatientCard = ({ name, age, gender, blood, conditions, history }) => {
         {name}
       </p>
       <p style={{ color: "var(--text-muted)" }} className="text-sm">
-        {age}yo • {displayGender} • {blood}
+        {ageLabel} • {displayGender} • {blood}
       </p>
 
       <div className="flex flex-wrap gap-2">

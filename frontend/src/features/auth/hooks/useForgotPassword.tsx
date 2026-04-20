@@ -22,7 +22,7 @@ export default function useForgotPassword() {
 
   function goBackToEmail() {
     setStep("email");
-    setToken("");
+    setToken(""); // Clear token when going back to email step
   }
 
   // OTP step handlers  

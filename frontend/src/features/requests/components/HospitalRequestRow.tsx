@@ -7,7 +7,7 @@ import { useLanguage } from "../../../i18n/useLanguage";
 interface HospitalRequestRowProps {
   id?: string;
   userName?: string;
-  userPhone?: string;
+  userPhone?: number | string;
   location?: string;
   priority?: RequestPriority;
   status?: RequestStatus;

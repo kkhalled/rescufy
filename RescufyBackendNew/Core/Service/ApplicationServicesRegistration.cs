@@ -26,6 +26,8 @@ namespace Service
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IRequestService, RequestService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IHospitalService, HospitalService>();
+            services.AddScoped<IAmbulanceService, AmbulanceService>();
             return services;
         }
     }

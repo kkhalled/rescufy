@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { getApiUrl, API_CONFIG } from "@/config/api.config";
 import { useLanguage } from "@/i18n/useLanguage";
 import type { RequestDetail } from "../types/requestDetails.types";
+import { getAuthToken } from "@/features/auth/utils/auth.utils";
 
 export function useGetRequestById() {
   const [request, setRequest] = useState<RequestDetail | null>(null);
@@ -17,7 +18,7 @@ export function useGetRequestById() {
     const toastPosition = isRTL ? "top-left" : "top-right";
 
     try {
-      const token = localStorage.getItem("auth_token");
+      const token = getAuthToken();
 
       if (!token) {
         toast.error(t("auth:signIn.tokenNotFound"), { position: toastPosition });

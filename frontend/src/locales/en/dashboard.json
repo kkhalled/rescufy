@@ -2,6 +2,10 @@
     "title": "Dashboard",
     "welcome": "Welcome back, {{name}}!",
     "overview": "Overview",
+    "monitoringCenter": {
+        "subtitle": "Auto-dispatch monitoring center for live awareness, alerts, and system reasoning.",
+        "liveTag": "System Live"
+    },
     "stats": {
         "totalRequests": "Total Requests",
         "activeAmbulances": "Active Ambulances",
@@ -32,6 +36,109 @@
         "criticalCapacity": "Critical capacity",
         "live": "LIVE"
     },
+    "kpi": {
+        "activeQueue": {
+            "title": "Dispatch Queue Pressure",
+            "action": "Action: pre-stage units across {{count}} pressure zones."
+        },
+        "successRate": {
+            "title": "Assignment Success Rate",
+            "trend": "+1.6% vs last hour",
+            "context": "{{value}} failed assignments in the current monitoring window",
+            "action": "Action: keep adaptive matching profile enabled."
+        },
+        "dispatchTime": {
+            "title": "Median Dispatch Time",
+            "trend": "-0.7 min vs baseline",
+            "context": "{{count}} handoff delays in the last hour",
+            "action": "Action: investigate zone-to-hospital transfer lag."
+        },
+        "fleetReadiness": {
+            "title": "Fleet Readiness",
+            "context": "{{available}} of {{total}} ambulances available now",
+            "action": "Action: reroute low-acuity arrivals from {{count}} overloaded hospitals."
+        }
+    },
+    "monitoring": {
+        "systemHealth": {
+            "title": "System Health",
+            "description": "Real-time heartbeat of dispatch performance and reliability.",
+            "healthy": "Healthy",
+            "warning": "Warning",
+            "critical": "Critical",
+            "avgDispatchTime": "Avg Dispatch Time",
+            "successRate": "Success Rate",
+            "failedAssignments": "Failed Assignments"
+        }
+    },
+    "activityFeed": {
+        "title": "Dispatch Activity Feed",
+        "subtitle": "Recent lifecycle events from request intake to completion.",
+        "requestId": "Request {{id}}",
+        "minutesAgo": "{{count}}m ago",
+        "types": {
+            "requestReceived": "Request Received",
+            "ambulanceAssigned": "Ambulance Assigned",
+            "etaUpdated": "ETA Updated",
+            "completed": "Completed"
+        },
+        "descriptions": {
+            "requestReceived": "Emergency request registered for {{patient}}.",
+            "ambulanceAssigned": "System assigned {{ambulance}}.",
+            "etaUpdated": "Route recalculated, updated ETA is {{eta}} min.",
+            "completed": "Case closed after handoff by {{ambulance}}."
+        }
+    },
+    "alerts": {
+        "title": "Priority Alerts",
+        "subtitle": "Escalations that may degrade auto-dispatch coverage.",
+        "noAlerts": "No active alerts. Monitoring signals are stable.",
+        "minutesAgo": "{{count}}m ago",
+        "affectedZone": "Zone: {{zone}}",
+        "recommendation": "Recommendation: {{value}}",
+        "severity": {
+            "critical": "Critical",
+            "warning": "Warning",
+            "info": "Info"
+        },
+        "zones": {
+            "westSector": "West Sector",
+            "centralDistrict": "Central District",
+            "cityWide": "City-wide"
+        },
+        "items": {
+            "noAmbulance": {
+                "title": "No standby unit available",
+                "description": "All nearby ambulances are currently in active transport.",
+                "recommendation": "Shift nearest reserve unit from adjacent sector immediately."
+            },
+            "dispatchDelay": {
+                "title": "Dispatch delays detected",
+                "description": "{{value}} requests exceeded expected assignment window.",
+                "recommendation": "Review traffic-weighted routing and prioritize nearest free crews."
+            },
+            "hospitalLoad": {
+                "title": "Hospital load imbalance",
+                "description": "{{value}} receiving facilities exceeded safe intake threshold.",
+                "recommendation": "Bias dispatch scoring toward secondary hospitals with open capacity."
+            }
+        }
+    },
+    "decisionInsights": {
+        "title": "System Decision Insights",
+        "subtitle": "Why the engine selected each ambulance for recent incidents.",
+        "request": "Request {{id}}",
+        "confidenceLabel": "{{value}}% confidence",
+        "selectedAmbulance": "Selected ambulance",
+        "etaDistance": "ETA {{eta}} min • {{distance}} km",
+        "alternatives": "Alternatives evaluated",
+        "reasoning": "System reasoning",
+        "items": {
+            "fastestCorridor": "Chosen due to fastest corridor clearance and immediate ALS readiness.",
+            "bestHospitalMatch": "Selected for shortest combined travel plus nearest trauma-ready hospital.",
+            "loadBalanced": "Assigned to keep fleet utilization balanced while preserving backup coverage."
+        }
+    },
     "charts": {
         "requestsOverview": "Requests Overview",
         "weeklyStats": "Weekly Statistics",
@@ -46,7 +153,17 @@
     },
     "recentRequests": {
         "title": "Recent Requests",
-        "viewAll": "View All"
+        "viewAll": "View All",
+        "liveFeed": "Live Feed",
+        "socketConnected": "Socket Connected",
+        "incomingRate": "Incoming Rate",
+        "incomingRateValue": "{{value}}/min",
+        "avgLatency": "Avg Latency",
+        "avgLatencyValue": "{{value}} ms",
+        "eventQueue": "Event Queue",
+        "eventQueueValue": "{{count}} waiting",
+        "designModeHint": "Design mode only: this panel is ready for realtime events when SignalR wiring is enabled.",
+        "lastRefresh": "Last refresh: {{value}} ago"
     },
     "criticalRequests": {
         "title": "Critical Requests"

@@ -4,7 +4,7 @@
  */
 
 export const API_CONFIG = {
-  BASE_URL: "https://localhost:7225",
+  BASE_URL: "https://rescuffy.runasp.net",
   ENDPOINTS: {
     AUTH: {
       LOGIN: "/api/Auth/login",
@@ -30,6 +30,13 @@ export const API_CONFIG = {
       DELETE: (id: string) => `/api/Hospital/${id}`,
       GET_STATS: (id: string) => `/api/Hospital/${id}/stats`,
       GET_REQUESTS: (id: string) => `/api/Hospital/${id}/requests`,
+    },
+    AMBULANCES: {
+      GET_ALL: "/api/Ambulance",
+      GET_BY_ID: (id: string) => `/api/Ambulance/${id}`,
+      CREATE: "/api/Ambulance",
+      UPDATE: (id: string) => `/api/Ambulance/${id}`,
+      DELETE: (id: string) => `/api/Ambulance/${id}`,
     },
     REQUESTS: {
       GET_ALL: "/api/Request",

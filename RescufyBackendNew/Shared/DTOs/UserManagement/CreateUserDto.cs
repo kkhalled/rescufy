@@ -31,5 +31,10 @@ namespace Shared.DTOs.UserManagement
 
         [Required]
         public string Role { get; set; } = default!; // "Admin", "AmbulanceDriver", "HospitalAdmin", "User"
+
+        /// <summary>
+        /// Required when Role is "HospitalAdmin" - the hospital ID to assign the admin to
+        /// </summary>
+        public int? HospitalId { get; set; }
     }
 }

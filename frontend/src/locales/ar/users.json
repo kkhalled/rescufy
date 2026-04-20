@@ -3,6 +3,14 @@
         "title": "إدارة المستخدمين",
         "subtitle": "إدارة حسابات المستخدمين وتعيينات الأدوار"
     },
+    "overview": {
+        "totalUsers": "إجمالي المستخدمين",
+        "adminTeam": "فريق الإدارة",
+        "hospitalAdmins": "مديرو المستشفيات",
+        "fieldTeam": "الفرق الميدانية",
+        "usersFound": "تم العثور على {{count}} مستخدم",
+        "activeFilters": "فلاتر نشطة"
+    },
     "title": "المستخدمون",
     "subtitle": "إدارة مستخدمي النظام",
     "addUser": "إضافة مستخدم",
@@ -11,6 +19,7 @@
     "search": "بحث عن مستخدمين...",
     "roles": {
         "all": "جميع الأدوار",
+        "SuperAdmin": "مدير عام",
         "System SuperAdmin": "مدير عام",
         "Admin": "مدير النظام",
         "HospitalAdmin": "مدير المستشفى",
@@ -22,6 +31,12 @@
         "namePlaceholder": "أدخل الاسم الكامل",
         "email": "البريد الإلكتروني",
         "emailPlaceholder": "أدخل البريد الإلكتروني",
+        "nationalId": "الرقم القومي",
+        "nationalIdPlaceholder": "أدخل الرقم القومي المكوّن من 14 رقمًا",
+        "gender": "النوع",
+        "selectGender": "اختر النوع",
+        "age": "العمر",
+        "agePlaceholder": "أدخل العمر",
         "password": "كلمة المرور",
         "passwordPlaceholder": "أدخل كلمة المرور",
         "phone": "رقم الهاتف",
@@ -30,7 +45,12 @@
         "selectRole": "اختر دوراً",
         "hospital": "المستشفى",
         "selectHospital": "اختر مستشفى",
-        "loadingHospitals": "جاري تحميل المستشفيات..."
+        "loadingHospitals": "جاري تحميل المستشفيات...",
+        "hospitalAdminHint": "اختر المستشفى التي سيديرها مدير المستشفى هذا."
+    },
+    "genders": {
+        "Male": "ذكر",
+        "Female": "أنثى"
     },
     "actions": {
         "add": "إضافة مستخدم",

@@ -41,7 +41,7 @@ export default function HospitalSideBar({ isOpen, onClose }: HospitalSideBarProp
     >
       {/* Mobile Header */}
       <div className="flex items-center justify-between mb-6 md:mb-0">
-        <Logo text={undefined} />
+        <Logo />
       </div>
 
       {/* Navigation */}

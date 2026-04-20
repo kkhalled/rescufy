@@ -1,4 +1,12 @@
-const InfoCard = ({ icon, title, children }) => {
+import type { ReactNode } from "react";
+
+interface InfoCardProps {
+  icon: ReactNode;
+  title: string;
+  children: ReactNode;
+}
+
+const InfoCard = ({ icon, title, children }: InfoCardProps) => {
   return (
     <div
       style={{

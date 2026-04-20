@@ -1,121 +1,274 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPenToSquare,
-  faTrash,
-  faLocationDot,
-} from "@fortawesome/free-solid-svg-icons";
-import { faAmbulance } from "@fortawesome/free-solid-svg-icons";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  AlertTriangle,
+  Building2,
+  CheckCircle2,
+  Clock3,
+  Eye,
+  MapPin,
+  Navigation,
+  Pencil,
+  Siren,
+  Trash2,
+  Wrench,
+  type LucideIcon,
+} from "lucide-react";
+import type { AmbulanceStatus } from "../types/ambulances.types";
+import SelectField from "@/shared/ui/SelectField";
+
+type StatusTheme = {
+  badgeClass: string;
+  borderClass: string;
+  glowClass: string;
+  icon: LucideIcon;
+};
+
+const STATUS_THEME: Record<AmbulanceStatus, StatusTheme> = {
+  AVAILABLE: {
+    badgeClass: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+    borderClass: "border-emerald-500/35",
+    glowClass: "shadow-[0_0_22px_rgba(16,185,129,0.18)]",
+    icon: CheckCircle2,
+  },
+  IN_TRANSIT: {
+    badgeClass: "bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border-cyan-500/30",
+    borderClass: "border-cyan-500/35",
+    glowClass: "shadow-[0_0_22px_rgba(6,182,212,0.16)]",
+    icon: Siren,
+  },
+  BUSY: {
+    badgeClass: "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/35",
+    borderClass: "border-amber-500/60",
+    glowClass: "shadow-[0_0_26px_rgba(245,158,11,0.2)]",
+    icon: AlertTriangle,
+  },
+  MAINTENANCE: {
+    badgeClass: "bg-red-500/15 text-red-700 dark:text-red-300 border-red-500/40",
+    borderClass: "border-red-500/80",
+    glowClass: "shadow-[0_0_30px_rgba(239,68,68,0.28)]",
+    icon: Wrench,
+  },
+};
 
 interface AmbulanceCardProps {
   id: string;
   licensePlate: string;
-  hospitalId: string;
-  status: "AVAILABLE" | "IN_TRANSIT" | "BUSY" | "MAINTENANCE";
+  hospitalName: string;
+  status: AmbulanceStatus;
   latitude: number;
   longitude: number;
+  distanceKm: number;
+  updatedSecondsAgo: number;
+  isRecentlyUpdated: boolean;
+  onAssign?: () => void;
+  onTrack?: () => void;
+  onChangeStatus?: (status: AmbulanceStatus) => void;
+  onViewProfile?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
 }
 
-export function AmbulanceCard({
+export const AmbulanceCard = memo(function AmbulanceCard({
   id,
   licensePlate,
-  hospitalId,
+  hospitalName,
   status,
   latitude,
   longitude,
+  distanceKm,
+  updatedSecondsAgo,
+  isRecentlyUpdated,
+  onAssign,
+  onTrack,
+  onChangeStatus,
+  onViewProfile,
   onEdit,
   onDelete,
 }: AmbulanceCardProps) {
-  const { t } = useTranslation('ambulances');
+  const { t } = useTranslation("ambulances");
+  const shouldReduceMotion = useReducedMotion();
 
-  const statusStyle: Record<typeof status, string> = {
-    AVAILABLE: "text-emerald-600 dark:text-emerald-400",
-    IN_TRANSIT: "text-blue-600 dark:text-blue-400",
-    BUSY: "text-amber-600 dark:text-amber-400",
-    MAINTENANCE: "text-red-600 dark:text-red-400",
+  const statusLabel: Record<AmbulanceStatus, string> = {
+    AVAILABLE: t("status.available"),
+    IN_TRANSIT: t("status.inTransit"),
+    BUSY: t("status.busy"),
+    MAINTENANCE: t("status.maintenance"),
   };
 
-  const statusLabel: Record<typeof status, string> = {
-    AVAILABLE: t('status.available'),
-    IN_TRANSIT: t('status.inTransit'),
-    BUSY: t('status.busy'),
-    MAINTENANCE: t('status.maintenance'),
-  };
+  const statusOptions: AmbulanceStatus[] = [
+    "AVAILABLE",
+    "IN_TRANSIT",
+    "BUSY",
+    "MAINTENANCE",
+  ];
+
+  const statusSelectOptions = statusOptions.map((option) => ({
+    value: option,
+    label: statusLabel[option],
+  }));
+
+  const theme = STATUS_THEME[status];
+  const StatusIcon = theme.icon;
+  const formattedDistance = `${distanceKm.toFixed(1)} km`;
+  const updatedLabel = t("controlCenter.updatedSeconds", { value: updatedSecondsAgo });
 
   return (
-    <div
+    <motion.article
       className="
+        group
+        relative
         w-full
-        rounded-lg
+        overflow-hidden
+        rounded-2xl
         border
-        border-border
+        border-border/70
         bg-bg-card
         p-4
-        transition
-        hover:bg-surface-muted
+        text-body
+        shadow-soft
+        transition-all
+        duration-250
+        ease-out
+        hover:-translate-y-0.5
+        hover:shadow-card
       "
+      initial={shouldReduceMotion ? undefined : { opacity: 0, y: 8 }}
+      animate={
+        shouldReduceMotion
+          ? undefined
+          : {
+              opacity: 1,
+              y: 0,
+              boxShadow: isRecentlyUpdated
+                ? "0 0 0 2px rgba(56,189,248,0.3), 0 0 30px rgba(56,189,248,0.2)"
+                : "0 0 0 0 rgba(0,0,0,0)",
+            }
+      }
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] as const }}
+      whileHover={shouldReduceMotion ? undefined : { y: -2 }}
+      viewport={{ once: true, amount: 0.3 }}
     >
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-8 h-8 rounded-md bg-primary/10 text-primary flex items-center justify-center shrink-0">
-            <FontAwesomeIcon icon={faAmbulance} />
-          </div>
+      <div
+        className={`pointer-events-none absolute inset-y-0 left-0 w-1 ${theme.borderClass.replace(
+          "border-",
+          "bg-",
+        )}`}
+      />
 
-          <div className="min-w-0">
-            <h3 className="text-sm font-semibold text-heading truncate">
-              {licensePlate}
-            </h3>
-            <p className="text-xs text-muted truncate">
-              ID: {id}
-            </p>
-          </div>
+      <div className={`absolute inset-0 -z-10 rounded-2xl border ${theme.borderClass} ${theme.glowClass}`} />
+
+      <header className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[11px] uppercase tracking-[0.08em] text-muted">{id}</p>
+          <h3 className="mt-1 truncate text-base font-semibold text-heading">{licensePlate}</h3>
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-1">
-          <button
-            onClick={onEdit}
-            className="p-1.5 rounded hover:bg-surface-muted text-muted hover:text-heading transition"
-            aria-label={t('card.editTooltip')}
-          >
-            <FontAwesomeIcon icon={faPenToSquare} />
-          </button>
-          <button
-            onClick={onDelete}
-            className="p-1.5 rounded hover:bg-danger/10 text-muted hover:text-danger transition"
-            aria-label={t('card.deleteTooltip')}
-          >
-            <FontAwesomeIcon icon={faTrash} />
-          </button>
-        </div>
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${theme.badgeClass}`}
+        >
+          <StatusIcon className="h-3.5 w-3.5" />
+          {statusLabel[status]}
+        </span>
+      </header>
+
+      <div className="mt-3 flex items-center justify-end gap-1.5">
+        <button
+          type="button"
+          onClick={onViewProfile}
+          className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border/60 bg-surface-muted/40 text-muted transition hover:text-primary hover:border-primary/40"
+          aria-label={t("card.viewTooltip")}
+        >
+          <Eye className="h-3.5 w-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onClick={onEdit}
+          className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border/60 bg-surface-muted/40 text-muted transition hover:text-primary hover:border-primary/40"
+          aria-label={t("card.editTooltip")}
+        >
+          <Pencil className="h-3.5 w-3.5" />
+        </button>
+
+        <button
+          type="button"
+          onClick={onDelete}
+          className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-border/60 bg-surface-muted/40 text-muted transition hover:text-danger hover:border-danger/40"
+          aria-label={t("card.deleteTooltip")}
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+        </button>
       </div>
 
-      {/* Meta */}
-      <div className="mt-3 space-y-1 text-xs">
-        <div className="flex items-center justify-between">
-          <span className="text-muted">{t('table.status')}</span>
-          <span className={`font-semibold ${statusStyle[status]}`}>
-            {statusLabel[status]}
+      <div className="mt-4 grid gap-2.5 text-xs">
+        <div className="flex items-center justify-between rounded-lg bg-surface-muted/40 px-3 py-2 border border-border/50">
+          <span className="inline-flex items-center gap-1.5 text-muted">
+            <Clock3 className="h-3.5 w-3.5" />
+            {t("controlCenter.lastUpdate")}
+          </span>
+          <span className="font-medium text-heading">{updatedLabel}</span>
+        </div>
+
+        <div className="flex items-center justify-between rounded-lg bg-surface-muted/40 px-3 py-2 border border-border/50">
+          <span className="inline-flex items-center gap-1.5 text-muted">
+            <Navigation className="h-3.5 w-3.5" />
+            {t("controlCenter.distanceFromCenter")}
+          </span>
+          <span className="font-medium text-info">{formattedDistance}</span>
+        </div>
+
+        <div className="flex items-center justify-between rounded-lg bg-surface-muted/40 px-3 py-2 border border-border/50">
+          <span className="inline-flex items-center gap-1.5 text-muted">
+            <Building2 className="h-3.5 w-3.5" />
+            {t("table.hospital")}
+          </span>
+          <span className="max-w-[58%] truncate text-right font-medium text-heading">
+            {hospitalName}
           </span>
         </div>
 
-        <div className="flex items-center justify-between">
-          <span className="text-muted">{t('table.hospital')}</span>
-          <span className="text-text-body font-medium">
-            {hospitalId}
+        <div className="rounded-lg bg-surface-muted/40 px-3 py-2 border border-border/50">
+          <span className="inline-flex items-center gap-1.5 text-muted">
+            <MapPin className="h-3.5 w-3.5" />
+            {t("table.location")}
           </span>
-        </div>
-
-        <div className="flex items-center gap-1.5 text-muted">
-          <FontAwesomeIcon icon={faLocationDot} />
-          <span>
+          <p className="mt-1 font-medium text-heading" dir="ltr">
             {latitude.toFixed(4)}, {longitude.toFixed(4)}
-          </span>
+          </p>
         </div>
       </div>
-    </div>
+
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        <button
+          type="button"
+          onClick={onAssign}
+          disabled={status === "MAINTENANCE"}
+          className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-emerald-500/35 bg-emerald-500/10 px-2 py-2 text-xs font-semibold text-emerald-700 dark:text-emerald-300 transition hover:bg-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <Siren className="h-3.5 w-3.5" />
+          {t("controlCenter.actions.assign")}
+        </button>
+
+        <button
+          type="button"
+          onClick={onTrack}
+          className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-cyan-500/35 bg-cyan-500/10 px-2 py-2 text-xs font-semibold text-cyan-700 dark:text-cyan-300 transition hover:bg-cyan-500/20"
+        >
+          <Navigation className="h-3.5 w-3.5" />
+          {t("controlCenter.actions.track")}
+        </button>
+
+        <SelectField
+          value={status}
+          onChange={(value) => onChangeStatus?.(value as AmbulanceStatus)}
+          options={statusSelectOptions}
+          placeholder={t("controlCenter.actions.changeStatus")}
+          triggerClassName="h-full w-full rounded-lg border border-amber-500/35 bg-amber-500/10 px-2 py-2 text-xs font-semibold text-amber-700 shadow-none ring-0 hover:bg-amber-500/20 focus:ring-2 focus:ring-amber-500/30 dark:text-amber-300"
+        />
+      </div>
+
+    </motion.article>
   );
-}
+});

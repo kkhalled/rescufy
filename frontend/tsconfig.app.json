@@ -16,7 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-     "baseUrl": ".",
     "paths": {
       "@/*": [
         "./src/*"
@@ -31,5 +30,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/shared/ui/SelectFiled.tsx"]
 }

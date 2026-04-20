@@ -1,7 +1,7 @@
 {
     "pageHeader": {
         "title": "Emergency Requests",
-        "subtitle": "Manage and track all emergency response requests"
+        "subtitle": "Monitor automated ambulance dispatch and intervene only when needed"
     },
     "title": "Requests",
     "subtitle": "Manage emergency requests",
@@ -126,5 +126,120 @@
     },
     "hospital": {
         "requestsSubtitle": "View and track requests assigned to your hospital"
+    },
+    "board": {
+        "loading": "Loading auto-dispatch feed...",
+        "monitoring": {
+            "title": "Auto-Dispatch Monitor",
+            "subtitle": "System is evaluating emergency requests continuously. Intervene only for critical delays or failed assignments."
+        },
+        "dispatchStatus": {
+            "all": "All Dispatch States",
+            "searching": "Searching for best ambulance...",
+            "assigned": "Assignment in progress",
+            "failed": "Dispatch failed"
+        },
+        "dispatchStateFilter": {
+            "all": "All Dispatch States",
+            "RECEIVED": "Received",
+            "SEARCHING": "Searching",
+            "ASSIGNED": "Assigned",
+            "ARRIVING": "Arriving",
+            "COMPLETED": "Completed",
+            "FAILED": "Failed"
+        },
+        "dispatchStateLabels": {
+            "RECEIVED": "Request intake confirmed",
+            "SEARCHING": "Searching for best ambulance...",
+            "ASSIGNED": "Assignment in progress",
+            "ARRIVING": "Ambulance arriving",
+            "COMPLETED": "Patient handoff completed",
+            "FAILED": "Dispatch failed"
+        },
+        "intervention": {
+            "title": "Intervention Required"
+        },
+        "timeline": {
+            "RECEIVED": "Request received",
+            "SEARCHING": "Searching",
+            "ASSIGNED": "Assigned",
+            "ARRIVING": "Arrival",
+            "COMPLETED": "Completed",
+            "FAILED": "Failed"
+        },
+        "filters": {
+            "title": "Monitoring Filters",
+            "searchLabel": "Search",
+            "searchPlaceholder": "Search by patient, location, or request ID",
+            "severityLabel": "Severity",
+            "statusLabel": "Dispatch State",
+            "sortLabel": "Sort",
+            "sortNewest": "Newest",
+            "sortLongest": "Longest Waiting"
+        },
+        "summary": {
+            "critical": "Critical: {{count}}",
+            "assigned": "Assigned: {{count}}",
+            "searching": "Searching: {{count}}",
+            "failed": "Failed: {{count}}",
+            "intervention": "Intervention: {{count}}"
+        },
+        "systemState": {
+            "stable": "System Stable",
+            "searching": "Active Search Ongoing",
+            "degraded": "Intervention Needed"
+        },
+        "list": {
+            "title": "Automated Dispatch Stream",
+            "subtitle": "{{count}} requests currently monitored",
+            "emptyTitle": "No requests match current filters",
+            "emptyDescription": "Try changing severity, dispatch state, or search terms."
+        },
+        "item": {
+            "waiting": "{{count}} min waiting",
+            "descriptionFallback": "No description provided",
+            "assignedAmbulance": "Ambulance",
+            "noAmbulance": "Searching for available units",
+            "searchingUnits": "Searching for available units",
+            "eta": "ETA:",
+            "etaMinutes": "{{count}} min",
+            "etaUnknown": "Evaluating closest ambulance"
+        },
+        "details": {
+            "title": "System Insight",
+            "subtitle": "Automatic dispatch reasoning and override controls",
+            "subtitleRefined": "AI selection insights, timeline trace, and intervention controls.",
+            "noSelection": "Select a request to inspect system decisions.",
+            "dispatchState": "Dispatch Status",
+            "selectedAmbulance": "Selected Ambulance",
+            "distance": "Distance",
+            "distanceKm": "{{value}} km",
+            "notAvailable": "N/A",
+            "reasoning": "Selection Reasoning",
+            "reasoningFallback": "No explicit reasoning provided by the dispatch engine.",
+            "alternatives": "Alternative Ambulances",
+            "noAlternatives": "No alternatives returned for this request.",
+            "alternativeMeta": "ETA {{eta}} | Distance {{distance}}",
+            "requestContext": "Request Context",
+            "systemDecisionInfo": "System decision info includes selected unit, travel estimate, and rationale.",
+            "systemDecisionInfoRefined": "Selection is based on proximity, unit readiness, and predicted route time.",
+            "timelineTitle": "Dispatch Timeline",
+            "interventionHint": "Intervention should be used only when safety or SLA thresholds are breached."
+        },
+        "actions": {
+            "title": "Override Controls",
+            "subtitle": "Use only when the automated decision is unsafe or invalid.",
+            "reassignAmbulance": "Reassign Ambulance",
+            "cancelAssignment": "Cancel Assignment",
+            "reassignRequestedToast": "Override sent: system is searching for a new ambulance",
+            "cancelAssignmentToast": "Assignment cancelled and flagged for review",
+            "auditNote": "All override actions are logged for audit and review.",
+            "titleRefined": "Intervention Controls",
+            "subtitleRefined": "Trigger reassignment or mark failure when system response is unsafe.",
+            "forceReevaluation": "Force Re-evaluation",
+            "markAsFailed": "Mark as Failed",
+            "forceReevaluationToast": "Manual intervention triggered: system restarted assignment search.",
+            "markAsFailedToast": "Request marked as failed and escalated for immediate review."
+        }
     }
 }

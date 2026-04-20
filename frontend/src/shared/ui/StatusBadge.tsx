@@ -25,20 +25,6 @@ const priorityStyles: Record<RequestPriority, string> = {
 
 export function StatusBadge({ status = "pending", priority }: StatusBadgeProps) {
   const { t } = useTranslation('requests');
-  const statusLabels: Record<RequestStatus, string> = {
-    pending: t('status.pending'),
-    assigned: t('status.assigned'),
-    enRoute: t('status.enRoute'),
-    completed: t('status.completed'),
-    cancelled: t('status.cancelled'),
-  };
-
-  const priorityLabels: Record<RequestPriority, string> = {
-    critical: t('priority.critical'),
-    high: t('priority.high'),
-    medium: t('priority.medium'),
-    low: t('priority.low'),
-  };
 
   // Fallback: humanize camelCase keys (e.g., enRoute -> En Route) when translation is missing
   const humanize = (key: string) =>

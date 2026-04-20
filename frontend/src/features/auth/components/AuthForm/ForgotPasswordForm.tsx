@@ -8,6 +8,7 @@ import ResetPasswordStep from "./ResetPasswordStep";
 export default function ForgotPasswordForm() {
   const {
     step,
+    email,
     emailFormik,
     emailLoading,
     otpFormik,
@@ -46,7 +47,11 @@ export default function ForgotPasswordForm() {
       )}
 
       {step === "reset" && (
-        <ResetPasswordStep formik={resetFormik} isLoading={resetLoading} />
+        <ResetPasswordStep
+          formik={resetFormik}
+          email={email}
+          isLoading={resetLoading}
+        />
       )}
 
       <div className="mt-6 px-6 pt-6 border-t border-slate-300 dark:border-white/10 text-center">

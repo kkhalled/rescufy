@@ -9,11 +9,11 @@
         public decimal Longitude { get; set; }
         public int AvailableBeds { get; set; }
         public int BedCapacity { get; set; }
-        // public string CapacityNotes { get; set; } = default!; // Removed as per ERD/Plan
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
         // Navigation Properties
         public ICollection<Assignment> Assignments { get; set; } = [];
+        public ICollection<ApplicationUser> Admins { get; set; } = [];
     }
 }

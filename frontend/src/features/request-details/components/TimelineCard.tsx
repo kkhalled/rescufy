@@ -3,7 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InfoCard from "./InfoCard";
 import { useTranslation } from "react-i18next";
 
-const TimelineCard = ({ events }) => {
+interface TimelineEvent {
+  title: string;
+  time: string;
+  description?: string | null;
+}
+
+interface TimelineCardProps {
+  events: TimelineEvent[];
+}
+
+const TimelineCard = ({ events }: TimelineCardProps) => {
   const { t } = useTranslation("requests");
   return (
     <InfoCard title={t("details.timeline")} icon={<FontAwesomeIcon icon={faClock} />}>

@@ -3,23 +3,42 @@
         "title": "Users Management",
         "subtitle": "Manage user accounts and role assignments"
     },
+    "overview": {
+        "totalUsers": "Total Users",
+        "adminTeam": "Admin Team",
+        "hospitalAdmins": "Hospital Admins",
+        "fieldTeam": "Field Team",
+        "usersFound": "{{count}} users found",
+        "activeFilters": "Filters Active"
+    },
     "title": "Users",
     "subtitle": "Manage system users",
 
     "form": {
         "name": "Name",
         "email": "Email", 
+        "nationalId": "National ID",
+        "gender": "Gender",
+        "age": "Age",
         "password": "Password",
-        "phoneNumber": "Phone Number",
+        "phone": "Phone Number",
         "role": "Role",
         "hospital": "Hospital",
         "namePlaceholder": "Enter user name",
         "emailPlaceholder": "user@example.com",
+        "nationalIdPlaceholder": "Enter 14-digit national ID",
+        "selectGender": "Select gender",
+        "agePlaceholder": "Enter age",
         "passwordPlaceholder": "Min 8 chars, 1 uppercase, 1 number, 1 special char",
         "phonePlaceholder": "Enter phone number",
         "selectRole": "Select role",
         "selectHospital": "Select hospital",
-        "loadingHospitals": "Loading hospitals..."
+        "loadingHospitals": "Loading hospitals...",
+        "hospitalAdminHint": "Choose the hospital this hospital admin will manage."
+    },
+    "genders": {
+        "Male": "Male",
+        "Female": "Female"
     },
     "roles": {
         "all": "All Roles",

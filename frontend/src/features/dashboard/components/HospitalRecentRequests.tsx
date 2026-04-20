@@ -2,11 +2,9 @@ import { HospitalRequestRow } from "../../requests/components/HospitalRequestRow
 import CriticalRequests from "./CriticalRequests";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@/app/provider/AuthContext";
 
 export default function HospitalRecentRequests() {
   const { t } = useTranslation("dashboard");
-  const { user } = useAuth();
 
   // TODO: Fetch recent requests from API filtered by user.HospitalId
   // Example: const { data } = useQuery(['recentHospitalRequests', user?.HospitalId], ...)

@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 ZNotes.md
+docs
 
 # Editor directories and files
 .vscode/*
@@ -23,3 +24,8 @@ ZNotes.md
 *.njsproj
 *.sln
 *.sw?
+
+#docs
+AUTH_CONTEXT_GUIDE.md
+AUTH_CONTEXT_API.md
+TOKEN_LOCALSTORAGE_USAGE.md

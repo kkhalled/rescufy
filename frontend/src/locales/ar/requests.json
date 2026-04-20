@@ -1,7 +1,7 @@
 {
     "pageHeader": {
         "title": "طلبات الطوارئ",
-        "subtitle": "إدارة ومتابعة جميع طلبات الاستجابة للطوارئ"
+        "subtitle": "مراقبة الإسناد الآلي لسيارات الإسعاف والتدخل فقط عند الحاجة"
     },
     "title": "الطلبات",
     "subtitle": "إدارة طلبات الطوارئ",
@@ -126,5 +126,120 @@
     },
     "hospital": {
         "requestsSubtitle": "عرض وتتبع الطلبات المُسندة لمستشفاك"
+    },
+    "board": {
+        "loading": "جارٍ تحميل تدفق الإسناد الآلي...",
+        "monitoring": {
+            "title": "مراقبة الإسناد الآلي",
+            "subtitle": "يقوم النظام بتقييم طلبات الطوارئ بشكل مستمر. التدخل مطلوب فقط عند التأخير الحرج أو فشل الإسناد."
+        },
+        "dispatchStatus": {
+            "all": "كل حالات الإسناد",
+            "searching": "جارٍ البحث عن أفضل سيارة إسعاف...",
+            "assigned": "الإسناد قيد التنفيذ",
+            "failed": "فشل الإسناد"
+        },
+        "dispatchStateFilter": {
+            "all": "كل حالات الإسناد",
+            "RECEIVED": "تم الاستلام",
+            "SEARCHING": "جارٍ البحث",
+            "ASSIGNED": "تم الإسناد",
+            "ARRIVING": "في الوصول",
+            "COMPLETED": "مكتمل",
+            "FAILED": "فشل"
+        },
+        "dispatchStateLabels": {
+            "RECEIVED": "تم تأكيد استقبال الطلب",
+            "SEARCHING": "جارٍ البحث عن أفضل سيارة إسعاف...",
+            "ASSIGNED": "الإسناد قيد التنفيذ",
+            "ARRIVING": "سيارة الإسعاف في طريقها",
+            "COMPLETED": "اكتملت عملية التسليم",
+            "FAILED": "فشل الإسناد"
+        },
+        "intervention": {
+            "title": "تدخل مطلوب"
+        },
+        "timeline": {
+            "RECEIVED": "استلام الطلب",
+            "SEARCHING": "البحث",
+            "ASSIGNED": "الإسناد",
+            "ARRIVING": "الوصول",
+            "COMPLETED": "مكتمل",
+            "FAILED": "فشل"
+        },
+        "filters": {
+            "title": "مرشحات المراقبة",
+            "searchLabel": "البحث",
+            "searchPlaceholder": "ابحث بالمريض أو الموقع أو رقم الطلب",
+            "severityLabel": "الخطورة",
+            "statusLabel": "حالة الإسناد",
+            "sortLabel": "الترتيب",
+            "sortNewest": "الأحدث",
+            "sortLongest": "الأطول انتظاراً"
+        },
+        "summary": {
+            "critical": "حرجة: {{count}}",
+            "assigned": "مُسندة: {{count}}",
+            "searching": "قيد البحث: {{count}}",
+            "failed": "فاشلة: {{count}}",
+            "intervention": "تدخل: {{count}}"
+        },
+        "systemState": {
+            "stable": "النظام مستقر",
+            "searching": "يجري البحث عن مركبات",
+            "degraded": "يتطلب تدخلاً"
+        },
+        "list": {
+            "title": "تدفق الإسناد التلقائي",
+            "subtitle": "{{count}} طلبات تحت المراقبة",
+            "emptyTitle": "لا توجد طلبات مطابقة للمرشحات الحالية",
+            "emptyDescription": "جرّب تغيير الخطورة أو حالة الإسناد أو نص البحث."
+        },
+        "item": {
+            "waiting": "انتظار {{count}} د",
+            "descriptionFallback": "لا يوجد وصف",
+            "assignedAmbulance": "سيارة الإسعاف",
+            "noAmbulance": "جارٍ البحث عن وحدات متاحة",
+            "searchingUnits": "جارٍ البحث عن وحدات متاحة",
+            "eta": "الوقت المتوقع:",
+            "etaMinutes": "{{count}} د",
+            "etaUnknown": "جارٍ تقييم أقرب سيارة إسعاف"
+        },
+        "details": {
+            "title": "رؤية النظام",
+            "subtitle": "منطق الإسناد الآلي وأزرار التجاوز",
+            "subtitleRefined": "رؤى اختيار الذكاء الاصطناعي، تتبع زمني، وأدوات التدخل.",
+            "noSelection": "اختر طلباً لعرض قرار النظام.",
+            "dispatchState": "حالة الإسناد",
+            "selectedAmbulance": "سيارة الإسعاف المختارة",
+            "distance": "المسافة",
+            "distanceKm": "{{value}} كم",
+            "notAvailable": "غير متاح",
+            "reasoning": "سبب الاختيار",
+            "reasoningFallback": "لا يوجد تفسير صريح من محرك الإسناد.",
+            "alternatives": "البدائل المقترحة",
+            "noAlternatives": "لا توجد بدائل مرسلة لهذا الطلب.",
+            "alternativeMeta": "الوقت {{eta}} | المسافة {{distance}}",
+            "requestContext": "سياق الطلب",
+            "systemDecisionInfo": "معلومة قرار النظام تشمل الوحدة المختارة وتقدير الوصول ومبرر الاختيار.",
+            "systemDecisionInfoRefined": "يعتمد الاختيار على القرب، جاهزية الوحدة، وتوقع زمن المسار.",
+            "timelineTitle": "الخط الزمني للإسناد",
+            "interventionHint": "استخدم التدخل فقط عند تجاوز حدود السلامة أو زمن الاستجابة."
+        },
+        "actions": {
+            "title": "أوامر التجاوز",
+            "subtitle": "استخدمها فقط إذا كان قرار النظام غير آمن أو غير صحيح.",
+            "reassignAmbulance": "إعادة إسناد سيارة إسعاف",
+            "cancelAssignment": "إلغاء الإسناد",
+            "reassignRequestedToast": "تم إرسال التجاوز: النظام يعيد البحث عن سيارة إسعاف",
+            "cancelAssignmentToast": "تم إلغاء الإسناد وتم تمييزه للمراجعة",
+            "auditNote": "يتم تسجيل كل عمليات التجاوز لأغراض التدقيق والمراجعة.",
+            "titleRefined": "ضوابط التدخل",
+            "subtitleRefined": "أعد تشغيل الإسناد أو وسم الحالة كفشل عند وجود خطر تشغيلي.",
+            "forceReevaluation": "إعادة التقييم",
+            "markAsFailed": "وضع كفشل",
+            "forceReevaluationToast": "تم تفعيل تدخل يدوي: أعاد النظام تشغيل البحث عن وحدة مناسبة.",
+            "markAsFailedToast": "تم وسم الطلب كفشل وتصعيده للمراجعة الفورية."
+        }
     }
 }

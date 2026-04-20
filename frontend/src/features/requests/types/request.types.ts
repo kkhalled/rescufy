@@ -4,6 +4,36 @@ export type RequestStatus = "pending" | "assigned" | "enRoute" | "completed" | "
 
 export type RequestPriority = "low" | "medium" | "high" | "critical";
 
+export type DispatchStatus = "searching" | "assigned" | "failed";
+
+export type DispatchState =
+  | "RECEIVED"
+  | "SEARCHING"
+  | "ASSIGNED"
+  | "ARRIVING"
+  | "COMPLETED"
+  | "FAILED";
+
+export type DispatchLogEntry = {
+  state: DispatchState;
+  timestamp: string;
+  note: string;
+};
+
+export type AssignedAmbulance = {
+  id: string;
+  name: string;
+  distanceKm: number;
+  etaMinutes: number;
+};
+
+export type DispatchAlternative = {
+  ambulanceName: string;
+  etaMinutes: number | null;
+  distanceKm: number | null;
+  score: number | null;
+};
+
 /** Maps API integer → readable status key */
 export const REQUEST_STATUS_MAP: Record<number, RequestStatus> = {
   0: "pending",
@@ -69,5 +99,37 @@ export type Request = {
   numberOfPeopleAffected: number;
   isSelfCase: boolean;
   priority?: RequestPriority;
+  dispatchStatus?: DispatchStatus;
+  assignedAmbulanceName?: string | null;
+  dispatchEtaMinutes?: number | null;
+  dispatchDistanceKm?: number | null;
+  dispatchReasoning?: string | null;
+  dispatchAlternatives?: DispatchAlternative[];
+  dispatchState?: DispatchState;
+  assignedAmbulance?: AssignedAmbulance | null;
+  eta?: number | null;
+  logs?: DispatchLogEntry[];
+  selectionReasons?: string[];
+  createdAt?: string;
   applicationUser: ApiApplicationUser;
+};
+
+export type MockDispatchRequest = {
+  id: number;
+  severity: RequestPriority;
+  createdAt: string;
+  dispatchState: DispatchState;
+  assignedAmbulance: AssignedAmbulance | null;
+  eta: number | null;
+  logs: DispatchLogEntry[];
+  userName: string;
+  userPhone: string;
+  address: string;
+  description: string;
+  latitude: number;
+  longitude: number;
+  numberOfPeopleAffected: number;
+  isSelfCase: boolean;
+  selectionReasons: string[];
+  alternatives: DispatchAlternative[];
 };

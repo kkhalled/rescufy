@@ -44,6 +44,7 @@
         "free": "Free",
         "usage": "Usage",
         "call": "Call",
+        "viewTooltip": "View profile",
         "editTooltip": "Edit hospital",
         "deleteTooltip": "Delete hospital"
     },
@@ -58,6 +59,51 @@
     "filters": {
         "allStates": "All States",
         "searchPlaceholder": "Search hospitals by name, address, or ID"
+    },
+    "operations": {
+        "liveMonitoring": "Capacity Monitoring",
+        "loading": "Loading hospitals...",
+        "kpi": {
+            "total": "Total hospitals",
+            "normal": "Normal load",
+            "busyCritical": "Busy or critical",
+            "full": "Full capacity"
+        },
+        "filters": {
+            "title": "Operations Filters",
+            "searchLabel": "Search",
+            "statusLabel": "Load status",
+            "sortLabel": "Sort",
+            "sort": {
+                "criticalFirst": "Critical first",
+                "occupancyHigh": "Highest occupancy",
+                "availableHigh": "Most available beds"
+            }
+        },
+        "list": {
+            "title": "Hospital Capacity Board",
+            "subtitle": "{{count}} facilities in view"
+        },
+        "insights": {
+            "title": "Capacity Insights",
+            "subtitle": "Operational pressure and bed availability",
+            "totalHospitals": "{{count}} hospitals",
+            "avgOccupancy": "Average occupancy",
+            "availableBeds": "Available beds",
+            "usedBeds": "Used beds",
+            "stressedFacilities": "Stressed facilities",
+            "noStressed": "No critical hospitals right now",
+            "facilityStatus": "{{status}} - {{occupancy}}% occupancy",
+            "monitoring": "Live occupancy visibility",
+            "hint": "Use filters and sort to prioritize intervention"
+        }
+    },
+    "deleteDialog": {
+        "title": "Delete hospital",
+        "description": "Are you sure you want to delete {{name}}? This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Delete",
+        "deleting": "Deleting..."
     },
     "buttons": {
         "cancel": "Cancel",
@@ -77,8 +123,27 @@
         "saveChanges": "Save Changes",
         "cancel": "Cancel"
     },
+    "adminProfile": {
+        "title": "Hospital Profile",
+        "subtitle": "Read-only operational profile for super admin review",
+        "backToList": "Back to Hospitals",
+        "notFoundTitle": "Hospital not found",
+        "notFoundSubtitle": "The requested hospital profile could not be loaded.",
+        "id": "Hospital ID",
+        "address": "Address",
+        "contactPhone": "Contact Phone",
+        "coordinates": "Coordinates",
+        "openInMaps": "Open in Maps",
+        "bedCapacity": "Bed Capacity",
+        "availableBeds": "Available Beds",
+        "usedBeds": "Used Beds",
+        "occupancyRate": "Occupancy Rate",
+        "createdAt": "Created At",
+        "updatedAt": "Updated At"
+    },
     "api": {
         "fetchError": "Failed to fetch hospitals",
+        "fetchProfileError": "Failed to fetch hospital profile",
         "addSuccess": "Hospital \"{{name}}\" added successfully",
         "addError": "Failed to add hospital",
         "updateSuccess": "Hospital \"{{name}}\" updated successfully",

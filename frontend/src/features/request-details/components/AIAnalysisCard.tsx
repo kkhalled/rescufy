@@ -3,7 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InfoCard from "./InfoCard";
 import { useTranslation } from "react-i18next";
 
-const AIAnalysisCard = ({ diagnosis, confidence }) => {
+interface AIAnalysisCardProps {
+  diagnosis: string;
+  confidence: number;
+}
+
+const AIAnalysisCard = ({ diagnosis, confidence }: AIAnalysisCardProps) => {
   const { t } = useTranslation("requests");
   return (
     <InfoCard title={t("details.aiAnalysis")} icon={<FontAwesomeIcon icon={faBrain} />}>

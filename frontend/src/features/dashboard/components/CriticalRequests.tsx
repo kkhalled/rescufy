@@ -2,12 +2,41 @@ import { faBell } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CriticalRequestCard from "./CriticalRequestCard";
 import { useTranslation } from "react-i18next";
+import { motion, useReducedMotion } from "framer-motion";
 
 export default function CriticalRequests() {
   const { t } = useTranslation('dashboard');
+  const shouldReduceMotion = useReducedMotion();
+
+  const listVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: shouldReduceMotion ? 0 : 0.1,
+        delayChildren: shouldReduceMotion ? 0 : 0.06,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: {
+      opacity: 0,
+      x: shouldReduceMotion ? 0 : 18,
+      y: shouldReduceMotion ? 0 : 8,
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      transition: {
+        duration: shouldReduceMotion ? 0.15 : 0.45,
+        ease: [0.22, 1, 0.36, 1] as const,
+      },
+    },
+  };
 
   return (
-    <div
+    <motion.section
       className="
         relative
         text-heading
@@ -18,25 +47,74 @@ export default function CriticalRequests() {
         border border-red-500/20
         shadow-[0_0_60px_rgba(230,57,70,0.15)]
       "
+      initial={shouldReduceMotion ? undefined : { opacity: 0, y: 12 }}
+      whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as const }}
     >
-      {/* Red glow background */}
-      <div className="absolute -inset-1 rounded-2xl bg-red-500/10 blur-3xl pointer-events-none" />
+      {!shouldReduceMotion && (
+        <>
+          <motion.div
+            aria-hidden
+            className="absolute inset-0 rounded-2xl border border-red-500/30 pointer-events-none"
+            animate={{ opacity: [0.3, 0.8, 0.3], scale: [1, 1.008, 1] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: [0.42, 0, 0.58, 1] as const }}
+          />
+          <motion.div
+            aria-hidden
+            className="absolute top-0 left-0 h-0.5 w-20 bg-linear-to-r from-transparent via-red-500/90 to-transparent pointer-events-none"
+            animate={{ x: [-90, 420] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: [0.42, 0, 0.58, 1] as const }}
+          />
+        </>
+      )}
 
       <div className="relative">
         <header className=" border-b border-red-500/20 gap-2 rtl:space-x-reverse flex items-center py-3 md:py-1  mb-4 md:mb-6">
-          <span>
+          <motion.span
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : { rotate: [0, -12, 10, -7, 0], scale: [1, 1.08, 1] }
+            }
+            transition={{ duration: 1.8, repeat: Infinity, ease: [0.42, 0, 0.58, 1] as const }}
+          >
             <FontAwesomeIcon icon={faBell} style={{ color: "#E63946" }} />
-          </span>
+          </motion.span>
+
+          {!shouldReduceMotion && (
+            <motion.span
+              aria-hidden
+              className="h-2 w-2 rounded-full bg-red-500"
+              animate={{ scale: [1, 1.5, 1], opacity: [1, 0.35, 1] }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: [0.42, 0, 0.58, 1] as const }}
+            />
+          )}
+
           <span className="font-medium text-sm md:text-base">
             {t('criticalRequests.title')}
           </span>
         </header>
 
-        <div className="grid space-y-2">
-          <CriticalRequestCard />
-          <CriticalRequestCard />
-        </div>
+        <motion.div
+          className="grid space-y-2"
+          variants={listVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          {[0, 1].map((item, index) => (
+            <motion.div
+              key={`critical-${item}-${index}`}
+              variants={itemVariants}
+              whileHover={shouldReduceMotion ? undefined : { x: 4 }}
+              transition={{ duration: 0.2 }}
+            >
+              <CriticalRequestCard />
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
-    </div>
+    </motion.section>
   );
 }

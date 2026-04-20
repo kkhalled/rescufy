@@ -1,3 +1,4 @@
+using Domain.Contracts;
 using Domain.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,23 +8,38 @@ using Shared.Enums;
 
 namespace Service
 {
-    public class UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) : IUserService
+    public class UserService(
+        UserManager<ApplicationUser> userManager, 
+        RoleManager<IdentityRole> roleManager,
+        IUnitOfWork unitOfWork) : IUserService
     {
         public async Task<UserDto> CreateUserAsync(CreateUserDto dto)
         {
-             if (await userManager.Users.AnyAsync(u => u.NationalId == dto.NationalId))
-                 throw new Exception("National ID is already registered.");
+            if (await userManager.Users.AnyAsync(u => u.NationalId == dto.NationalId))
+                throw new Exception("National ID is already registered.");
+
+            // Validate HospitalId for HospitalAdmin role
+            if (dto.Role == nameof(Roles.HospitalAdmin))
+            {
+                if (!dto.HospitalId.HasValue)
+                    throw new Exception("HospitalId is required when creating a HospitalAdmin.");
+
+                var hospital = await unitOfWork.GetRepository<Hospital, int>().GetByIdAsync(dto.HospitalId.Value);
+                if (hospital == null)
+                    throw new Exception("Hospital not found.");
+            }
 
             var user = new ApplicationUser
             {
-                UserName = dto.Email, // Use full email as username to avoid conflicts
+                UserName = dto.Email,
                 Email = dto.Email,
                 Name = dto.Name,
                 PhoneNumber = dto.PhoneNumber,
-                EmailConfirmed = true, // Auto-confirm for admin created users
+                EmailConfirmed = true,
                 NationalId = dto.NationalId,
                 Gender = dto.Gender,
-                Age = dto.Age
+                Age = dto.Age,
+                HospitalId = dto.Role == nameof(Roles.HospitalAdmin) ? dto.HospitalId : null
             };
 
             var result = await userManager.CreateAsync(user, dto.Password);
@@ -32,18 +48,6 @@ namespace Service
                 throw new Exception($"Failed to create user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
             }
 
-            // Validate Role
-            if (!await roleManager.RoleExistsAsync(dto.Role))
-            {
-                 // Rollback? Or just throw. UserManager doesn't support transaction rollback easily without TransactionScope. 
-                 // But for simplicity, we'll check role existence before creating user? 
-                 // Let's do that in a better way. 
-                 // But stick to the flow: 
-                 
-                 // If role doesn't exist, we should have checked earlier. 
-                 // Assuming role exists because we validate against Enum in controller or here.
-            }
-            
             // Assign Role
             var roleResult = await userManager.AddToRoleAsync(user, dto.Role);
             if (!roleResult.Succeeded)
@@ -56,7 +60,9 @@ namespace Service
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync(string? role = null)
         {
-            var users = await userManager.Users.ToListAsync();
+            var users = await userManager.Users
+                .Include(u => u.Hospital)
+                .ToListAsync();
             var userDtos = new List<UserDto>();
 
             foreach (var user in users)
@@ -79,7 +85,9 @@ namespace Service
 
         public async Task<UserDto> GetUserByIdAsync(string id)
         {
-            var user = await userManager.FindByIdAsync(id);
+            var user = await userManager.Users
+                .Include(u => u.Hospital)
+                .FirstOrDefaultAsync(u => u.Id == id);
             if (user == null) throw new Exception("User not found");
 
             return await MapToDtoAsync(user);
@@ -93,12 +101,11 @@ namespace Service
             user.Name = dto.Name;
             user.PhoneNumber = dto.PhoneNumber;
             user.IsBanned = dto.IsBanned;
-            // user.Email? usually requires specific flow for email change. Keeping it simple.
 
             var result = await userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
-                 throw new Exception($"Failed to update user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                throw new Exception($"Failed to update user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
             }
 
             return await MapToDtoAsync(user);
@@ -110,9 +117,9 @@ namespace Service
             if (user == null) throw new Exception("User not found");
 
             var result = await userManager.DeleteAsync(user);
-             if (!result.Succeeded)
+            if (!result.Succeeded)
             {
-                 throw new Exception($"Failed to delete user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                throw new Exception($"Failed to delete user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
             }
         }
 
@@ -129,8 +136,56 @@ namespace Service
                 Age = user.Age,
                 PhoneNumber = user.PhoneNumber,
                 Roles = roles,
-                IsBanned = user.IsBanned
+                IsBanned = user.IsBanned,
+                HospitalId = user.HospitalId,
+                HospitalName = user.Hospital?.Name
             };
+        }
+
+        public async Task<UserDto> AssignUserToHospitalAsync(string userId, int hospitalId)
+        {
+            var user = await userManager.Users
+                .Include(u => u.Hospital)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null) throw new Exception("User not found");
+
+            // Verify hospital exists
+            var hospital = await unitOfWork.GetRepository<Hospital, int>().GetByIdAsync(hospitalId);
+            if (hospital == null) throw new Exception("Hospital not found");
+
+            // Verify user is a HospitalAdmin
+            var roles = await userManager.GetRolesAsync(user);
+            if (!roles.Contains(nameof(Roles.HospitalAdmin)))
+                throw new Exception("User must have HospitalAdmin role to be assigned to a hospital");
+
+            user.HospitalId = hospitalId;
+            var result = await userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new Exception($"Failed to assign user to hospital: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            }
+
+            // Reload with hospital info
+            user = await userManager.Users
+                .Include(u => u.Hospital)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            return await MapToDtoAsync(user!);
+        }
+
+        public async Task<UserDto> RemoveUserFromHospitalAsync(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null) throw new Exception("User not found");
+
+            user.HospitalId = null;
+            var result = await userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new Exception($"Failed to remove user from hospital: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            }
+
+            return await MapToDtoAsync(user);
         }
     }
 }

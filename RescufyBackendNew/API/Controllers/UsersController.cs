@@ -66,7 +66,6 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                // Determine if not found or other error. For simplicity, generic bad request or not found based on message
                 if (ex.Message == "User not found") return NotFound(ex.Message);
                 return BadRequest(ex.Message);
             }
@@ -79,6 +78,42 @@ namespace API.Controllers
             {
                 await userService.DeleteUserAsync(id);
                 return NoContent();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "User not found") return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Assign a HospitalAdmin to a specific hospital
+        /// </summary>
+        [HttpPut("{userId}/assign-hospital/{hospitalId}")]
+        public async Task<IActionResult> AssignUserToHospital(string userId, int hospitalId)
+        {
+            try
+            {
+                var user = await userService.AssignUserToHospitalAsync(userId, hospitalId);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("not found")) return NotFound(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Remove a user from their assigned hospital
+        /// </summary>
+        [HttpPut("{userId}/remove-hospital")]
+        public async Task<IActionResult> RemoveUserFromHospital(string userId)
+        {
+            try
+            {
+                var user = await userService.RemoveUserFromHospitalAsync(userId);
+                return Ok(user);
             }
             catch (Exception ex)
             {

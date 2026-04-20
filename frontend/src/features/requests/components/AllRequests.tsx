@@ -1,286 +1,210 @@
-import { RequestRow } from "@/features/requests/components/RequestRow";
-import { useState, useEffect } from "react";
-import { filterRequests } from "../utils/requests.filter";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useGetRequests } from "../hooks/useGetRequests";
-import type { RequestFilters } from "../hooks/useGetRequests";
-import Loading from "@/shared/common/Loading";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from "sonner";
+import { ShieldAlert } from "lucide-react";
+import { useNavigate } from "react-router";
+import { useMockDispatch } from "../hooks/useMockDispatch";
+import type { DispatchState, RequestPriority } from "../types/request.types";
+import { FiltersBar } from "./FiltersBar";
+import { RequestList } from "./RequestList";
+import { RequestDetailsPanel } from "./RequestDetailsPanel";
+import type { QueueRequestItem } from "./RequestItem";
 import {
-  faMagnifyingGlass,
-  faFilter,
-  faRotateRight,
-  faChevronDown,
-  faChevronUp,
-} from "@fortawesome/free-solid-svg-icons";
+  formatWaitingTime,
+  getInterventionReason,
+  getWaitingMinutes,
+} from "../utils/dispatch.helpers";
 
-/** Maps the API integer RequestStatus to readable keys */
-const STATUS_OPTIONS = [
-  { value: "", label: "all" },
-  { value: "0", label: "pending" },
-  { value: "1", label: "assigned" },
-  { value: "2", label: "enRoute" },
-  { value: "3", label: "completed" },
-  { value: "4", label: "cancelled" },
-] as const;
-
-const SELF_CASE_OPTIONS = [
-  { value: "", label: "all" },
-  { value: "true", label: "selfCase" },
-  { value: "false", label: "forOthers" },
-] as const;
+type RequestSort = "newest" | "longestWaiting";
 
 export default function AllRequests() {
-  const { t } = useTranslation(["requests", "common"]);
-  const { requests, isLoading, fetchRequests } = useGetRequests();
+  const { t } = useTranslation("requests");
+  const navigate = useNavigate();
+  const { requests, isLoading, requestIntervention, markDispatchFailed } = useMockDispatch();
 
-  // ── API filter state ──
-  const [userId, setUserId] = useState("");
-  const [requestStatus, setRequestStatus] = useState<string>("");
-  const [isSelfCase, setIsSelfCase] = useState<string>("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [search, setSearch] = useState("");
+  const [severity, setSeverity] = useState<RequestPriority | "all">("all");
+  const [status, setStatus] = useState<DispatchState | "all">("all");
+  const [sortBy, setSortBy] = useState<RequestSort>("newest");
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  // ── Local client-side filters ──
-  const [searchValue, setSearchValue] = useState("");
+  const queueRequests = useMemo<QueueRequestItem[]>(() => {
+    return requests.map((request) => {
+      const waitingMinutes = getWaitingMinutes(request.createdAt);
+      const interventionReason = getInterventionReason({
+        severity: request.severity,
+        dispatchState: request.dispatchState,
+        assignedAmbulance: request.assignedAmbulance,
+        waitingMinutes,
+      });
 
-  // ── UI state ──
-  const [filtersOpen, setFiltersOpen] = useState(false);
+      return {
+        ...request,
+        waitingMinutes,
+        waitingLabel: formatWaitingTime(request.createdAt),
+        interventionRequired: Boolean(interventionReason),
+        interventionReason,
+        dispatchAlternatives: request.alternatives,
+      };
+    });
+  }, [requests]);
 
-  /** Get a date one year ago as YYYY-MM-DDT00:00 */
-  const getOneYearAgo = () => {
-    const now = new Date();
-    const y = now.getFullYear() - 1;
-    const m = String(now.getMonth() + 1).padStart(2, "0");
-    const d = String(now.getDate()).padStart(2, "0");
-    return `${y}-${m}-${d}T00:00`;
-  };
+  const filteredRequests = useMemo(() => {
+    const q = search.trim().toLowerCase();
 
-  // Initial load — fetch requests from one year ago
+    const filtered = queueRequests.filter((request) => {
+      const matchesSearch =
+        !q ||
+        request.userName.toLowerCase().includes(q) ||
+        request.address.toLowerCase().includes(q) ||
+        String(request.id).includes(q) ||
+        request.description.toLowerCase().includes(q);
+
+      const matchesSeverity = severity === "all" || request.severity === severity;
+      const matchesStatus = status === "all" || request.dispatchState === status;
+
+      return matchesSearch && matchesSeverity && matchesStatus;
+    });
+
+    const sorted = [...filtered];
+
+    if (sortBy === "longestWaiting") {
+      sorted.sort((a, b) => b.waitingMinutes - a.waitingMinutes);
+      return sorted;
+    }
+
+    sorted.sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+
+      return dateB - dateA;
+    });
+
+    return sorted;
+  }, [queueRequests, search, severity, status, sortBy]);
+
   useEffect(() => {
-    const oneYearAgo = getOneYearAgo();
-    setStartDate(oneYearAgo);
-    fetchRequests({ StartDate: oneYearAgo });
-  }, []);
+    if (filteredRequests.length === 0) {
+      setSelectedId(null);
+      return;
+    }
 
-  /** Build the filters object & call API */
-  const handleSearch = () => {
-    const filters: RequestFilters = {};
-    if (userId.trim()) filters.UserId = userId.trim();
-    if (requestStatus !== "") filters.RequestStatus = Number(requestStatus);
-    if (isSelfCase !== "") filters.IsSelfCase = isSelfCase === "true";
-    if (startDate) filters.StartDate = startDate;
-    if (endDate) filters.EndDate = endDate;
-    fetchRequests(filters);
+    const stillExists = selectedId
+      ? filteredRequests.some((request) => request.id === selectedId)
+      : false;
+
+    if (!stillExists) {
+      setSelectedId(filteredRequests[0].id);
+    }
+  }, [filteredRequests, selectedId]);
+
+  const selectedRequest = useMemo(() => {
+    if (!selectedId) {
+      return null;
+    }
+
+    return filteredRequests.find((request) => request.id === selectedId) ?? null;
+  }, [filteredRequests, selectedId]);
+
+  const criticalCount = filteredRequests.filter((request) => request.severity === "critical").length;
+  const failedCount = filteredRequests.filter((request) => request.dispatchState === "FAILED").length;
+  const searchingCount = filteredRequests.filter(
+    (request) => request.dispatchState === "RECEIVED" || request.dispatchState === "SEARCHING",
+  ).length;
+  const assignedCount = filteredRequests.filter(
+    (request) => request.dispatchState === "ASSIGNED" || request.dispatchState === "ARRIVING",
+  ).length;
+  const interventionCount = filteredRequests.filter((request) => request.interventionRequired).length;
+
+  const queueTone = interventionCount > 0 ? "bg-red-500" : searchingCount > 0 ? "bg-amber-500" : "bg-emerald-500";
+  const systemState = interventionCount > 0 ? "degraded" : searchingCount > 0 ? "searching" : "stable";
+
+  const handleReassignAmbulance = (requestId: number) => {
+    requestIntervention(requestId);
+    toast.success(t("board.actions.forceReevaluationToast"));
   };
 
-  /** Reset all filters & re-fetch */
-  const handleReset = () => {
-    setUserId("");
-    setRequestStatus("");
-    setIsSelfCase("");
-    setStartDate("");
-    setEndDate("");
-    setSearchValue("");
-    fetchRequests();
+  const handleCancelAssignment = (requestId: number) => {
+    markDispatchFailed(requestId);
+    toast.success(t("board.actions.markAsFailedToast"));
   };
 
-  // Client-side filter on already-fetched data
-  const filteredRequests = filterRequests(requests, {
-    status: "all", // status already filtered server-side
-    search: searchValue,
-  });
+  const handleOpenRequestDetails = (requestId: number) => {
+    setSelectedId(requestId);
+    navigate(`/admin/request_details/${requestId}`);
+  };
 
   return (
-    <>
-      {/* ═══════ Filter Card ═══════ */}
-      <div className="bg-bg-card rounded-xl shadow-card border border-border overflow-hidden">
-        {/* ── Top row: search + toggle ── */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4">
-          {/* Quick search (client-side) */}
-          <div className="relative flex-1">
-            <div className="absolute inset-y-0 ltr:left-0 rtl:right-0 ltr:pl-3 rtl:pr-3 flex items-center pointer-events-none">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="w-3.5 h-3.5 text-muted" />
-            </div>
-            <input
-              type="text"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              placeholder={t("requests:filters.searchPlaceholder")}
-              className="w-full ltr:pl-9 rtl:pr-9 ltr:pr-3 rtl:pl-3 py-2.5 rounded-lg text-sm bg-background-second border border-border text-heading placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"
-            />
-          </div>
-
-          {/* Buttons */}
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => setFiltersOpen(!filtersOpen)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium border border-border bg-background-second text-body hover:bg-primary/5 hover:border-primary/30 transition-all cursor-pointer"
-            >
-              <FontAwesomeIcon icon={faFilter} className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{t("requests:filters.advancedFilters")}</span>
-              <FontAwesomeIcon icon={filtersOpen ? faChevronUp : faChevronDown} className="w-3 h-3 text-muted" />
-            </button>
-
-            <button
-              onClick={handleSearch}
-              disabled={isLoading}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-primary text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all disabled:opacity-50 cursor-pointer"
-            >
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="w-3.5 h-3.5" />
-              <span>{t("requests:filters.search")}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* ── Expandable filters panel ── */}
-        <div
-          className={`grid transition-all duration-300 ease-in-out ${
-            filtersOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-          }`}
-        >
-          <div className="overflow-hidden">
-            <div className="border-t border-border px-4 pb-4 pt-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* User ID */}
-                <div>
-                  <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">
-                    {t("requests:filters.userId")}
-                  </label>
-                  <input
-                    type="text"
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
-                    placeholder={t("requests:filters.userIdPlaceholder")}
-                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-background-second border border-border text-heading placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"
-                  />
-                </div>
-
-                {/* Request Status */}
-                <div>
-                  <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">
-                    {t("requests:filters.status")}
-                  </label>
-                  <select
-                    value={requestStatus}
-                    onChange={(e) => setRequestStatus(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-background-second border border-border text-heading focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all cursor-pointer appearance-none"
-                  >
-                    {STATUS_OPTIONS.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {t(`requests:status.${opt.label}`)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Is Self Case */}
-                <div>
-                  <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">
-                    {t("requests:filters.caseType")}
-                  </label>
-                  <select
-                    value={isSelfCase}
-                    onChange={(e) => setIsSelfCase(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-background-second border border-border text-heading focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all cursor-pointer appearance-none"
-                  >
-                    {SELF_CASE_OPTIONS.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {t(`requests:filters.${opt.label}`)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Start Date */}
-                <div>
-                  <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">
-                    {t("requests:filters.startDate")}
-                  </label>
-                  <input
-                    type="datetime-local"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-background-second border border-border text-heading focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"
-                  />
-                </div>
-
-                {/* End Date */}
-                <div>
-                  <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-1.5">
-                    {t("requests:filters.endDate")}
-                  </label>
-                  <input
-                    type="datetime-local"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-lg text-sm bg-background-second border border-border text-heading focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all"
-                  />
-                </div>
-
-
-              </div>
-
-              {/* Reset button */}
-              <div className="flex justify-end mt-4">
-                <button
-                  onClick={handleReset}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-muted hover:text-danger hover:bg-danger/5 border border-transparent hover:border-danger/20 transition-all cursor-pointer"
-                >
-                  <FontAwesomeIcon icon={faRotateRight} className="w-3.5 h-3.5" />
-                  {t("requests:filters.reset")}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="space-y-5">
+      <div className="rounded-2xl border border-border/80 bg-bg-card px-4 py-3 shadow-card dark:border-border">
+        <p className="text-sm font-semibold text-heading">{t("board.monitoring.title")}</p>
+        <p className="mt-1 text-xs text-muted">{t("board.monitoring.subtitle")}</p>
       </div>
 
-      {/* ═══════ Results ═══════ */}
-      <div className="mt-6">
-        <span className="text-body font-medium ltr:ml-1 rtl:mr-1">
-          {t("requests:pagination.showing")} {filteredRequests.length} {t("requests:pagination.of")} {requests.length} {t("requests:pagination.requests")}
-        </span>
+      <FiltersBar
+        search={search}
+        severity={severity}
+        status={status}
+        sortBy={sortBy}
+        onSearchChange={setSearch}
+        onSeverityChange={setSeverity}
+        onStatusChange={setStatus}
+        onSortChange={setSortBy}
+      />
 
-        <div className="bg-bg-card mt-4 rounded-xl shadow-card border border-border overflow-x-auto">
-          {isLoading ? (
-            <Loading />
-          ) : filteredRequests.length > 0 ? (
-            filteredRequests.map((request) => (
-              <RequestRow
-                key={request.id}
-                id={String(request.id)}
-                address={request.address}
-                userName={request.userName}
-                userPhone={request.userPhone}
-                status={request.status}
-                timestamp={request.timestamp}
-              />
-            ))
-          ) : (
-            <div className="flex flex-col items-center justify-center py-12">
-              <p className="text-muted text-sm">{t("requests:empty.title")}</p>
-              <p className="text-muted text-xs mt-1">{t("requests:empty.description")}</p>
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
+        <section className="rounded-2xl border border-border/80 bg-background-second/75 p-4 shadow-card dark:border-border dark:bg-background-second/50">
+          <header className="mb-3 flex items-center justify-between border-b border-border/80 pb-3 dark:border-border">
+            <div>
+              <h3 className="text-base font-semibold text-heading">{t("board.list.title")}</h3>
+              <p className="text-xs text-muted">{t("board.list.subtitle", { count: filteredRequests.length })}</p>
             </div>
-          )}
 
-          <div className="text-sm flex items-center py-4 px-4 justify-between text-muted border-t border-border">
-            <span>{t("requests:pagination.page")} 1 {t("requests:pagination.of")} 1</span>
-            <div className="flex items-center gap-3">
-              <button className="px-3 py-1 bg-background-second rounded-md hover:bg-primary/10 text-muted transition cursor-pointer">
-                {t("requests:pagination.previous")}
-              </button>
-              <button>
-                <span className="px-3 py-1 bg-primary text-white rounded-md">1</span>
-              </button>
-              <button className="px-3 py-1 bg-primary text-white rounded-md hover:bg-primary/90 transition cursor-pointer">
-                {t("requests:pagination.next")}
-              </button>
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <span className="rounded-full border border-border/80 bg-surface-muted/70 px-2.5 py-1 text-[11px] text-body dark:border-border dark:bg-surface-muted/45 dark:text-muted">
+                {t("board.summary.critical", { count: criticalCount })}
+              </span>
+              <span className="rounded-full border border-border/80 bg-surface-muted/70 px-2.5 py-1 text-[11px] text-body dark:border-border dark:bg-surface-muted/45 dark:text-muted">
+                {t("board.summary.assigned", { count: assignedCount })}
+              </span>
+              <span className="rounded-full border border-border/80 bg-surface-muted/70 px-2.5 py-1 text-[11px] text-body dark:border-border dark:bg-surface-muted/45 dark:text-muted">
+                {t("board.summary.searching", { count: searchingCount })}
+              </span>
+              <span className="rounded-full border border-border/80 bg-surface-muted/70 px-2.5 py-1 text-[11px] text-body dark:border-border dark:bg-surface-muted/45 dark:text-muted">
+                {t("board.summary.failed", { count: failedCount })}
+              </span>
+              <span className="rounded-full border border-border/80 bg-surface-muted/70 px-2.5 py-1 text-[11px] text-body dark:border-border dark:bg-surface-muted/45 dark:text-muted">
+                {t("board.summary.intervention", { count: interventionCount })}
+              </span>
+              <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-surface-muted/70 px-3 py-1 text-xs text-body dark:border-border dark:bg-surface-muted/45 dark:text-muted">
+                <span className={`h-2 w-2 rounded-full ${queueTone}`} />
+                {t(`board.systemState.${systemState}`)}
+              </div>
             </div>
-          </div>
-        </div>
+          </header>
+
+          <RequestList
+            requests={filteredRequests}
+            selectedId={selectedId}
+            isLoading={isLoading}
+            onSelect={handleOpenRequestDetails}
+          />
+        </section>
+
+        <RequestDetailsPanel
+          request={selectedRequest}
+          onReassignAmbulance={handleReassignAmbulance}
+          onCancelAssignment={handleCancelAssignment}
+        />
       </div>
-    </>
+
+      {!isLoading && requests.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-border/80 bg-surface-muted/65 px-4 py-6 text-center dark:border-border dark:bg-surface-muted/30">
+          <ShieldAlert className="mx-auto h-7 w-7 text-body dark:text-muted" />
+          <p className="mt-2 text-sm font-medium text-heading">{t("empty.title")}</p>
+          <p className="mt-1 text-xs text-muted">{t("empty.description")}</p>
+        </div>
+      ) : null}
+    </div>
   );
 }
-

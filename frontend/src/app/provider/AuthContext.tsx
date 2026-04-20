@@ -6,6 +6,7 @@ import {
   useEffect,
 } from "react";
 import type { Role } from "../../features/auth/types/auth.types";
+import { clearAuthToken, getAuthToken } from "@/features/auth/utils/auth.utils";
 
 export interface AuthUser {
   id: string; // user id
@@ -40,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const savedUser = localStorage.getItem("auth_user");
-    const token = localStorage.getItem("auth_token");
+    const token = getAuthToken();
 
     if (savedUser && token) {
       try {
@@ -48,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (err) {
         console.error("Failed to parse stored user:", err);
         localStorage.removeItem("auth_user");
-        localStorage.removeItem("auth_token");
+        clearAuthToken();
       }
     }
 
@@ -68,7 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUserState(null);
     localStorage.removeItem("auth_user");
-    localStorage.removeItem("auth_token");
+    clearAuthToken();
   };
 
   const value: AuthContextType = {

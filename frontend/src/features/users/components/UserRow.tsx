@@ -1,19 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faPenToSquare,
-  faTrash,
   faEnvelope,
-  faEye,
-  faEyeSlash,
+  faPenToSquare,
+  faPhone,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 interface UserRowProps {
   id: string;
   name: string;
   email: string;
-  password: string;
   role: string;
   phoneNumber?: string | null;
   isBanned?: boolean;
@@ -25,152 +23,186 @@ export function UserRow({
   id,
   name,
   email,
-  password,
   role,
   phoneNumber,
   isBanned,
   onEdit,
   onDelete,
 }: UserRowProps) {
-  const [showPassword, setShowPassword] = useState(false);
-  const { t } = useTranslation(['users', 'common']);
+  const { t } = useTranslation(["users", "common"]);
 
-  // Generate initials from name
   const initials = useMemo(() => {
     const parts = name.trim().split(/\s+/);
-    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
     return name.slice(0, 2).toUpperCase();
   }, [name]);
 
-  // Updated role mappings to match current API values
-  const roleColor: Record<string, string> = {
-    SuperAdmin: "bg-red-500",
-    Admin: "bg-purple-500", 
-    HospitalAdmin: "bg-blue-500",
-    Paramedic: "bg-green-500",
-    AmbulanceDriver: "bg-emerald-500",
+  const roleStyles: Record<string, { dot: string; badge: string }> = {
+    SuperAdmin: {
+      dot: "bg-red-500",
+      badge: "border-red-500/25 bg-red-500/12 text-red-600 dark:text-red-300",
+    },
+    Admin: {
+      dot: "bg-purple-500",
+      badge: "border-purple-500/25 bg-purple-500/12 text-purple-600 dark:text-purple-300",
+    },
+    HospitalAdmin: {
+      dot: "bg-blue-500",
+      badge: "border-blue-500/25 bg-blue-500/12 text-blue-600 dark:text-blue-300",
+    },
+    Paramedic: {
+      dot: "bg-green-500",
+      badge: "border-green-500/25 bg-green-500/12 text-green-600 dark:text-green-300",
+    },
+    AmbulanceDriver: {
+      dot: "bg-emerald-500",
+      badge: "border-emerald-500/25 bg-emerald-500/12 text-emerald-600 dark:text-emerald-300",
+    },
   };
 
   const roleLabel: Record<string, string> = {
-    SuperAdmin: t('users:roles.SuperAdmin'),
-    Admin: t('users:roles.Admin'),
-    HospitalAdmin: t('users:roles.HospitalAdmin'), 
-    Paramedic: t('users:roles.Paramedic'),
-    AmbulanceDriver: t('users:roles.AmbulanceDriver') || 'Ambulance Driver',
+    SuperAdmin: t("users:roles.SuperAdmin"),
+    Admin: t("users:roles.Admin"),
+    HospitalAdmin: t("users:roles.HospitalAdmin"),
+    Paramedic: t("users:roles.Paramedic"),
+    AmbulanceDriver: t("users:roles.AmbulanceDriver"),
   };
 
-  const roleBgColor: Record<string, string> = {
-    SuperAdmin: "bg-red-500/15 dark:bg-red-500/25 text-red-600 dark:text-red-400",
-    Admin: "bg-purple-500/15 dark:bg-purple-500/25 text-purple-600 dark:text-purple-400",
-    HospitalAdmin: "bg-blue-500/15 dark:bg-blue-500/25 text-blue-600 dark:text-blue-400",
-    Paramedic: "bg-green-500/15 dark:bg-green-500/25 text-green-600 dark:text-green-400",
-    AmbulanceDriver: "bg-emerald-500/15 dark:bg-emerald-500/25 text-emerald-600 dark:text-emerald-400",
+  const resolvedRole = roleLabel[role] || role || t("users:roles.all");
+  const roleStyle = roleStyles[role] || {
+    dot: "bg-gray-500",
+    badge: "border-gray-500/25 bg-gray-500/12 text-gray-600 dark:text-gray-300",
   };
+
+  const userStatus = isBanned
+    ? t("users:status.suspended")
+    : t("users:status.active");
+  const userStatusStyle = isBanned
+    ? "border-danger/25 bg-danger/10 text-danger"
+    : "border-success/25 bg-success/10 text-success";
 
   return (
-    <div className={`relative flex flex-col md:flex-row md:items-center gap-3 md:gap-4 px-4 md:px-6 py-4 md:py-4 bg-card border-b border-border hover:bg-surface-muted/50 transition-colors`}>
-      {/* Indicator Bar */}
-      <div className={`absolute left-0 rtl:left-auto rtl:right-0 top-0 h-1 md:h-full w-full md:w-1 ${roleColor[role] || 'bg-gray-500'} md:rounded-r rtl:md:rounded-r-none rtl:md:rounded-l rounded-t`} />
-
-      {/* Top Row - Mobile */}
-      <div className="md:hidden flex items-start justify-between gap-3 pt-1 w-full">
-        {/* User Avatar & Name */}
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white ${roleColor[role] || 'bg-gray-500'}`}>
+    <>
+      <div className="hidden items-center gap-3 px-5 py-4 transition-colors hover:bg-surface-muted/40 md:grid md:grid-cols-[2.2fr_1.3fr_1.2fr_0.9fr_auto]">
+        <div className="flex min-w-0 items-center gap-3">
+          <div
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${roleStyle.dot}`}
+          >
             {initials}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-heading truncate">{name}</p>
-            <p className="text-[10px] text-muted font-mono truncate">{id}</p>
+            <p className="truncate text-sm font-semibold text-heading">{name}</p>
+            <p className="truncate text-[11px] font-mono text-muted">{id.split("-")[0]}</p>
           </div>
         </div>
-        {/* Role Badge Mobile */}
-        <span
-          className={`inline-flex px-2 py-1 rounded-lg text-xs font-semibold whitespace-nowrap ${roleBgColor[role] || 'bg-gray-500/15 text-gray-600'}`}
-        >
-          {roleLabel[role] || role}
-        </span>
-      </div>
 
-      {/* Desktop: Avatar + Name */}
-      <div className="hidden md:flex md:items-center md:gap-3 md:w-64">
-        <div className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white ${roleColor[role] || 'bg-gray-500'}`}>
-          {initials}
+        <div className="flex min-w-0 items-center gap-2">
+          <FontAwesomeIcon
+            icon={faEnvelope}
+            className="h-3.5 w-3.5 shrink-0 text-muted"
+          />
+          <span className="truncate text-sm text-body">{email}</span>
         </div>
-        <div className="min-w-0">
-          <p className="text-sm font-medium text-heading truncate">{name}</p>
-          <p className="text-[11px] text-muted font-mono truncate">{(id).split('-')[0]}</p>
-        </div>
-      </div>
 
-      {/* Email */}
-      <div className="hidden md:flex md:items-center md:gap-2 md:w-85">
-        <FontAwesomeIcon icon={faEnvelope} className="w-4 h-4 text-muted shrink-0" />
-        <span className="text-sm text-body truncate">{email}</span>
-      </div>
-
-      {/* Mobile Email & Password */}
-      <div className="md:hidden space-y-2 flex-1 min-w-0">
-        <div className="flex items-center gap-2 text-xs md:text-sm">
-          <FontAwesomeIcon icon={faEnvelope} className="w-3 h-3 text-muted shrink-0" />
-          <span className="text-body truncate">{email}</span>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-body">
-          <span className="font-medium">{t('users:row.password')}</span>
-          <span className="font-mono">{showPassword ? password : "•".repeat(8)}</span>
-          <button
-            onClick={() => setShowPassword(!showPassword)}
-            className="text-muted hover:text-heading transition-colors cursor-pointer"
+        <div className="flex items-center gap-2">
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${roleStyle.badge}`}
           >
-            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="w-3 h-3" />
+            <span className={`h-1.5 w-1.5 rounded-full ${roleStyle.dot}`} />
+            {resolvedRole}
+          </span>
+          <span
+            className={`inline-flex rounded-full border px-2 py-1 text-[11px] font-semibold ${userStatusStyle}`}
+          >
+            {userStatus}
+          </span>
+        </div>
+
+        <div className="flex min-w-0 items-center gap-2" dir="ltr">
+          <FontAwesomeIcon icon={faPhone} className="h-3.5 w-3.5 shrink-0 text-muted" />
+          <span className="truncate text-sm text-body">{phoneNumber || "N/A"}</span>
+        </div>
+
+        <div className="flex items-center justify-end gap-1">
+          <button
+            onClick={onEdit}
+            className="rounded-lg p-2 text-muted transition-colors hover:bg-surface-muted hover:text-heading"
+            aria-label={t("users:row.editTooltip")}
+          >
+            <FontAwesomeIcon icon={faPenToSquare} className="h-4 w-4" />
+          </button>
+          <button
+            onClick={onDelete}
+            className="rounded-lg p-2 text-muted transition-colors hover:bg-danger/10 hover:text-danger disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label={t("users:row.deleteTooltip")}
+            disabled={!onDelete}
+          >
+            <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
           </button>
         </div>
       </div>
 
-      {/* Desktop Password */}
-      <div className="hidden md:flex md:items-center md:gap-3 md:w-32">
-        <span className="text-sm text-body font-mono">
-          {showPassword ? (password || '••••••••') : "••••••••"}
-        </span>
-        <button
-          onClick={() => setShowPassword(!showPassword)}
-          className="text-muted hover:text-heading transition-colors cursor-pointer p-1 shrink-0"
-          aria-label={showPassword ? 'Hide password' : 'Show password'}
-        >
-          <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} className="w-3 h-3" />
-        </button>
+      <div className="px-4 py-4 md:hidden">
+        <article className="rounded-xl border border-border/70 bg-bg-card p-3">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-3">
+              <div
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${roleStyle.dot}`}
+              >
+                {initials}
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-heading">{name}</p>
+                <p className="truncate text-[11px] font-mono text-muted">{id}</p>
+              </div>
+            </div>
+            <span
+              className={`inline-flex rounded-full border px-2 py-1 text-[11px] font-semibold ${userStatusStyle}`}
+            >
+              {userStatus}
+            </span>
+          </div>
+
+          <div className="mt-3 space-y-2">
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${roleStyle.badge}`}
+            >
+              <span className={`h-1.5 w-1.5 rounded-full ${roleStyle.dot}`} />
+              {resolvedRole}
+            </span>
+
+            <p className="flex items-center gap-2 text-xs text-body">
+              <FontAwesomeIcon icon={faEnvelope} className="h-3 w-3 text-muted" />
+              <span className="truncate">{email}</span>
+            </p>
+
+            <p className="flex items-center gap-2 text-xs text-body" dir="ltr">
+              <FontAwesomeIcon icon={faPhone} className="h-3 w-3 text-muted" />
+              <span className="truncate">{phoneNumber || "N/A"}</span>
+            </p>
+          </div>
+
+          <div className="mt-3 flex items-center justify-end gap-2 border-t border-border/70 pt-3">
+            <button
+              onClick={onEdit}
+              className="rounded-lg p-2 text-muted transition-colors hover:bg-surface-muted hover:text-heading"
+              aria-label={t("users:row.editTooltip")}
+            >
+              <FontAwesomeIcon icon={faPenToSquare} className="h-4 w-4" />
+            </button>
+            <button
+              onClick={onDelete}
+              className="rounded-lg p-2 text-muted transition-colors hover:bg-danger/10 hover:text-danger disabled:cursor-not-allowed disabled:opacity-50"
+              aria-label={t("users:row.deleteTooltip")}
+              disabled={!onDelete}
+            >
+              <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
+            </button>
+          </div>
+        </article>
       </div>
-
-      {/* Desktop Role Badge */}
-      <div className="hidden md:flex md:items-center md:w-40 md:justify-center">
-        <span
-          className={`inline-flex px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap ${roleBgColor[role] || 'bg-gray-500/15 text-gray-600'}`}
-        >
-          {roleLabel[role] || role || 'No Role'}
-        </span>
-      </div>
-
-      {/* Action Buttons Container */}
-      <div className="flex items-center gap-2 justify-end md:gap-2 md:w-22">
-
-        {/* Edit Button */}
-        <button
-          onClick={onEdit}
-          className="p-2 text-muted hover:text-heading hover:bg-surface-muted rounded-lg transition-colors cursor-pointer"
-          aria-label={t('users:row.editTooltip')}
-        >
-          <FontAwesomeIcon icon={faPenToSquare} className="w-4 h-4" />
-        </button>
-
-        {/* Delete Button */}
-        <button
-          onClick={onDelete}
-          className="p-2 text-muted hover:text-danger hover:bg-danger/10 rounded-lg transition-colors cursor-pointer"
-          aria-label={t('users:row.deleteTooltip')}
-        >
-          <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
-        </button>
-      </div>
-    </div>
+    </>
   );
 }

@@ -14,7 +14,7 @@ function App() {
     <LanguageProvider>
       <Provider store={store}>
         <AuthProvider>
-          <div className="min-h-screen bg-white dark:bg-gray-900">
+          <div className="min-h-screen bg-white  dark:bg-gray-900">
             <RouterProvider router={router} />
              <Toaster />
           </div>

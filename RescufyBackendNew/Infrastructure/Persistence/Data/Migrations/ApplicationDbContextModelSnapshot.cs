@@ -148,6 +148,9 @@ namespace Persistence.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -159,6 +162,13 @@ namespace Persistence.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("HospitalId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsBanned")
                         .HasColumnType("bit");
 
@@ -169,6 +179,10 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NationalId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -203,6 +217,8 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HospitalId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -592,6 +608,9 @@ namespace Persistence.Data.Migrations
                         .HasPrecision(9, 6)
                         .HasColumnType("decimal(9,6)");
 
+                    b.Property<int>("NumberOfPeopleAffected")
+                        .HasColumnType("int");
+
                     b.Property<int>("RequestStatus")
                         .HasColumnType("int");
 
@@ -880,6 +899,16 @@ namespace Persistence.Data.Migrations
                     b.Navigation("Driver");
                 });
 
+            modelBuilder.Entity("Domain.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("Domain.Models.Hospital", "Hospital")
+                        .WithMany("Admins")
+                        .HasForeignKey("HospitalId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Hospital");
+                });
+
             modelBuilder.Entity("Domain.Models.Assignment", b =>
                 {
                     b.HasOne("Domain.Models.Ambulance", "Ambulance")
@@ -1095,6 +1124,8 @@ namespace Persistence.Data.Migrations
 
             modelBuilder.Entity("Domain.Models.Hospital", b =>
                 {
+                    b.Navigation("Admins");
+
                     b.Navigation("Assignments");
                 });
 

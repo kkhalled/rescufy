@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PatientCard from "../components/PatientCard";
@@ -6,10 +7,12 @@ import DescriptionCard from "../components/DescriptionCard";
 import HospitalCard from "../components/HospitalCard";
 import TimelineCard from "../components/TimelineCard";
 import AIAnalysisCard from "../components/AIAnalysisCard";
+import HospitalReportModal from "../components/HospitalReportModal";
 
 export default function HospitalRequestDetails() {
   const { t } = useTranslation("requests");
   const { id } = useParams<{ id: string }>();
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 
   // Sample data - in a real application, this would come from an API
   const requestData = {
@@ -136,7 +139,25 @@ export default function HospitalRequestDetails() {
         <TimelineCard events={requestData.timeline} />
       </div>
 
-      {/* No ActionButtons for hospital users - admin only */}
+      {/* Hospital Admin Actions */}
+      <div className="mb-6 rounded-xl border border-border bg-bg-card p-4 shadow-card">
+        <p className="mb-3 text-sm text-muted">
+          {t("details.hospitalReportHint", "Submit final report after patient handoff")}
+        </p>
+        <button
+          type="button"
+          onClick={() => setIsReportModalOpen(true)}
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/90"
+        >
+          {t("details.submitHospitalReport", "Submit Hospital Report")}
+        </button>
+      </div>
+
+      <HospitalReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        requestId={String(id || requestData.id)}
+      />
     </div>
   );
 }

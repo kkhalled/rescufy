@@ -1,6 +1,5 @@
 import {
   Search,
-  Bell,
   Sun,
   Moon,
   Menu,
@@ -13,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
+import NotificationBell from "@/features/notifications/components/NotificationBell";
 // ...existing code...
 
 type AdminNavbarProps = {
@@ -38,9 +38,6 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
           >
             <Menu size={22} className="text-heading" />
           </button>
-
-          {/* Desktop Search */}
-          <div className="hidden md:flex items-center flex-1 max-w-md"></div>
         </div>
 
         {/* Right Section - Actions */}
@@ -69,14 +66,7 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
             )}
           </button>
 
-          {/* Notifications */}
-          <button
-            className="relative p-2 rounded-lg hover:bg-muted transition-colors"
-            aria-label={t("common:aria.notifications")}
-          >
-            <Bell size={18} className="text-heading" />
-            <span className="absolute top-1.5 right-1.5 rtl:right-auto rtl:left-1.5 w-2 h-2 rounded-full bg-danger animate-pulse" />
-          </button>
+          <NotificationBell />
 
           {/* Divider */}
           <div className="hidden sm:block h-8 w-px bg-border" />

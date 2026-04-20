@@ -2,6 +2,10 @@
     "title": "لوحة التحكم",
     "welcome": "مرحباً بعودتك، {{name}}!",
     "overview": "نظرة عامة",
+    "monitoringCenter": {
+        "subtitle": "مركز مراقبة التوزيع الآلي للمتابعة اللحظية والتنبيهات وتفسير قرارات النظام.",
+        "liveTag": "النظام مباشر"
+    },
     "stats": {
         "totalRequests": "إجمالي الطلبات",
         "activeAmbulances": "سيارات الإسعاف النشطة",
@@ -32,6 +36,109 @@
         "criticalCapacity": "سعة حرجة",
         "live": "مباشر"
     },
+    "kpi": {
+        "activeQueue": {
+            "title": "ضغط طابور التوزيع",
+            "action": "إجراء: إعادة تمركز الوحدات في {{count}} مناطق ضغط."
+        },
+        "successRate": {
+            "title": "معدل نجاح الإسناد",
+            "trend": "+1.6% مقارنة بالساعة الماضية",
+            "context": "{{value}} إسنادات فاشلة ضمن نافذة المراقبة الحالية",
+            "action": "إجراء: الإبقاء على نمط المطابقة التكيفي مفعلاً."
+        },
+        "dispatchTime": {
+            "title": "متوسط زمن التوزيع",
+            "trend": "-0.7 دقيقة عن خط الأساس",
+            "context": "تم رصد {{count}} تأخيرات تسليم خلال الساعة الماضية",
+            "action": "إجراء: مراجعة بطء التحويل من المنطقة إلى المستشفى."
+        },
+        "fleetReadiness": {
+            "title": "جاهزية الأسطول",
+            "context": "{{available}} من أصل {{total}} سيارات إسعاف متاحة الآن",
+            "action": "إجراء: إعادة توجيه الحالات منخفضة الخطورة من {{count}} مستشفيات مزدحمة."
+        }
+    },
+    "monitoring": {
+        "systemHealth": {
+            "title": "صحة النظام",
+            "description": "نبض لحظي لأداء التوزيع واعتمادية التشغيل.",
+            "healthy": "مستقر",
+            "warning": "تحذير",
+            "critical": "حرج",
+            "avgDispatchTime": "متوسط زمن التوزيع",
+            "successRate": "معدل النجاح",
+            "failedAssignments": "الإسنادات الفاشلة"
+        }
+    },
+    "activityFeed": {
+        "title": "موجز نشاط التوزيع",
+        "subtitle": "أحدث أحداث دورة الطلب من الاستقبال حتى الإغلاق.",
+        "requestId": "الطلب {{id}}",
+        "minutesAgo": "منذ {{count}} د",
+        "types": {
+            "requestReceived": "استقبال طلب",
+            "ambulanceAssigned": "إسناد سيارة إسعاف",
+            "etaUpdated": "تحديث زمن الوصول",
+            "completed": "مكتمل"
+        },
+        "descriptions": {
+            "requestReceived": "تم تسجيل طلب طارئ للمريض {{patient}}.",
+            "ambulanceAssigned": "أسند النظام سيارة الإسعاف {{ambulance}}.",
+            "etaUpdated": "تم تحديث المسار، زمن الوصول المتوقع الآن {{eta}} دقيقة.",
+            "completed": "أُغلقت الحالة بعد التسليم بواسطة {{ambulance}}."
+        }
+    },
+    "alerts": {
+        "title": "تنبيهات الأولوية",
+        "subtitle": "تصعيدات قد تؤثر على تغطية التوزيع الآلي.",
+        "noAlerts": "لا توجد تنبيهات نشطة. مؤشرات المراقبة مستقرة.",
+        "minutesAgo": "منذ {{count}} د",
+        "affectedZone": "المنطقة: {{zone}}",
+        "recommendation": "التوصية: {{value}}",
+        "severity": {
+            "critical": "حرج",
+            "warning": "تحذير",
+            "info": "معلومة"
+        },
+        "zones": {
+            "westSector": "القطاع الغربي",
+            "centralDistrict": "المنطقة المركزية",
+            "cityWide": "على مستوى المدينة"
+        },
+        "items": {
+            "noAmbulance": {
+                "title": "لا توجد وحدة احتياطية متاحة",
+                "description": "جميع سيارات الإسعاف القريبة في نقل نشط حالياً.",
+                "recommendation": "تحويل أقرب وحدة احتياطية من قطاع مجاور فوراً."
+            },
+            "dispatchDelay": {
+                "title": "رصد تأخير في التوزيع",
+                "description": "{{value}} طلبات تجاوزت نافذة الإسناد المتوقعة.",
+                "recommendation": "مراجعة التوجيه حسب الازدحام وإعطاء أولوية لأقرب الفرق المتاحة."
+            },
+            "hospitalLoad": {
+                "title": "اختلال في أحمال المستشفيات",
+                "description": "{{value}} منشآت استقبال تجاوزت حد الاستيعاب الآمن.",
+                "recommendation": "ترجيح نقاط التوزيع نحو المستشفيات البديلة ذات السعة المتاحة."
+            }
+        }
+    },
+    "decisionInsights": {
+        "title": "رؤى قرارات النظام",
+        "subtitle": "سبب اختيار المحرك لكل سيارة إسعاف في الحوادث الأخيرة.",
+        "request": "الطلب {{id}}",
+        "confidenceLabel": "ثقة {{value}}%",
+        "selectedAmbulance": "سيارة الإسعاف المختارة",
+        "etaDistance": "الوصول {{eta}} دقيقة • {{distance}} كم",
+        "alternatives": "البدائل التي تم تقييمها",
+        "reasoning": "منطق النظام",
+        "items": {
+            "fastestCorridor": "تم الاختيار بسبب أسرع ممر مروري مع جاهزية فورية للدعم المتقدم.",
+            "bestHospitalMatch": "تم الاختيار لأقصر زمن رحلة مجمع مع أقرب مستشفى مجهز للحالات الحرجة.",
+            "loadBalanced": "تم الإسناد للحفاظ على توازن استخدام الأسطول مع إبقاء تغطية احتياطية."
+        }
+    },
     "charts": {
         "requestsOverview": "نظرة عامة على الطلبات",
         "weeklyStats": "الإحصائيات الأسبوعية",
@@ -46,7 +153,17 @@
     },
     "recentRequests": {
         "title": "الطلبات الأخيرة",
-        "viewAll": "عرض الكل"
+        "viewAll": "عرض الكل",
+        "liveFeed": "تغذية مباشرة",
+        "socketConnected": "الاتصال نشط",
+        "incomingRate": "معدل الوصول",
+        "incomingRateValue": "{{value}}/دقيقة",
+        "avgLatency": "متوسط زمن الاستجابة",
+        "avgLatencyValue": "{{value}} مللي ثانية",
+        "eventQueue": "طابور الأحداث",
+        "eventQueueValue": "{{count}} قيد الانتظار",
+        "designModeHint": "وضع تصميم فقط: هذه اللوحة جاهزة للأحداث اللحظية عند تفعيل ربط SignalR.",
+        "lastRefresh": "آخر تحديث: منذ {{value}}"
     },
     "criticalRequests": {
         "title": "الطلبات الحرجة"

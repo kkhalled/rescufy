@@ -1,14 +1,20 @@
-import type { Request } from "../types/request.types";
+type FilterableRequest = {
+  id: string | number;
+  userName: string;
+  status: string;
+  priority?: string;
+};
 
 export type Filters = {
   status: string;
   search: string;
+  priority?: string;
 };
 
-export function filterRequests(
-  requests: Request[],
+export function filterRequests<T extends FilterableRequest>(
+  requests: T[],
   filters: Filters,
-): Request[] {
+): T[] {
   const q = filters.search.trim().toLowerCase();
 
   return requests.filter((r) => {
@@ -20,6 +26,9 @@ export function filterRequests(
     const matchStatus =
       filters.status === "all" || r.status === filters.status;
 
-    return matchSearch && matchStatus;
+    const matchPriority =
+      !filters.priority || filters.priority === "all" || r.priority === filters.priority;
+
+    return matchSearch && matchStatus && matchPriority;
   });
 }

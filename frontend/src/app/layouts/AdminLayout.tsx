@@ -1,38 +1,67 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import SideBar from "../../shared/common/SideBar";
 import { Outlet, useLocation } from "react-router-dom";
 import AdminNavbar from "../../shared/common/AdminNavBar";
+import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
 
 export default function AdminLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const [sidebarOpen, setSidebarOpen] = useState(isDesktop);
 
   const location = useLocation();
-  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
-  const closeSidebar = () => setSidebarOpen(false);
 
-  
+  // 👇 يخلي الحالة sync مع الشاشة
+  useEffect(() => {
+    setSidebarOpen(isDesktop);
+  }, [isDesktop]);
+
+  const toggleSidebar = () => setSidebarOpen(prev => !prev);
+
+  const closeSidebar = () => {
+    if (!isDesktop) {
+      setSidebarOpen(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Mobile Overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
-          onClick={closeSidebar}
-        />
-      )}
+
+      {/* Overlay (mobile only) */}
+      <AnimatePresence>
+        {sidebarOpen && !isDesktop && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+            onClick={closeSidebar}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
       <SideBar isOpen={sidebarOpen} onClose={closeSidebar} />
 
-      {/* Main Content Wrapper */}
+      {/* Content */}
       <div className="flex-1 flex flex-col min-w-0 md:ltr:ml-22 md:rtl:mr-22">
         <AdminNavbar onMenuClick={toggleSidebar} />
 
-        {/* Main Content with top padding for fixed navbar */}
         <main className="flex-1 pt-20 md:pt-24 pb-6 px-4 md:px-8 lg:px-12 overflow-y-auto">
-          <div key={location.pathname} className="page-enter">
-            <Outlet />
-          </div>
+          
+          <AnimatePresence mode="wait">
+            <motion.div  
+              key={location.pathname}
+              initial={{ opacity: 0, y: 2 }}
+              animate={{ opacity: 1, y: 0 }}
+              
+              transition={{ duration: 1 }}
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
+
         </main>
       </div>
     </div>

@@ -11,5 +11,9 @@ namespace Shared.DTOs.UserManagement
         public string? PhoneNumber { get; set; }
         public IList<string> Roles { get; set; } = [];
         public bool IsBanned { get; set; }
+
+        // Hospital info for HospitalAdmin
+        public int? HospitalId { get; set; }
+        public string? HospitalName { get; set; }
     }
 }

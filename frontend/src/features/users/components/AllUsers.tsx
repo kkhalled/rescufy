@@ -1,5 +1,6 @@
-import SearchBar from "@/shared/common/SearchBar";
-
+import { useMemo, type ComponentType } from "react";
+import SearchInput from "@/shared/ui/SearchInput";
+import { Building2, ShieldCheck, Stethoscope, UsersRound } from "lucide-react";
 import { UserRow } from "./UserRow";
 import { UserFormModal } from "./UserFormModal";
 import { useUsers } from "../hooks/useUsers";
@@ -10,23 +11,69 @@ import UsersRoles from "./UsersRoles";
 /** Skeleton placeholder row shown while loading */
 function UserRowSkeleton() {
   return (
-    <div className="flex items-center gap-4 px-6 py-4 border-b border-border animate-pulse">
-      <div className="w-9 h-9 rounded-full bg-surface-muted" />
-      <div className="flex-1 space-y-2">
-        <div className="h-3.5 w-32 bg-surface-muted rounded" />
-        <div className="h-2.5 w-20 bg-surface-muted rounded" />
+    <div className="animate-pulse px-4 py-4 md:px-5">
+      <div className="hidden items-center gap-3 md:grid md:grid-cols-[2.2fr_1.3fr_1.2fr_0.9fr_auto]">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-full bg-surface-muted" />
+          <div className="space-y-2">
+            <div className="h-3.5 w-32 rounded bg-surface-muted" />
+            <div className="h-2.5 w-20 rounded bg-surface-muted" />
+          </div>
+        </div>
+        <div className="h-3.5 w-40 rounded bg-surface-muted" />
+        <div className="h-6 w-24 rounded-full bg-surface-muted" />
+        <div className="h-3.5 w-20 rounded bg-surface-muted" />
+        <div className="h-8 w-20 justify-self-end rounded bg-surface-muted" />
       </div>
-      <div className="hidden md:block h-3.5 w-48 bg-surface-muted rounded" />
-      <div className="hidden md:block h-3.5 w-20 bg-surface-muted rounded" />
-      <div className="hidden md:block h-6 w-24 bg-surface-muted rounded-lg" />
-      <div className="hidden md:block h-8 w-16 bg-surface-muted rounded" />
+
+      <div className="rounded-xl border border-border/70 bg-bg-card p-3 md:hidden">
+        <div className="mb-3 flex items-center gap-3">
+          <div className="h-9 w-9 rounded-full bg-surface-muted" />
+          <div className="space-y-2">
+            <div className="h-3.5 w-28 rounded bg-surface-muted" />
+            <div className="h-2.5 w-16 rounded bg-surface-muted" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <div className="h-3 w-40 rounded bg-surface-muted" />
+          <div className="h-3 w-36 rounded bg-surface-muted" />
+          <div className="h-8 w-full rounded bg-surface-muted" />
+        </div>
+      </div>
     </div>
   );
 }
-// import { UsersRoles } from '@/shared/common/UsersRoles';
+
+type OverviewStatProps = {
+  icon: ComponentType<{ className?: string }>;
+  label: string;
+  value: number;
+  tone: "primary" | "success" | "info" | "warning";
+};
+
+function OverviewStat({ icon: Icon, label, value, tone }: OverviewStatProps) {
+  const toneStyles = {
+    primary: "border-primary/20 bg-primary/8 text-primary",
+    success: "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300",
+    info: "border-cyan-500/20 bg-cyan-500/10 text-cyan-600 dark:text-cyan-300",
+    warning: "border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-300",
+  };
+
+  return (
+    <article className="rounded-xl border border-border/70 bg-bg-card p-3 shadow-card md:p-4">
+      <div className="flex items-center justify-between">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">{label}</p>
+        <span className={`inline-flex h-8 w-8 items-center justify-center rounded-lg border ${toneStyles[tone]}`}>
+          <Icon className="h-4 w-4" />
+        </span>
+      </div>
+      <p className="mt-3 text-2xl font-bold leading-none text-heading">{value}</p>
+    </article>
+  );
+}
 
 export default function AllUsers() {
-  const { t } = useTranslation('users');
+  const { t } = useTranslation("users");
   const {
     users,
     search,
@@ -44,96 +91,142 @@ export default function AllUsers() {
     handleDeleteUser,
   } = useUsers();
 
+  const overview = useMemo(() => {
+    const extractRole = (userRole: { roles?: string[]; role?: string }) =>
+      userRole.roles && userRole.roles.length > 0 ? userRole.roles[0] : userRole.role || "";
+
+    const admins = users.filter((user) => {
+      const currentRole = extractRole(user);
+      return currentRole === "Admin" || currentRole === "SuperAdmin";
+    }).length;
+
+    const hospitalAdmins = users.filter((user) => extractRole(user) === "HospitalAdmin").length;
+    const fieldTeam = users.filter((user) => {
+      const currentRole = extractRole(user);
+      return currentRole === "Paramedic" || currentRole === "AmbulanceDriver";
+    }).length;
+
+    return {
+      total: users.length,
+      admins,
+      hospitalAdmins,
+      fieldTeam,
+    };
+  }, [users]);
+
+  const hasActiveFilters = search.trim().length > 0 || role !== "all";
+
   return (
     <>
-      <div className="my-6">
-        <SearchBar
-          value={search}
-          onSearchChange={setSearch}
-          placeholder={t('filters.searchPlaceholder')}
-        >
-          <div className="flex items-center gap-3">
-            <UsersRoles value={role} onChange={setRole} />
+      <div className="mt-6 space-y-5">
+        <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <OverviewStat
+            icon={UsersRound}
+            label={t("overview.totalUsers")}
+            value={overview.total}
+            tone="primary"
+          />
+          <OverviewStat
+            icon={ShieldCheck}
+            label={t("overview.adminTeam")}
+            value={overview.admins}
+            tone="success"
+          />
+          <OverviewStat
+            icon={Building2}
+            label={t("overview.hospitalAdmins")}
+            value={overview.hospitalAdmins}
+            tone="info"
+          />
+          <OverviewStat
+            icon={Stethoscope}
+            label={t("overview.fieldTeam")}
+            value={overview.fieldTeam}
+            tone="warning"
+          />
+        </section>
+
+        <section className="rounded-2xl border border-border/70 bg-bg-card p-4 shadow-card md:p-5">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+            <div className="flex-1">
+              <SearchInput
+                value={search}
+                onSearchChange={setSearch}
+                placeholder={t("filters.searchPlaceholder")}
+              />
+            </div>
+
+            <div className="w-full sm:w-55">
+              <UsersRoles value={role} onChange={setRole} />
+            </div>
+
             <button
               onClick={openAddModal}
-              className="shrink-0 h-10 px-4 rounded-xl bg-primary text-white text-sm font-medium shadow hover:bg-primary/90 transition-all flex items-center gap-2"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-white transition-colors hover:bg-primary/90"
             >
-              <span className="text-lg leading-none">+</span> {t('actions.add')}
+              <span className="text-base leading-none">+</span>
+              {t("actions.add")}
             </button>
           </div>
-        </SearchBar>
+
+          <div className="mt-3 flex items-center justify-between gap-2 text-xs text-muted">
+            <p>{t("overview.usersFound", { count: users.length })}</p>
+            {hasActiveFilters && (
+              <span className="rounded-full border border-primary/25 bg-primary/8 px-2.5 py-1 text-primary">
+                {t("overview.activeFilters")}
+              </span>
+            )}
+          </div>
+        </section>
       </div>
 
-      <main className="mt-6 border border-border rounded-xl overflow-hidden bg-bg-card">
+      <main className="mt-6 overflow-hidden rounded-2xl border border-border/70 bg-bg-card shadow-card">
         {/* Table Header */}
-        <div className="hidden md:flex items-center gap-4 px-6 py-4 bg-surface-muted border-b border-border">
-          <div className="w-64">
-            <p className="text-xs font-semibold text-muted uppercase tracking-wider">
-              {t('table.name')}
-            </p>
-          </div>
-          <div className="w-85">
-            <p className="text-xs font-semibold text-muted uppercase tracking-wider">
-              {t('table.email')}
-            </p>
-          </div>
-          <div className="w-32">
-            <p className="text-xs font-semibold text-muted uppercase tracking-wider">
-              {t('form.password')}
-            </p>
-          </div>
-          <div className="w-40 text-center">
-            <p className="text-xs font-semibold text-muted uppercase tracking-wider">
-              {t('table.role')}
-            </p>
-          </div>
-          <div className="w-20 text-right rtl:text-left">
-            <p className="text-xs font-semibold text-muted uppercase tracking-wider">
-              {t('table.actions')}
-            </p>
-          </div>
+        <div className="hidden grid-cols-[2.2fr_1.3fr_1.2fr_0.9fr_auto] items-center gap-3 border-b border-border/70 bg-surface-muted/50 px-5 py-3 md:grid">
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.name")}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.email")}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.role")}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("form.phone")}</p>
+          <p className="text-end text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.actions")}</p>
         </div>
 
         {/* Rows */}
-        <div>
+        <div className="divide-y divide-border/70">
           {isLoading ? (
-            // Skeleton loading rows
-            Array.from({ length: 6 }).map((_, i) => (
-              <UserRowSkeleton key={i} />
-            ))
+            Array.from({ length: 6 }).map((_, i) => <UserRowSkeleton key={i} />)
           ) : users.length > 0 ? (
             users.map((user, index) => {
-              // Extract first role from roles array, fallback to role property
-              const userRole = user.roles && user.roles.length > 0 ? user.roles[0] : user.role || '';
+              const userRole = user.roles && user.roles.length > 0 ? user.roles[0] : user.role || "";
               return (
                 <div
                   key={user.id}
                   className="animate-fade-in-up"
-                  style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'both' }}
+                  style={{ animationDelay: `${index * 40}ms`, animationFillMode: "both" }}
                 >
                   <UserRow
-                    id={user.id || ''}
+                    id={user.id || ""}
                     name={user.name}
                     email={user.email}
-                    password={user.password || '••••••••'}
                     role={userRole}
                     phoneNumber={user.phoneNumber}
                     isBanned={user.isBanned}
                     onEdit={() => openEditModal(user)}
-                    onDelete={() => handleDeleteUser(user.id || '', user.name)}
+                    onDelete={() => handleDeleteUser(user.id || "", user.name)}
                   />
                 </div>
               );
             })
           ) : (
-            <div className="flex items-center justify-center py-12">
-              <p className="text-muted text-sm">{t('empty.title')}</p>
+            <div className="flex flex-col items-center justify-center gap-1 py-14">
+              <p className="text-sm font-medium text-heading">{t("empty.title")}</p>
+              <p className="text-xs text-muted">{t("empty.description")}</p>
             </div>
           )}
         </div>
       </main>
 
       <UserFormModal
+        key={`${modalMode}-${selectedUser?.id ?? "new"}`}
         isOpen={isModalOpen}
         onClose={closeModal}
         onSubmit={submitUser}

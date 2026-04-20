@@ -1,0 +1,63 @@
+{
+  "title": "الإشعارات",
+  "subtitle": "تنبيهات وتحديثات التشغيل",
+  "unreadCounter": "{{count}} غير مقروء",
+  "tabs": {
+    "all": "الكل",
+    "unread": "غير المقروء",
+    "critical": "حرج"
+  },
+  "actions": {
+    "markAllRead": "تحديد الكل كمقروء",
+    "clearRead": "حذف المقروء",
+    "dismiss": "إخفاء",
+    "markRead": "تحديد كمقروء",
+    "markUnread": "تحديد كغير مقروء"
+  },
+  "status": {
+    "read": "مقروء",
+    "unread": "غير مقروء"
+  },
+  "empty": {
+    "title": "لا توجد إشعارات جديدة",
+    "criticalTitle": "لا توجد تنبيهات حرجة حالياً",
+    "description": "ستظهر الإشعارات الجديدة هنا"
+  },
+  "categories": {
+    "request": "طلب",
+    "hospital": "مستشفى",
+    "ambulance": "إسعاف",
+    "user": "مستخدم",
+    "system": "النظام"
+  },
+  "toasts": {
+    "markedAllRead": "تم تحديد كل الإشعارات كمقروءة",
+    "clearedRead": "تم حذف الإشعارات المقروءة"
+  },
+  "items": {
+    "criticalRequest": {
+      "title": "تصعيد طلب حرج",
+      "message": "تم رفع أولوية الطلب REQ-2025-001 إلى حرج."
+    },
+    "newHospitalAdmin": {
+      "title": "تعيين مدير مستشفى جديد",
+      "message": "تم تعيين مدير جديد لمركز النور الطبي."
+    },
+    "ambulanceBackOnline": {
+      "title": "عودة سيارة الإسعاف للخدمة",
+      "message": "عادت سيارة الإسعاف AMB-17 إلى حالة متاحة."
+    },
+    "hospitalCapacityWarning": {
+      "title": "تنبيه سعة المستشفى",
+      "message": "مستشفى الملك فهد تجاوز 90% من سعة الأسرة."
+    },
+    "systemMaintenance": {
+      "title": "إشعار صيانة النظام",
+      "message": "ستبدأ الصيانة المجدولة الليلة الساعة 2:00 صباحاً."
+    },
+    "requestCompleted": {
+      "title": "تم إغلاق الطلب",
+      "message": "تم إغلاق طلب الطوارئ REQ-2025-004 بنجاح."
+    }
+  }
+}

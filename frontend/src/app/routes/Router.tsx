@@ -1,44 +1,93 @@
+import { lazy, Suspense, type ReactNode } from "react";
 import { createBrowserRouter } from "react-router";
 
-import DashBoard from "@/features/dashboard/pages/DashBoard";
-import HospitalDashboard from "@/features/dashboard/pages/HospitalDashboard";
-import Request from "@/features/requests/pages/Request";
-import HospitalRequests from "@/features/requests/pages/HospitalRequests";
-import HospitalRequestDetails from "@/features/request-details/pages/HospitalRequestDetails";
-import HospitalProfile from "@/features/hospitals_management/pages/HospitalProfile";
-import Users from "@/features/users/pages/Users";
 import AdminLayout from "@/app/layouts/AdminLayout";
-import SignIn from "@/features/auth/pages/SignIn";
-import SignUp from "@/features/auth/pages/SignUp";
-import ForgotPassword from "@/features/auth/pages/ForgotPassword";
-import ResetPassword from "@/features/auth/pages/ResetPassword";
-import Settings from "@/features/settings/pages/Settings";
-import HospitalsManagement from "@/features/hospitals_management/pages/HospitalsManagement";
-import AmbulancesManagement from "@/features/ambulances_management/pages/AmbulancesManagement";
 import HospitalUserLayout from "../layouts/HospitalUserLayout";
 import ProtectedRoute from "./ProtectedRoute";
-import NotFound from "@/shared/common/NotFound";
-import Audits from "@/features/audits/Audits";
-import RequestDetails from "@/features/request-details/pages/RequestDetails";
 import AuthRoute from "./AuthRoute";
+import Loading from "@/shared/common/Loading";
+import Analytics from "@/features/analytics/pages/Analytics";
+
+const DashBoard = lazy(() => import("@/features/dashboard/pages/DashBoard"));
+const HospitalDashboard = lazy(
+  () => import("@/features/dashboard/pages/HospitalDashboard"),
+);
+const Request = lazy(() => import("@/features/requests/pages/Request"));
+const HospitalRequests = lazy(
+  () => import("@/features/requests/pages/HospitalRequests"),
+);
+const HospitalRequestDetails = lazy(
+  () => import("@/features/request-details/pages/HospitalRequestDetails"),
+);
+const HospitalProfile = lazy(
+  () => import("@/features/hospitals_management/pages/HospitalProfile"),
+);
+const AdminHospitalProfile = lazy(
+  () => import("@/features/hospitals_management/pages/AdminHospitalProfile"),
+);
+const Users = lazy(() => import("@/features/users/pages/Users"));
+const SignIn = lazy(() => import("@/features/auth/pages/SignIn"));
+const ForgotPassword = lazy(
+  () => import("@/features/auth/pages/ForgotPassword"),
+);
+const ResetPassword = lazy(() => import("@/features/auth/pages/ResetPassword"));
+const Settings = lazy(() => import("@/features/settings/pages/Settings"));
+const HospitalsManagement = lazy(
+  () => import("@/features/hospitals_management/pages/HospitalsManagement"),
+);
+const AmbulancesManagement = lazy(
+  () => import("@/features/ambulances_management/pages/AmbulancesManagement"),
+);
+const AmbulanceProfile = lazy(
+  () => import("@/features/ambulances_management/pages/AmbulanceProfile"),
+);
+
+const RequestDetails = lazy(
+  () => import("@/features/request-details/pages/RequestDetails"),
+);
+const NotFound = lazy(() => import("@/shared/common/NotFound"));
+
+const withLoading = (element: ReactNode) => (
+  <Suspense fallback={<Loading />}>{element}</Suspense>
+);
 
 const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
+      
       <ProtectedRoute requiredRole="Admin">
         <AdminLayout />
       </ProtectedRoute>
+     
     ),
     children: [
-      { index: true, element: <DashBoard /> },
-      { path: "requests", element: <Request /> },
-      { path: "hospitals_management", element: <HospitalsManagement /> },
-      { path: "ambulances_management", element: <AmbulancesManagement /> },
-      { path: "users", element: <Users /> },
-      { path: "audits", element: <Audits /> },
-      { path: "settings", element: <Settings /> },
-      { path: "request_details/:id", element: <RequestDetails /> },
+      { index: true, element: withLoading(<DashBoard />) },
+      { path: "requests", element: withLoading(<Request />) },
+      {
+        path: "hospitals_management",
+        element: withLoading(<HospitalsManagement />),
+      },
+      {
+        path: "hospitals_management/:id",
+        element: withLoading(<AdminHospitalProfile />),
+      },
+      {
+        path: "ambulances_management",
+        element: withLoading(<AmbulancesManagement />),
+      },
+      {
+        path: "ambulances_management/:id",
+        element: withLoading(<AmbulanceProfile />),
+      },
+      { path: "users", element: withLoading(<Users />) },
+
+      { path: "settings", element: withLoading(<Settings />) },
+      { path: "analytics", element: withLoading(<Analytics />) },
+      {
+        path: "request_details/:id",
+        element: withLoading(<RequestDetails />),
+      },
     ],
   },
 
@@ -50,45 +99,37 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <HospitalDashboard /> },
-      { path: "requests", element: <HospitalRequests /> },
-      { path: "request_details/:id", element: <HospitalRequestDetails /> },
-      { path: "profile", element: <HospitalProfile /> },
-      { path: "settings", element: <Settings /> },
+      { index: true, element: withLoading(<HospitalDashboard />) },
+      { path: "requests", element: withLoading(<HospitalRequests />) },
+      {
+        path: "request_details/:id",
+        element: withLoading(<HospitalRequestDetails />),
+      },
+      { path: "profile", element: withLoading(<HospitalProfile />) },
+      { path: "settings", element: withLoading(<Settings />) },
     ],
   },
 
   {
     path: "/signin",
-    element: (
-      <AuthRoute>
-        <SignIn />
-      </AuthRoute>
-    ),
+    element: <AuthRoute>{withLoading(<SignIn />)}</AuthRoute>,
   },
-  {
-    path: "/signup",
-    element: <SignUp />,
-  },
+
   {
     path: "/forgot-password",
-    element: <ForgotPassword />,
+    element: withLoading(<ForgotPassword />),
   },
   {
-    path: "/reset-password/:token",
-    element: <ResetPassword />,
+    path: "/reset-password",
+    element: withLoading(<ResetPassword />),
   },
   {
     path: "/",
-    element: (
-      <AuthRoute>
-        <SignIn />
-      </AuthRoute>
-    ),
+    element: <AuthRoute>{withLoading(<SignIn />)}</AuthRoute>,
   },
   {
     path: "*",
-    element: <NotFound />,
+    element: withLoading(<NotFound />),
   },
 ]);
 

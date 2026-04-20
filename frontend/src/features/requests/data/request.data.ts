@@ -1,6 +1,16 @@
-import type { Request } from "../types/request.types";
+import type { RequestPriority, RequestStatus } from "../types/request.types";
 
-export const requests: Request[] = [
+export interface HospitalMockRequest {
+  id: string;
+  userName: string;
+  userPhone: string;
+  location: string;
+  priority: RequestPriority;
+  status: RequestStatus;
+  timestamp: string;
+}
+
+export const requests: HospitalMockRequest[] = [
   {
     id: "REQ-2025-002",
     userName: "Fatima Al-Mutairi",

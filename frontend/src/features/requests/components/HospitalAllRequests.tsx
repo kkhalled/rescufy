@@ -6,10 +6,8 @@ import RequestsStateMenu from "./RequestsStateMenu";
 import RequestsTypesMenu from "./RequestsPriorityMenu";
 import { filterRequests } from "../utils/requests.filter";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@/app/provider/AuthContext";
 
 export default function HospitalAllRequests() {
-  const { user } = useAuth();
   const { t } = useTranslation(["requests", "common"]);
 
   // TODO: Fetch requests from API filtered by user.HospitalId

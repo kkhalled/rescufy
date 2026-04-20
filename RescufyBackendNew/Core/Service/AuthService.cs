@@ -34,6 +34,7 @@ namespace Service
         public async Task<AuthResult> LoginAsync(LoginRequest request)
         {
             var user = await userManager.Users
+                .Include(u => u.Hospital)
                 .FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (user is not null && !user.EmailConfirmed)
@@ -44,12 +45,42 @@ namespace Service
                 return new AuthResult { Succeeded = false, Message = localizer[SharedResourcesKeys.InvalidCredentials] };
             }
 
-
             var token = await GenerateJwtTokenAsync(user);
+            var roles = await userManager.GetRolesAsync(user);
 
-            // await notificationService.SendAsync();
+            var result = new AuthResult 
+            { 
+                Succeeded = true, 
+                Token = token, 
+                Message = localizer[SharedResourcesKeys.LoginSuccessful],
+                User = new UserInfo
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email ?? "",
+                    PhoneNumber = user.PhoneNumber,
+                    ProfileImageUrl = user.ProfileImageUrl,
+                    Roles = roles.ToList()
+                }
+            };
 
-            return new AuthResult { Succeeded = true, Token = token, Message = localizer[SharedResourcesKeys.LoginSuccessful] };
+            // Include hospital info if user is a HospitalAdmin
+            if (roles.Contains(nameof(Roles.HospitalAdmin)) && user.Hospital != null)
+            {
+                result.Hospital = new HospitalInfo
+                {
+                    Id = user.Hospital.Id,
+                    Name = user.Hospital.Name,
+                    Address = user.Hospital.Address,
+                    ContactPhone = user.Hospital.ContactPhone,
+                    Latitude = user.Hospital.Latitude,
+                    Longitude = user.Hospital.Longitude,
+                    AvailableBeds = user.Hospital.AvailableBeds,
+                    BedCapacity = user.Hospital.BedCapacity
+                };
+            }
+
+            return result;
         }
 
         public async Task<AuthResult> ChangePasswordAsync(ChangePassRequest request)
@@ -325,8 +356,8 @@ namespace Service
                 EmailConfirmed = false,
                 NationalId = dto.NationalId,
                 Gender = dto.Gender,
-                Age = dto.Age
-                EmailConfirmed = false
+                Age = dto.Age,
+                
             };
 
             var result = await userManager.CreateAsync(user, dto.Password);

@@ -1,4 +1,4 @@
-import SelectField from "@/shared/ui/SelectFiled";
+import SelectField from "@/shared/ui/SelectField";
 import { useTranslation } from "react-i18next";
 
 export default function RequestsPriorityMenu({ value, onChange }: { value: string; onChange: (value: string) => void }) {
