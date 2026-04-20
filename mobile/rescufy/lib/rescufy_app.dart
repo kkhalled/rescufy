@@ -49,7 +49,7 @@ class RescufyApp extends StatelessWidget {
                 theme: AppTheme.lightTheme,
                 darkTheme: AppTheme.darkTheme,
                 themeMode: themeState.themeMode,
-                initialRoute: AppRoutes.userHome,
+                initialRoute: AppRoutes.splash,
                 onGenerateRoute: AppRouter().generateRoute,
               );
             },

@@ -1,6 +1,6 @@
 // lib/core/network/api_endpoints.dart
 class ApiEndpoints {
-  static const String baseUrl = 'http://rescufyy.runasp.net';
+  static const String baseUrl = 'http://umedical2.runasp.net';
 
   // Auth
   static const String login = '$baseUrl/api/Auth/login';
@@ -36,4 +36,10 @@ class ApiEndpoints {
 
   static String updateCaseStatus(String requestId) =>
       '$baseUrl/api/paramedic/requests/$requestId/status';
+  static const String paramedicHistory = '/paramedic/history';
+  static const String paramedicProfile = '/paramedic/profile';
+
+  // ── SignalR ─────────────────────────────────────────────────────────────────
+  /// Full URL to the SignalR hub (NOT the REST base URL).
+  static const String signalRHubUrl = 'https://api.rescufy.io/hubs/emergency';
 }

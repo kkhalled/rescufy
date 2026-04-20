@@ -1,130 +1,172 @@
-// lib/presentation/features/auth/cubit/register/register_cubit.dart
-import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/navigation/app_routes.dart';
-import '../../../../domain/usecases/auth/register_usecase.dart';
 import 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
-  final RegisterUseCase registerUseCase;
+  RegisterCubit() : super(const RegisterState());
 
-  final _obscurePasswordController = StreamController<bool>.broadcast();
-  final _obscureConfirmPasswordController = StreamController<bool>.broadcast();
-  final _selectedGenderController = StreamController<String>.broadcast();
-  final _isLoadingController = StreamController<bool>.broadcast();
+  void onNameChanged(String value) {
+    emit(
+      state.copyWith(
+        name: value,
+        nameError: state.showValidation ? _validateName(value) : null,
+        clearNameError: !state.showValidation,
+      ),
+    );
+  }
 
-  Stream<bool> get obscurePasswordStream => _obscurePasswordController.stream;
-  Stream<bool> get obscureConfirmPasswordStream =>
-      _obscureConfirmPasswordController.stream;
-  Stream<String> get selectedGenderStream => _selectedGenderController.stream;
-  Stream<bool> get isLoadingStream => _isLoadingController.stream;
+  void onEmailChanged(String value) {
+    emit(
+      state.copyWith(
+        email: value,
+        emailError: state.showValidation ? _validateEmail(value) : null,
+        clearEmailError: !state.showValidation,
+      ),
+    );
+  }
 
-  BuildContext? _context;
-  GlobalKey<FormState>? _formKey;
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
-  String _selectedGender = '';
+  void onUserNameChanged(String value) {
+    emit(
+      state.copyWith(
+        userName: value,
+        userNameError: state.showValidation ? _validateUserName(value) : null,
+        clearUserNameError: !state.showValidation,
+      ),
+    );
+  }
 
-  RegisterCubit(this.registerUseCase) : super(const RegisterState());
+  void onPasswordChanged(String value) {
+    emit(
+      state.copyWith(
+        password: value,
+        passwordError: state.showValidation ? _validatePassword(value) : null,
+        clearPasswordError: !state.showValidation,
+      ),
+    );
+  }
 
-  void initialize({
-    required BuildContext context,
-    required GlobalKey<FormState> formKey,
-  }) {
-    _context = context;
-    _formKey = formKey;
+  void onNationalIdChanged(String value) {
+    emit(
+      state.copyWith(
+        nationalId: value,
+        nationalIdError: state.showValidation
+            ? _validateNationalId(value)
+            : null,
+        clearNationalIdError: !state.showValidation,
+      ),
+    );
+  }
+
+  void onAgeChanged(String value) {
+    emit(
+      state.copyWith(
+        age: value,
+        ageError: state.showValidation ? _validateAge(value) : null,
+        clearAgeError: !state.showValidation,
+      ),
+    );
   }
 
   void togglePasswordVisibility() {
-    _obscurePassword = !_obscurePassword;
-    _obscurePasswordController.add(_obscurePassword);
-  }
-
-  void toggleConfirmPasswordVisibility() {
-    _obscureConfirmPassword = !_obscureConfirmPassword;
-    _obscureConfirmPasswordController.add(_obscureConfirmPassword);
+    emit(state.copyWith(obscurePassword: !state.obscurePassword));
   }
 
   void setGender(String gender) {
-    _selectedGender = gender;
-    _selectedGenderController.add(_selectedGender);
+    emit(
+      state.copyWith(
+        gender: gender,
+        genderError: state.showValidation ? _validateGender(gender) : null,
+        clearGenderError: !state.showValidation,
+      ),
+    );
   }
 
-  Future<void> register({
-    required String fullName,
-    required String email,
-    required String password,
-    required String confirmPassword,
-    required String nationalId,
-    required String phoneNumber,
-    required String age,
-    required String gender,
-  }) async {
-    if (_context == null || _formKey == null) return;
-    if (!_formKey!.currentState!.validate()) return;
+  bool validate() {
+    final nameError = _validateName(state.name);
+    final emailError = _validateEmail(state.email);
+    final userNameError = _validateUserName(state.userName);
+    final passwordError = _validatePassword(state.password);
+    final nationalIdError = _validateNationalId(state.nationalId);
+    final ageError = _validateAge(state.age);
+    final genderError = _validateGender(state.gender);
 
-    _isLoadingController.add(true);
+    emit(
+      state.copyWith(
+        nameError: nameError,
+        emailError: emailError,
+        userNameError: userNameError,
+        passwordError: passwordError,
+        nationalIdError: nationalIdError,
+        ageError: ageError,
+        genderError: genderError,
+        showValidation: true,
+      ),
+    );
 
-    // Parse age
-    int parsedAge = 0;
-    try {
-      parsedAge = int.parse(age);
-    } catch (e) {
-      _isLoadingController.add(false);
-      _showSnackbar(message: 'Invalid age format', isError: true);
-      return;
+    return nameError == null &&
+        emailError == null &&
+        userNameError == null &&
+        passwordError == null &&
+        nationalIdError == null &&
+        ageError == null &&
+        genderError == null;
+  }
+
+  String? _validateName(String value) {
+    if (value.trim().isEmpty) {
+      return 'Please enter your name';
     }
-
-    final result = await registerUseCase(
-      RegisterParams(
-        fullName: fullName,
-        email: email,
-        password: password,
-        confirmPassword: confirmPassword,
-        nationalId: nationalId,
-        phoneNumber: phoneNumber,
-        age: parsedAge,
-        gender: _selectedGender,
-      ),
-    );
-
-    result.fold(
-      (failure) {
-        _isLoadingController.add(false);
-        _showSnackbar(message: failure.message, isError: true);
-      },
-      (user) {
-        _isLoadingController.add(false);
-        _showSnackbar(message: 'Account created successfully!', isError: false);
-        Navigator.of(_context!).pushReplacementNamed(AppRoutes.userHome);
-      },
-    );
+    return null;
   }
 
-  void navigateBack() {
-    if (_context == null) return;
-    Navigator.of(_context!).pop();
+  String? _validateEmail(String value) {
+    if (value.trim().isEmpty) {
+      return 'Please enter your email';
+    }
+    if (!RegExp(r'^[\w\-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
+      return 'Please enter a valid email';
+    }
+    return null;
   }
 
-  void _showSnackbar({required String message, bool isError = false}) {
-    if (_context == null) return;
-    final colorScheme = Theme.of(_context!).colorScheme;
-
-    ScaffoldMessenger.of(_context!).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? colorScheme.error : colorScheme.primary,
-      ),
-    );
+  String? _validateUserName(String value) {
+    if (value.trim().isEmpty) {
+      return 'Please enter your user name';
+    }
+    return null;
   }
 
-  @override
-  Future<void> close() {
-    _obscurePasswordController.close();
-    _obscureConfirmPasswordController.close();
-    _selectedGenderController.close();
-    _isLoadingController.close();
-    return super.close();
+  String? _validatePassword(String value) {
+    if (value.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
+
+  String? _validateNationalId(String value) {
+    if (value.trim().isEmpty) {
+      return 'Please enter your national ID';
+    }
+    return null;
+  }
+
+  String? _validateAge(String value) {
+    if (value.trim().isEmpty) {
+      return 'Please enter your age';
+    }
+    final parsedAge = int.tryParse(value.trim());
+    if (parsedAge == null || parsedAge < 1 || parsedAge > 120) {
+      return 'Please enter a valid age';
+    }
+    return null;
+  }
+
+  String? _validateGender(String value) {
+    if (value.isEmpty) {
+      return 'Please select your gender';
+    }
+    return null;
   }
 }

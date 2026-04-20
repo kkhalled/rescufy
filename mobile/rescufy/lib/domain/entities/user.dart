@@ -23,7 +23,6 @@ class User extends Equatable {
   // Role helpers
   bool get isParamedic => role.isParamedic;
   bool get isUser => role.isUser;
-  bool get isAdmin => role.isAdmin;
   bool get canLoginFromMobile => role.canLoginFromMobile;
 
   @override

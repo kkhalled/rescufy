@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rescufy/core/di/injection_container.dart' as di;
 import 'package:rescufy/core/navigation/app_routes.dart';
-import 'package:rescufy/core/services/location_service.dart';
+import 'package:rescufy/domain/entities/incoming_request.dart';
 
 // Auth Screens
 import 'package:rescufy/presentation/onboarding/onboarding_screen.dart';
@@ -12,13 +12,17 @@ import 'package:rescufy/presentation/auth/views/register_screen.dart';
 import 'package:rescufy/presentation/auth/views/forgot_password_screen.dart';
 import 'package:rescufy/presentation/auth/views/verify_reset_otp_screen.dart';
 import 'package:rescufy/presentation/auth/views/reset_password_screen.dart';
+import 'package:rescufy/presentation/splash/splash_screen.dart';
+import 'package:rescufy/presentation/paramedic/active_case/cubit/active_case_cubit.dart';
+import 'package:rescufy/presentation/paramedic/dashboard/cubit/dashboard_cubit.dart';
 import 'package:rescufy/presentation/paramedic/dashboard/views/dashboard_screen.dart';
+import 'package:rescufy/presentation/paramedic/incoming_request/cubit/incoming_request_cubit.dart';
+import 'package:rescufy/presentation/paramedic/incoming_request/views/incoming_request_screen.dart';
 
 // User Screens
 import 'package:rescufy/presentation/user/home/views/home_screen.dart';
 import 'package:rescufy/presentation/user/request/cubit/emergency_request_cubit.dart';
 import 'package:rescufy/presentation/user/request/views/emergency_form_builder.dart';
-import 'package:rescufy/presentation/user/request/views/emergency_form_screen.dart';
 import 'package:rescufy/presentation/user/history/views/request_history_screen.dart';
 import 'package:rescufy/presentation/user/profile/views/profile_screen.dart';
 import 'package:rescufy/presentation/settings/language/language_screen.dart';
@@ -42,7 +46,7 @@ class AppRouter {
       // Splash / Onboarding
       // =============================
       case AppRoutes.splash:
-        return MaterialPageRoute(builder: (_) => const OnBoardingScreen());
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
 
       case AppRoutes.onboarding:
         return MaterialPageRoute(builder: (_) => const OnBoardingScreen());
@@ -130,11 +134,33 @@ class AppRouter {
           builder: (_) => const ParamedicNavigationScreen(),
         );
 
-      case AppRoutes.paramedicActiveCase:
-        return MaterialPageRoute(builder: (_) => const ActiveCaseScreen());
-
       case AppRoutes.paramedicDashboard:
-        return MaterialPageRoute(builder: (_) => const DashboardScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => di.sl<DashboardCubit>(),
+            child: const DashboardScreen(),
+          ),
+        );
+
+      case AppRoutes.paramedicIncomingRequest:
+        final request = settings.arguments as IncomingRequest;
+        return MaterialPageRoute(
+          fullscreenDialog: true,
+          builder: (_) => BlocProvider(
+            create: (_) =>
+                di.sl<IncomingRequestCubit>(param1: request)..initialize(),
+            child: const IncomingRequestScreen(),
+          ),
+        );
+
+      case AppRoutes.paramedicActiveCase:
+        final request = settings.arguments as IncomingRequest;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => di.sl<ActiveCaseCubit>(param1: request),
+            child: const ActiveCaseScreen(),
+          ),
+        );
 
       // =============================
       // Fallback

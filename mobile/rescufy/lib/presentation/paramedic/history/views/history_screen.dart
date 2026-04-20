@@ -1,152 +1,252 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rescufy/core/theme/colors.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
 
+  static const _cases = [
+    (
+      severity: 'CRITICAL',
+      title: 'Cardiac Arrest',
+      caseId: 'EMR-2410',
+      date: 'Feb 16, 2026 - 14:35',
+      responseTime: '18m 32s',
+    ),
+    (
+      severity: 'HIGH',
+      title: 'Severe Bleeding',
+      caseId: 'EMR-2409',
+      date: 'Feb 16, 2026 - 09:12',
+      responseTime: '12m 45s',
+    ),
+    (
+      severity: 'MEDIUM',
+      title: 'Fractured Limb',
+      caseId: 'EMR-2408',
+      date: 'Feb 15, 2026 - 18:47',
+      responseTime: '15m 20s',
+    ),
+    (
+      severity: 'CRITICAL',
+      title: 'Stroke Symptoms',
+      caseId: 'EMR-2407',
+      date: 'Feb 15, 2026 - 11:23',
+      responseTime: '9m 18s',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0E1A),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1A1F2E),
-        elevation: 0,
-        title: Text(
-          'Case History',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
+      appBar: AppBar(title: const Text('Case History')),
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              theme.colorScheme.primary.withValues(alpha: 0.06),
+              theme.scaffoldBackgroundColor,
+            ],
           ),
         ),
+        child: ListView.separated(
+          padding: EdgeInsets.all(20.w),
+          itemCount: _cases.length + 1,
+          separatorBuilder: (_, _) => SizedBox(height: 14.h),
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return _HistoryHeader(theme: theme);
+            }
+
+            final item = _cases[index - 1];
+            return _HistoryCard(
+              severity: item.severity,
+              title: item.title,
+              caseId: item.caseId,
+              date: item.date,
+              responseTime: item.responseTime,
+            );
+          },
+        ),
       ),
-      body: ListView(
-        padding: EdgeInsets.all(20.w),
+    );
+  }
+}
+
+class _HistoryHeader extends StatelessWidget {
+  const _HistoryHeader({required this.theme});
+
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 4.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHistoryCard(
-            severity: 'CRITICAL',
-            severityColor: const Color(0xFFDC2626),
-            title: 'Cardiac Arrest',
-            caseId: 'EMR-2410',
-            date: 'Feb 16, 2026 - 14:35',
-            responseTime: '18m 32s',
+          Text(
+            'Recent Cases',
+            style: theme.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
           ),
-          SizedBox(height: 16.h),
-          _buildHistoryCard(
-            severity: 'HIGH',
-            severityColor: const Color(0xFFEA580C),
-            title: 'Severe Bleeding',
-            caseId: 'EMR-2409',
-            date: 'Feb 16, 2026 - 09:12',
-            responseTime: '12m 45s',
-          ),
-          SizedBox(height: 16.h),
-          _buildHistoryCard(
-            severity: 'MEDIUM',
-            severityColor: const Color(0xFFFACC15),
-            title: 'Fractured Limb',
-            caseId: 'EMR-2408',
-            date: 'Feb 15, 2026 - 18:47',
-            responseTime: '15m 20s',
-          ),
-          SizedBox(height: 16.h),
-          _buildHistoryCard(
-            severity: 'CRITICAL',
-            severityColor: const Color(0xFFDC2626),
-            title: 'Stroke Symptoms',
-            caseId: 'EMR-2407',
-            date: 'Feb 15, 2026 - 11:23',
-            responseTime: '9m 18s',
+          SizedBox(height: 6.h),
+          Text(
+            'Review recent emergency responses, severity level, and response time using the same app theme.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.textTheme.bodySmall?.color,
+            ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildHistoryCard({
-    required String severity,
-    required Color severityColor,
-    required String title,
-    required String caseId,
-    required String date,
-    required String responseTime,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFF2A3142), width: 1),
-      ),
+class _HistoryCard extends StatelessWidget {
+  const _HistoryCard({
+    required this.severity,
+    required this.title,
+    required this.caseId,
+    required this.date,
+    required this.responseTime,
+  });
+
+  final String severity;
+  final String title;
+  final String caseId;
+  final String date;
+  final String responseTime;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final severityColor = switch (severity) {
+      'CRITICAL' => theme.colorScheme.error,
+      'HIGH' => AppColors.warning,
+      _ => AppColors.info,
+    };
+
+    return Card(
+      elevation: 2,
+      clipBehavior: Clip.antiAlias,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Severity Header
           Container(
-            padding: EdgeInsets.symmetric(vertical: 8.h),
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
             decoration: BoxDecoration(
-              color: severityColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.r),
-                topRight: Radius.circular(16.r),
-              ),
+              color: severityColor.withValues(alpha: 0.1),
+              border: Border(left: BorderSide(color: severityColor, width: 4)),
             ),
-            alignment: Alignment.center,
-            child: Text(
-              severity,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1,
-              ),
+            child: Row(
+              children: [
+                Text(
+                  severity,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: severityColor,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.8,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  caseId,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: theme.textTheme.bodySmall?.color,
+                  ),
+                ),
+              ],
             ),
           ),
-
-          // Case Details
-          Container(
+          Padding(
             padding: EdgeInsets.all(16.w),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1A1F2E),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(16.r),
-                bottomRight: Radius.circular(16.r),
-              ),
-            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
                   ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  caseId,
-                  style: TextStyle(color: Colors.white54, fontSize: 12.sp),
                 ),
                 SizedBox(height: 12.h),
                 Row(
                   children: [
-                    Icon(
-                      Icons.calendar_today,
-                      size: 14.sp,
-                      color: Colors.white54,
+                    Expanded(
+                      child: _MetaItem(
+                        icon: Icons.calendar_today_outlined,
+                        label: 'Date',
+                        value: date,
+                      ),
                     ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      date,
-                      style: TextStyle(color: Colors.white70, fontSize: 12.sp),
-                    ),
-                    SizedBox(width: 16.w),
-                    Icon(Icons.timer, size: 14.sp, color: Colors.white54),
-                    SizedBox(width: 8.w),
-                    Text(
-                      responseTime,
-                      style: TextStyle(color: Colors.white70, fontSize: 12.sp),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: _MetaItem(
+                        icon: Icons.timer_outlined,
+                        label: 'Response',
+                        value: responseTime,
+                      ),
                     ),
                   ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetaItem extends StatelessWidget {
+  const _MetaItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 18.sp, color: theme.colorScheme.primary),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: theme.textTheme.bodySmall?.color,
+                  ),
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  value,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),

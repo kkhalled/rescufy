@@ -1,19 +1,21 @@
 // lib/core/network/dio_client.dart
 import 'package:dio/dio.dart';
+import 'package:rescufy/core/network/auth_interceptor.dart';
 
 class DioClient {
   final Dio _dio;
 
-  DioClient(this._dio) {
+  DioClient(this._dio, AuthInterceptor authInterceptor) {
     _dio
       ..options.baseUrl =
-          'https://your-api-url.com/api/' // TODO: Add your base URL
+          'http://umedical2.runasp.net' // TODO: Add your base URL
       ..options.connectTimeout = const Duration(seconds: 30)
       ..options.receiveTimeout = const Duration(seconds: 30)
       ..options.headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       }
+      ..interceptors.add(authInterceptor)
       ..interceptors.add(
         LogInterceptor(
           request: true,

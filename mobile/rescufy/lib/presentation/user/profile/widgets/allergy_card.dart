@@ -92,7 +92,7 @@ class _CardActions extends StatelessWidget {
             onTap: onEdit,
             borderRadius: BorderRadius.circular(8),
             child: Padding(
-              padding: EdgeInsets.all(4.w),
+              padding: EdgeInsets.all(8.w),
               child: Icon(
                 Icons.edit_outlined,
                 size: 18.sp,

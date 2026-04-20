@@ -1,63 +1,69 @@
-// lib/presentation/features/auth/cubit/login/login_cubit.dart
-import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../domain/core/failures.dart';
-import '../../../../../domain/usecases/auth/login_usecase.dart';
 import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  final LoginUseCase loginUseCase;
+  LoginCubit() : super(const LoginState());
 
-  // Stream controllers for UI reactivity (keeping your pattern)
-  final _obscurePasswordController = StreamController<bool>.broadcast();
-  final _rememberMeController = StreamController<bool>.broadcast();
+  void onEmailChanged(String value) {
+    emit(
+      state.copyWith(
+        email: value,
+        emailError: state.showValidation ? _validateEmail(value) : null,
+        clearEmailError: !state.showValidation,
+      ),
+    );
+  }
 
-  // Expose streams
-  Stream<bool> get obscurePasswordStream => _obscurePasswordController.stream;
-  Stream<bool> get rememberMeStream => _rememberMeController.stream;
-
-  // Internal state
-  bool _obscurePassword = true;
-  bool _rememberMe = false;
-
-  LoginCubit(this.loginUseCase) : super(const LoginInitial());
+  void onPasswordChanged(String value) {
+    emit(
+      state.copyWith(
+        password: value,
+        passwordError: state.showValidation ? _validatePassword(value) : null,
+        clearPasswordError: !state.showValidation,
+      ),
+    );
+  }
 
   void togglePasswordVisibility() {
-    _obscurePassword = !_obscurePassword;
-    _obscurePasswordController.add(_obscurePassword);
+    emit(state.copyWith(obscurePassword: !state.obscurePassword));
   }
 
   void toggleRememberMe(bool? value) {
-    _rememberMe = value ?? false;
-    _rememberMeController.add(_rememberMe);
+    emit(state.copyWith(rememberMe: value ?? false));
   }
 
-  Future<void> login(String email, String password) async {
-    emit(const LoginLoading());
+  bool validate() {
+    final emailError = _validateEmail(state.email);
+    final passwordError = _validatePassword(state.password);
 
-    final result = await loginUseCase(
-      LoginParams(email: email, password: password),
+    emit(
+      state.copyWith(
+        emailError: emailError,
+        passwordError: passwordError,
+        showValidation: true,
+      ),
     );
 
-    result.fold(
-      (failure) {
-        // Emit different states based on failure type
-        if (failure is AdminLoginFailure) {
-          emit(LoginAdminBlocked(message: failure.message));
-        } else {
-          emit(LoginError(message: failure.message));
-        }
-      },
-      (user) {
-        emit(LoginSuccess(user: user));
-      },
-    );
+    return emailError == null && passwordError == null;
   }
 
-  @override
-  Future<void> close() {
-    _obscurePasswordController.close();
-    _rememberMeController.close();
-    return super.close();
+  String? _validateEmail(String value) {
+    if (value.trim().isEmpty) {
+      return 'Please enter your email';
+    }
+    if (!RegExp(r'^[\w\-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String value) {
+    if (value.isEmpty) {
+      return 'Please enter your password';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
   }
 }

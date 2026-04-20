@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rescufy/core/cubit/theme/theme_cubit.dart';
 import 'package:rescufy/core/cubit/theme/theme_state.dart';
+import 'package:rescufy/presentation/auth/cubit/auth/auth_cubit.dart';
+import 'package:rescufy/presentation/auth/cubit/auth/auth_state.dart';
 import 'package:rescufy/l10n/app_localizations.dart';
 import '../cubit/profile_cubit.dart';
 import '../cubit/profile_state.dart';
@@ -207,6 +209,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              context.read<AuthCubit>().logout();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+  }
+
   // ──────────────────────────────────────────────────────────
   // BUILD
   // ──────────────────────────────────────────────────────────
@@ -255,225 +281,246 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      body: BlocConsumer<ProfileCubit, ProfileState>(
-        listenWhen: (prev, curr) =>
-            curr.updateSuccess != null || curr.updateError != null,
+      body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state.updateSuccess != null) {
+          if (state is AuthUnauthenticated) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              state.route,
+              (route) => false,
+            );
+          } else if (state is AuthFailure) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Row(
-                    children: [
-                      const Icon(
-                        Icons.check_circle,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(state.updateSuccess!),
-                    ],
-                  ),
-                  backgroundColor: Colors.green.shade700,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  margin: EdgeInsets.all(16.w),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
-          } else if (state.updateError != null) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Text(state.updateError!),
+                  content: Text(state.message),
                   backgroundColor: Colors.red,
                   behavior: SnackBarBehavior.floating,
                 ),
               );
           }
         },
-        builder: (context, state) {
-          final cubit = context.read<ProfileCubit>();
+        child: BlocConsumer<ProfileCubit, ProfileState>(
+          listenWhen: (prev, curr) =>
+              curr.updateSuccess != null || curr.updateError != null,
+          listener: (context, state) {
+            if (state.updateSuccess != null) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        const Icon(
+                          Icons.check_circle,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(state.updateSuccess!),
+                      ],
+                    ),
+                    backgroundColor: Colors.green.shade700,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    margin: EdgeInsets.all(16.w),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+            } else if (state.updateError != null) {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(state.updateError!),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+            }
+          },
+          builder: (context, state) {
+            final cubit = context.read<ProfileCubit>();
 
-          return SingleChildScrollView(
-            padding: EdgeInsets.all(20.w),
-            child: Column(
-              children: [
-                // ── Profile Header ──
-                ProfileHeader(
-                  fullName: state.fullName,
-                  email: state.email,
-                  phone: state.phone,
-                  profileImageUrl: state.profileImageUrl,
-                  onEditPressed: cubit.navigateToEditProfile,
-                ),
-                SizedBox(height: 24.h),
+            return SingleChildScrollView(
+              padding: EdgeInsets.all(20.w),
+              child: Column(
+                children: [
+                  // ── Profile Header ──
+                  ProfileHeader(
+                    fullName: state.fullName,
+                    email: state.email,
+                    phone: state.phone,
+                    profileImageUrl: state.profileImageUrl,
+                    onEditPressed: cubit.navigateToEditProfile,
+                  ),
+                  SizedBox(height: 24.h),
 
-                // ── Quick Stats ──
-                QuickStatsRow(
-                  bloodType: state.bloodType,
-                  heightCm: state.heightCm,
-                  weightKg: state.weightKg,
-                ),
-                SizedBox(height: 24.h),
+                  // ── Quick Stats ──
+                  QuickStatsRow(
+                    bloodType: state.bloodType,
+                    heightCm: state.heightCm,
+                    weightKg: state.weightKg,
+                  ),
+                  SizedBox(height: 24.h),
 
-                // ── Medical Information ──
-                MedicalInfoCard(
-                  pregnancyStatus: state.pregnancyStatus,
-                  medicalNotes: state.medicalNotes,
-                  onEditPressed: () => _openMedicalInfoEdit(context, state),
-                ),
-                SizedBox(height: 24.h),
+                  // ── Medical Information ──
+                  MedicalInfoCard(
+                    pregnancyStatus: state.pregnancyStatus,
+                    medicalNotes: state.medicalNotes,
+                    onEditPressed: () => _openMedicalInfoEdit(context, state),
+                  ),
+                  SizedBox(height: 24.h),
 
-                // ── Medications ──
-                ExpandableSection(
-                  title: 'Medications',
-                  icon: Icons.medication,
-                  count: state.medications.length,
-                  onAdd: () => _openAddMedication(context),
-                  children: state.medications.asMap().entries.map((e) {
-                    final i = e.key;
-                    final med = e.value;
-                    return MedicationCard(
-                      medication: med,
-                      onEdit: () => _openEditMedication(context, i, med),
-                      onDelete: () => _confirmDelete(
-                        context,
-                        'medication',
-                        () => cubit.deleteMedication(i),
+                  // ── Medications ──
+                  ExpandableSection(
+                    title: 'Medications',
+                    icon: Icons.medication,
+                    count: state.medications.length,
+                    onAdd: () => _openAddMedication(context),
+                    children: state.medications.asMap().entries.map((e) {
+                      final i = e.key;
+                      final med = e.value;
+                      return MedicationCard(
+                        medication: med,
+                        onEdit: () => _openEditMedication(context, i, med),
+                        onDelete: () => _confirmDelete(
+                          context,
+                          'medication',
+                          () => cubit.deleteMedication(i),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 24.h),
+
+                  // ── Allergies ──
+                  ExpandableSection(
+                    title: 'Allergies',
+                    icon: Icons.warning_amber_rounded,
+                    count: state.allergies.length,
+                    color: Colors.orange,
+                    onAdd: () => _openAddAllergy(context),
+                    children: state.allergies.asMap().entries.map((e) {
+                      final i = e.key;
+                      final allergy = e.value;
+                      return AllergyCard(
+                        allergy: allergy,
+                        onEdit: () => _openEditAllergy(context, i, allergy),
+                        onDelete: () => _confirmDelete(
+                          context,
+                          'allergy',
+                          () => cubit.deleteAllergy(i),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 24.h),
+
+                  // ── Chronic Diseases ──
+                  ExpandableSection(
+                    title: 'Chronic Diseases',
+                    icon: Icons.local_hospital,
+                    count: state.chronicDiseases.length,
+                    color: Colors.purple,
+                    onAdd: () => _openAddDisease(context),
+                    children: state.chronicDiseases.asMap().entries.map((e) {
+                      final i = e.key;
+                      final disease = e.value;
+                      return DiseaseCard(
+                        disease: disease,
+                        onEdit: () => _openEditDisease(context, i, disease),
+                        onDelete: () => _confirmDelete(
+                          context,
+                          'disease',
+                          () => cubit.deleteDisease(i),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 24.h),
+
+                  // ── Past Surgeries ──
+                  ExpandableSection(
+                    title: 'Past Surgeries',
+                    icon: Icons.healing,
+                    count: state.pastSurgeries.length,
+                    color: Colors.teal,
+                    onAdd: () => _openAddSurgery(context),
+                    children: state.pastSurgeries.asMap().entries.map((e) {
+                      final i = e.key;
+                      final surgery = e.value;
+                      return SurgeryCard(
+                        surgery: surgery,
+                        onEdit: () => _openEditSurgery(context, i, surgery),
+                        onDelete: () => _confirmDelete(
+                          context,
+                          'surgery',
+                          () => cubit.deleteSurgery(i),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 24.h),
+
+                  // ── Emergency Contacts ──
+                  ExpandableSection(
+                    title: 'Emergency Contacts',
+                    icon: Icons.contact_phone,
+                    count: state.emergencyContacts.length,
+                    color: Colors.red,
+                    onAdd: () => _openAddContact(context),
+                    children: state.emergencyContacts.asMap().entries.map((e) {
+                      final i = e.key;
+                      final contact = e.value;
+                      return ContactCard(
+                        contact: contact,
+                        onCallPressed: () =>
+                            cubit.callEmergencyContact(contact['phone']!),
+                        onEdit: () => _openEditContact(context, i, contact),
+                        onDelete: () => _confirmDelete(
+                          context,
+                          'contact',
+                          () => cubit.deleteContact(i),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 24.h),
+
+                  // ── Settings ──
+                  SettingsSection(
+                    onNotificationsTap: cubit.navigateToNotifications,
+                    onLanguageTap: cubit.navigateToLanguage,
+                    onPrivacyTap: cubit.navigateToPrivacy,
+                    onHelpTap: cubit.navigateToHelp,
+                    currentLanguage: state.currentLanguage,
+                  ),
+                  SizedBox(height: 32.h),
+
+                  // ── Logout ──
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56.h,
+                    child: OutlinedButton.icon(
+                      onPressed: () => _showLogoutDialog(context),
+                      icon: const Icon(Icons.logout),
+                      label: const Text('Logout'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                        side: const BorderSide(color: Colors.red),
                       ),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 24.h),
-
-                // ── Allergies ──
-                ExpandableSection(
-                  title: 'Allergies',
-                  icon: Icons.warning_amber_rounded,
-                  count: state.allergies.length,
-                  color: Colors.orange,
-                  onAdd: () => _openAddAllergy(context),
-                  children: state.allergies.asMap().entries.map((e) {
-                    final i = e.key;
-                    final allergy = e.value;
-                    return AllergyCard(
-                      allergy: allergy,
-                      onEdit: () => _openEditAllergy(context, i, allergy),
-                      onDelete: () => _confirmDelete(
-                        context,
-                        'allergy',
-                        () => cubit.deleteAllergy(i),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 24.h),
-
-                // ── Chronic Diseases ──
-                ExpandableSection(
-                  title: 'Chronic Diseases',
-                  icon: Icons.local_hospital,
-                  count: state.chronicDiseases.length,
-                  color: Colors.purple,
-                  onAdd: () => _openAddDisease(context),
-                  children: state.chronicDiseases.asMap().entries.map((e) {
-                    final i = e.key;
-                    final disease = e.value;
-                    return DiseaseCard(
-                      disease: disease,
-                      onEdit: () => _openEditDisease(context, i, disease),
-                      onDelete: () => _confirmDelete(
-                        context,
-                        'disease',
-                        () => cubit.deleteDisease(i),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 24.h),
-
-                // ── Past Surgeries ──
-                ExpandableSection(
-                  title: 'Past Surgeries',
-                  icon: Icons.healing,
-                  count: state.pastSurgeries.length,
-                  color: Colors.teal,
-                  onAdd: () => _openAddSurgery(context),
-                  children: state.pastSurgeries.asMap().entries.map((e) {
-                    final i = e.key;
-                    final surgery = e.value;
-                    return SurgeryCard(
-                      surgery: surgery,
-                      onEdit: () => _openEditSurgery(context, i, surgery),
-                      onDelete: () => _confirmDelete(
-                        context,
-                        'surgery',
-                        () => cubit.deleteSurgery(i),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 24.h),
-
-                // ── Emergency Contacts ──
-                ExpandableSection(
-                  title: 'Emergency Contacts',
-                  icon: Icons.contact_phone,
-                  count: state.emergencyContacts.length,
-                  color: Colors.red,
-                  onAdd: () => _openAddContact(context),
-                  children: state.emergencyContacts.asMap().entries.map((e) {
-                    final i = e.key;
-                    final contact = e.value;
-                    return ContactCard(
-                      contact: contact,
-                      onCallPressed: () =>
-                          cubit.callEmergencyContact(contact['phone']!),
-                      onEdit: () => _openEditContact(context, i, contact),
-                      onDelete: () => _confirmDelete(
-                        context,
-                        'contact',
-                        () => cubit.deleteContact(i),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 24.h),
-
-                // ── Settings ──
-                SettingsSection(
-                  onNotificationsTap: cubit.navigateToNotifications,
-                  onLanguageTap: cubit.navigateToLanguage,
-                  onPrivacyTap: cubit.navigateToPrivacy,
-                  onHelpTap: cubit.navigateToHelp,
-                  currentLanguage: state.currentLanguage,
-                ),
-                SizedBox(height: 32.h),
-
-                // ── Logout ──
-                SizedBox(
-                  width: double.infinity,
-                  height: 56.h,
-                  child: OutlinedButton.icon(
-                    onPressed: cubit.showLogoutDialog,
-                    icon: const Icon(Icons.logout),
-                    label: const Text('Logout'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: const BorderSide(color: Colors.red),
                     ),
                   ),
-                ),
-                SizedBox(height: 20.h),
-              ],
-            ),
-          );
-        },
+                  SizedBox(height: 20.h),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

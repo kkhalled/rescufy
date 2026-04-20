@@ -1,19 +1,49 @@
+import 'package:equatable/equatable.dart';
 import 'package:rescufy/domain/entities/incoming_request.dart';
 
-class DashboardState {
+enum DashboardSignalRStatus {
+  disconnected,
+  connecting,
+  connected,
+  reconnecting,
+}
+
+class DashboardState extends Equatable {
+  const DashboardState({
+    required this.isOnline,
+    required this.signalRStatus,
+    this.incomingRequest,
+    this.error,
+  });
+
   final bool isOnline;
+  final DashboardSignalRStatus signalRStatus;
   final IncomingRequest? incomingRequest;
+  final String? error;
 
-  const DashboardState({required this.isOnline, required this.incomingRequest});
+  factory DashboardState.initial() => const DashboardState(
+    isOnline: false,
+    signalRStatus: DashboardSignalRStatus.disconnected,
+  );
 
-  DashboardState copyWith({bool? isOnline, IncomingRequest? incomingRequest}) {
+  DashboardState copyWith({
+    bool? isOnline,
+    DashboardSignalRStatus? signalRStatus,
+    IncomingRequest? incomingRequest,
+    bool clearRequest = false,
+    String? error,
+    bool clearError = false,
+  }) {
     return DashboardState(
       isOnline: isOnline ?? this.isOnline,
-      incomingRequest: incomingRequest,
+      signalRStatus: signalRStatus ?? this.signalRStatus,
+      incomingRequest: clearRequest
+          ? null
+          : incomingRequest ?? this.incomingRequest,
+      error: clearError ? null : error ?? this.error,
     );
   }
 
-  factory DashboardState.initial() {
-    return const DashboardState(isOnline: false, incomingRequest: null);
-  }
+  @override
+  List<Object?> get props => [isOnline, signalRStatus, incomingRequest, error];
 }

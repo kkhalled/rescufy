@@ -27,7 +27,10 @@ class ExpandableSection extends StatelessWidget {
 
     return Card(
       child: ExpansionTile(
-        leading: Icon(icon, color: accentColor),
+        leading: Padding(
+          padding: EdgeInsets.only(top: 6.h),
+          child: Icon(icon, color: accentColor),
+        ),
         title: Text(
           title,
           style: theme.textTheme.titleMedium?.copyWith(

@@ -2,22 +2,22 @@
 import 'package:dio/dio.dart';
 import '../../../core/network/api_endpoints.dart';
 import '../../../core/network/dio_client.dart';
+import '../../models/register_request_model.dart';
 import '../../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<UserModel> login({required String email, required String password});
 
   Future<UserModel> register({
-    required String fullName,
+    required String name,
     required String email,
+    required String userName,
     required String password,
     required String nationalId,
-    required String phoneNumber,
     required int age,
     required String gender,
+    String? profileImagePath,
   });
-
-  Future<void> logout();
 
   // ✅ NEW: Password Reset
   Future<String> forgotPassword({required String email});
@@ -52,7 +52,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       final token = response.data['token'];
       if (token != null) {
-        return UserModel.fromToken(token);
+        return UserModel.fromAuthResponse(
+          Map<String, dynamic>.from(response.data),
+        );
       } else {
         throw Exception('No token received from server');
       }
@@ -63,42 +65,39 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> register({
-    required String fullName,
+    required String name,
     required String email,
+    required String userName,
     required String password,
     required String nationalId,
-    required String phoneNumber,
     required int age,
     required String gender,
+    String? profileImagePath,
   }) async {
     try {
-      final response = await dioClient.post(
-        ApiEndpoints.register,
-        data: {
-          'full_name': fullName,
-          'email': email,
-          'password': password,
-          'national_id': nationalId,
-          'phone_number': phoneNumber,
-          'age': age,
-          'gender': gender,
-        },
+      final request = RegisterRequestModel(
+        name: name,
+        email: email,
+        userName: userName,
+        password: password,
+        nationalId: nationalId,
+        age: age,
+        gender: gender,
+        profileImagePath: profileImagePath,
       );
 
-      if (response.data['token'] != null) {
-        return UserModel.fromToken(response.data['token']);
-      } else {
-        throw Exception('Invalid response format');
-      }
-    } on DioException {
-      rethrow;
-    }
-  }
+      final response = await dioClient.post(
+        ApiEndpoints.register,
+        data: request.toJson(),
+      );
 
-  @override
-  Future<void> logout() async {
-    try {
-      await dioClient.post(ApiEndpoints.logout);
+      if (response.data is Map<String, dynamic>) {
+        return UserModel.fromAuthResponse(
+          Map<String, dynamic>.from(response.data),
+        );
+      }
+
+      throw Exception('Invalid response format');
     } on DioException {
       rethrow;
     }

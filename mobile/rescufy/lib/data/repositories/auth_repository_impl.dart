@@ -7,7 +7,7 @@ import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/remote/auth_remote_datasource.dart';
 import '../datasources/local/auth_local_datasource.dart';
-import '../models/user_model.dart'; // Import to access AdminLoginNotAllowedException
+import '../models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -35,9 +35,6 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       return Right(userModel);
-    } on AdminLoginNotAllowedException catch (e) {
-      // Handle admin blocking specifically
-      return Left(AdminLoginFailure(e.message));
     } on DioException catch (e) {
       return Left(NetworkExceptions.handleDioException(e));
     } catch (e) {
@@ -47,23 +44,25 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, User>> register({
-    required String fullName,
+    required String name,
     required String email,
+    required String userName,
     required String password,
     required String nationalId,
-    required String phoneNumber,
     required int age,
     required String gender,
+    String? profileImagePath,
   }) async {
     try {
       final userModel = await remoteDataSource.register(
-        fullName: fullName,
+        name: name,
         email: email,
+        userName: userName,
         password: password,
         nationalId: nationalId,
-        phoneNumber: phoneNumber,
         age: age,
         gender: gender,
+        profileImagePath: profileImagePath,
       );
 
       // Save token and user data
@@ -73,9 +72,6 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       return Right(userModel);
-    } on AdminLoginNotAllowedException catch (e) {
-      // Also block admin registration from mobile
-      return Left(AdminLoginFailure(e.message));
     } on DioException catch (e) {
       return Left(NetworkExceptions.handleDioException(e));
     } catch (e) {
@@ -86,14 +82,30 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, void>> logout() async {
     try {
-      await remoteDataSource.logout();
       await localDataSource.deleteToken();
-      await localDataSource.deleteUser(); // Also clear user data
+      await localDataSource.deleteUser();
       return const Right(null);
-    } on DioException catch (e) {
-      return Left(NetworkExceptions.handleDioException(e));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> restoreSession() async {
+    try {
+      final token = await localDataSource.getToken();
+      if (token == null || token.isEmpty) {
+        return const Left(CacheFailure('No active session found'));
+      }
+
+      final userModel = UserModel.fromToken(token);
+      await localDataSource.saveUser(userModel);
+
+      return Right(userModel);
+    } catch (_) {
+      await localDataSource.deleteToken();
+      await localDataSource.deleteUser();
+      return const Left(CacheFailure('Session restoration failed'));
     }
   }
 

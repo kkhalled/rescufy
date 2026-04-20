@@ -109,24 +109,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           onPressed: cubit.togglePasswordVisibility,
                         ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a password';
-                        }
-                        if (value.length < 8) {
-                          return 'Password must be at least 8 characters';
-                        }
-                        if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                          return 'Password must contain an uppercase letter';
-                        }
-                        if (!RegExp(r'[a-z]').hasMatch(value)) {
-                          return 'Password must contain a lowercase letter';
-                        }
-                        if (!RegExp(r'[0-9]').hasMatch(value)) {
-                          return 'Password must contain a number';
-                        }
-                        return null;
-                      },
+                      validator: cubit.validateNewPassword,
                     );
                   },
                 ),
@@ -159,15 +142,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           onPressed: cubit.toggleConfirmPasswordVisibility,
                         ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please confirm your password';
-                        }
-                        if (value != _newPasswordController.text) {
-                          return 'Passwords do not match';
-                        }
-                        return null;
-                      },
+                      validator: (value) => cubit.validateConfirmPassword(
+                        newPassword: _newPasswordController.text,
+                        confirmPassword: value,
+                      ),
                     );
                   },
                 ),
@@ -225,9 +203,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             : () {
                                 cubit.resetPassword(
                                   newPassword: _newPasswordController.text
-                                      .trim(),
-                                  confirmPassword: _confirmPasswordController
-                                      .text
                                       .trim(),
                                 );
                               },

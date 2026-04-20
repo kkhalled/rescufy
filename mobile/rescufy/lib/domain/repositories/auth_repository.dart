@@ -10,14 +10,17 @@ abstract class AuthRepository {
   });
 
   Future<Either<Failure, User>> register({
-    required String fullName,
+    required String name,
     required String email,
+    required String userName,
     required String password,
     required String nationalId,
-    required String phoneNumber,
     required int age,
     required String gender,
+    String? profileImagePath,
   });
+
+  Future<Either<Failure, User>> restoreSession();
 
   Future<Either<Failure, void>> logout();
 

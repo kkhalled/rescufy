@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import '../dashboard/views/dashboard_screen.dart';
-import '../history/views/history_screen.dart';
-import '../profile/views/paramedic_profile_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rescufy/core/di/injection_container.dart' as di;
+import 'package:rescufy/presentation/paramedic/dashboard/cubit/dashboard_cubit.dart';
+import 'package:rescufy/presentation/paramedic/dashboard/views/dashboard_screen.dart';
+import 'package:rescufy/presentation/paramedic/history/views/history_screen.dart';
+import 'package:rescufy/presentation/paramedic/profile/views/paramedic_profile_screen.dart';
 
 class ParamedicNavigationScreen extends StatefulWidget {
   const ParamedicNavigationScreen({super.key});
@@ -22,38 +25,52 @@ class _ParamedicNavigationScreenState extends State<ParamedicNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _screens),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: Color(0xFF2A3142), width: 1)),
-        ),
-        child: NavigationBar(
-          selectedIndex: _currentIndex,
-          onDestinationSelected: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          backgroundColor: const Color(0xFF1A1F2E),
-          indicatorColor: const Color(0xFF00D9A5).withOpacity(0.2),
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.dashboard_outlined, color: Colors.white70),
-              selectedIcon: Icon(Icons.dashboard, color: Color(0xFF00D9A5)),
-              label: 'Dashboard',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.history_outlined, color: Colors.white70),
-              selectedIcon: Icon(Icons.history, color: Color(0xFF00D9A5)),
-              label: 'History',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person_outline, color: Colors.white70),
-              selectedIcon: Icon(Icons.person, color: Color(0xFF00D9A5)),
-              label: 'Profile',
-            ),
-          ],
+    final theme = Theme.of(context);
+
+    return BlocProvider(
+      create: (_) => di.sl<DashboardCubit>(),
+      child: Scaffold(
+        body: IndexedStack(index: _currentIndex, children: _screens),
+        bottomNavigationBar: NavigationBarTheme(
+          data: NavigationBarThemeData(
+            backgroundColor: theme.colorScheme.surface,
+            indicatorColor: theme.colorScheme.primary.withValues(alpha: 0.12),
+            labelTextStyle: WidgetStateProperty.resolveWith((states) {
+              final base = theme.textTheme.labelMedium;
+              if (states.contains(WidgetState.selected)) {
+                return base?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w700,
+                );
+              }
+              return base;
+            }),
+          ),
+          child: NavigationBar(
+            selectedIndex: _currentIndex,
+            onDestinationSelected: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.dashboard_outlined),
+                selectedIcon: Icon(Icons.dashboard),
+                label: 'Dashboard',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.history_outlined),
+                selectedIcon: Icon(Icons.history),
+                label: 'History',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.person_outline),
+                selectedIcon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
+          ),
         ),
       ),
     );

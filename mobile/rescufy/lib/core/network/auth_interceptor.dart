@@ -1,17 +1,20 @@
 // lib/core/network/auth_interceptor.dart
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rescufy/data/datasources/local/auth_local_datasource.dart';
 
 class AuthInterceptor extends Interceptor {
+  AuthInterceptor(this.authLocalDataSource);
+
+  final AuthLocalDataSource authLocalDataSource;
+
   @override
   void onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('auth_token');
+    final token = await authLocalDataSource.getToken();
 
-    if (token != null) {
+    if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
 

@@ -1,45 +1,58 @@
-// lib/presentation/features/auth/cubit/login/login_state.dart
 import 'package:equatable/equatable.dart';
-import '../../../../../domain/entities/user.dart';
 
-abstract class LoginState extends Equatable {
-  const LoginState();
+class LoginState extends Equatable {
+  const LoginState({
+    this.email = '',
+    this.password = '',
+    this.emailError,
+    this.passwordError,
+    this.obscurePassword = true,
+    this.rememberMe = false,
+    this.showValidation = false,
+  });
+
+  final String email;
+  final String password;
+  final String? emailError;
+  final String? passwordError;
+  final bool obscurePassword;
+  final bool rememberMe;
+  final bool showValidation;
+
+  bool get isValid => emailError == null && passwordError == null;
+
+  LoginState copyWith({
+    String? email,
+    String? password,
+    String? emailError,
+    String? passwordError,
+    bool? obscurePassword,
+    bool? rememberMe,
+    bool? showValidation,
+    bool clearEmailError = false,
+    bool clearPasswordError = false,
+  }) {
+    return LoginState(
+      email: email ?? this.email,
+      password: password ?? this.password,
+      emailError: clearEmailError ? null : (emailError ?? this.emailError),
+      passwordError: clearPasswordError
+          ? null
+          : (passwordError ?? this.passwordError),
+      obscurePassword: obscurePassword ?? this.obscurePassword,
+      rememberMe: rememberMe ?? this.rememberMe,
+      showValidation: showValidation ?? this.showValidation,
+    );
+  }
 
   @override
-  List<Object?> get props => [];
-}
-
-class LoginInitial extends LoginState {
-  const LoginInitial();
-}
-
-class LoginLoading extends LoginState {
-  const LoginLoading();
-}
-
-class LoginSuccess extends LoginState {
-  final User user;
-
-  const LoginSuccess({required this.user});
-
-  @override
-  List<Object?> get props => [user];
-}
-
-class LoginError extends LoginState {
-  final String message;
-
-  const LoginError({required this.message});
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class LoginAdminBlocked extends LoginState {
-  final String message;
-
-  const LoginAdminBlocked({required this.message});
-
-  @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [
+    email,
+    password,
+    emailError,
+    passwordError,
+    obscurePassword,
+    rememberMe,
+    showValidation,
+  ];
 }

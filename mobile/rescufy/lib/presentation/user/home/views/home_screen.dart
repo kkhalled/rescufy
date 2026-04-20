@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Badge(
-              label: const Text('3'),
+              //label: const Text(''),
               child: const Icon(Icons.notifications_outlined),
             ),
             onPressed: () {

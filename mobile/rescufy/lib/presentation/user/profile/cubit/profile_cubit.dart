@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rescufy/core/cubit/locale/locale_cubit.dart';
+import 'package:rescufy/core/navigation/app_routes.dart';
 import 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
@@ -28,9 +29,9 @@ class ProfileCubit extends Cubit<ProfileState> {
   void _loadProfileData() {
     emit(
       ProfileState(
-        fullName: 'Sara John',
-        email: 'sara.john@email.com',
-        phone: '+1 (555) 123-4567',
+        fullName: 'Omar Waqqad',
+        email: 'waqad@email.com',
+        phone: '01070457845',
         profileImageUrl: null,
         currentLanguage: _localeCubit.currentLanguageName,
         bloodType: 'O+',
@@ -325,7 +326,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   void navigateToNotifications() {}
   void navigateToLanguage() {
     if (_context == null) return;
-    Navigator.of(_context!).pushNamed('/language');
+    Navigator.of(_context!).pushNamed(AppRoutes.language);
   }
 
   void navigateToPrivacy() {}
@@ -336,31 +337,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     ScaffoldMessenger.of(
       _context!,
     ).showSnackBar(SnackBar(content: Text('Calling $phone...')));
-  }
-
-  void showLogoutDialog() {
-    if (_context == null) return;
-    showDialog(
-      context: _context!,
-      builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.of(_context!).pushReplacementNamed('/login');
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Logout'),
-          ),
-        ],
-      ),
-    );
   }
 
   void _clearFeedback() {

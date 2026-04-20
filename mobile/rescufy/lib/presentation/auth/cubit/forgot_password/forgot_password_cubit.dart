@@ -2,12 +2,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/navigation/app_routes.dart';
-import '../../../../domain/usecases/auth/forgot_password_usecase.dart';
+import 'package:rescufy/core/navigation/app_routes.dart';
+import 'package:rescufy/domain/repositories/auth_repository.dart';
 import 'forgot_password_state.dart';
 
 class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
-  final ForgotPasswordUseCase forgotPasswordUseCase;
+  ForgotPasswordCubit(this._authRepository)
+    : super(const ForgotPasswordState());
+
+  final AuthRepository _authRepository;
 
   // Stream controller for loading state
   final _isLoadingController = StreamController<bool>.broadcast();
@@ -17,9 +20,6 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
   BuildContext? _context;
   GlobalKey<FormState>? _formKey;
 
-  ForgotPasswordCubit(this.forgotPasswordUseCase)
-    : super(const ForgotPasswordState());
-
   void initialize({
     required BuildContext context,
     required GlobalKey<FormState> formKey,
@@ -28,26 +28,39 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     _formKey = formKey;
   }
 
+  String? validateEmail(String? value) {
+    final email = value?.trim() ?? '';
+
+    if (email.isEmpty) {
+      return 'Please enter your email';
+    }
+
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
+      return 'Please enter a valid email';
+    }
+
+    return null;
+  }
+
   Future<void> sendOtp(String email) async {
     if (_context == null || _formKey == null) return;
     if (!_formKey!.currentState!.validate()) return;
 
     _isLoadingController.add(true);
 
-    final result = await forgotPasswordUseCase(
-      ForgotPasswordParams(email: email),
-    );
+    final result = await _authRepository.forgotPassword(email: email.trim());
 
     result.fold(
       (failure) {
         _isLoadingController.add(false);
         _showSnackbar(message: failure.message, isError: true);
       },
-      (message) {
+      (_) {
         _isLoadingController.add(false);
-        Navigator.of(
-          _context!,
-        ).pushNamed(AppRoutes.verifyResetOtp, arguments: {'email': email});
+        Navigator.of(_context!).pushNamed(
+          AppRoutes.verifyResetOtp,
+          arguments: {'email': email.trim()},
+        );
       },
     );
   }

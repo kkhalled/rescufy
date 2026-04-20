@@ -17,7 +17,7 @@ class AppRoutes {
   // =========================
   // USER MODULE
   // =========================
-  static const String userHome = '/user/home';
+  static const String userHome = '/user-home';
   static const String emergencyForm = '/emergency-form';
   static const String userHistory = '/user/history';
   static const String userProfile = '/user/profile';
@@ -32,6 +32,7 @@ class AppRoutes {
   static const String paramedicHistory = '/paramedic/history';
   static const String paramedicProfile = '/paramedic/profile';
   static const String paramedicActiveCase = '/paramedic/active-case';
+  static const String paramedicIncomingRequest = '/paramedic/incoming-request';
 
   // =========================
   // Error

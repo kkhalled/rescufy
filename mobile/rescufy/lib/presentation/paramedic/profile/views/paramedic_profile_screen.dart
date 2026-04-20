@@ -1,215 +1,296 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/navigation/app_routes.dart';
+import 'package:rescufy/core/cubit/theme/theme_cubit.dart';
+import 'package:rescufy/core/cubit/theme/theme_state.dart';
+import 'package:rescufy/core/theme/colors.dart';
+import 'package:rescufy/presentation/auth/cubit/auth/auth_cubit.dart';
+import 'package:rescufy/presentation/auth/cubit/auth/auth_state.dart';
 
 class ParamedicProfileScreen extends StatelessWidget {
   const ParamedicProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0E1A),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1A1F2E),
-        elevation: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Profile',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
-              ),
+      appBar: AppBar(title: const Text('Profile')),
+      body: BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthUnauthenticated) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              state.route,
+              (route) => false,
+            );
+          } else if (state is AuthFailure) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: theme.colorScheme.error,
+                ),
+              );
+          }
+        },
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                theme.colorScheme.primary.withValues(alpha: 0.06),
+                theme.scaffoldBackgroundColor,
+              ],
             ),
-            Text(
-              'Your paramedic information',
-              style: TextStyle(color: Colors.white54, fontSize: 12.sp),
+          ),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(20.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _ProfileHeader(theme: theme),
+                SizedBox(height: 16.h),
+                const _ThemeCard(),
+                SizedBox(height: 16.h),
+                _ProfileDetailsCard(theme: theme),
+                SizedBox(height: 16.h),
+                _MonthlyStatsCard(theme: theme),
+                SizedBox(height: 24.h),
+                OutlinedButton.icon(
+                  onPressed: () => _showLogoutDialog(context),
+                  icon: const Icon(Icons.logout),
+                  label: const Text('Logout'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: Size(double.infinity, 54.h),
+                    foregroundColor: theme.colorScheme.error,
+                    side: BorderSide(color: theme.colorScheme.error),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
-      body: SingleChildScrollView(
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              context.read<AuthCubit>().logout();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileHeader extends StatelessWidget {
+  const _ProfileHeader({required this.theme});
+
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Paramedic Profile',
+          style: theme.textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        SizedBox(height: 6.h),
+        Text(
+          'View your role details, monthly performance, and theme preferences using the same shared app styling.',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.textTheme.bodySmall?.color,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ThemeCard extends StatelessWidget {
+  const _ThemeCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, state) {
+            final isDark = state.themeMode == ThemeMode.dark;
+
+            return Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    isDark ? Icons.dark_mode : Icons.light_mode,
+                    color: theme.colorScheme.primary,
+                    size: 20.sp,
+                  ),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Theme',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        isDark ? 'Dark mode enabled' : 'Light mode enabled',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.textTheme.bodySmall?.color,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Switch(
+                  value: isDark,
+                  onChanged: (_) => context.read<ThemeCubit>().toggleTheme(),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfileDetailsCard extends StatelessWidget {
+  const _ProfileDetailsCard({required this.theme});
+
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
         padding: EdgeInsets.all(20.w),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Theme Toggle
-            _buildThemeCard(),
-            SizedBox(height: 20.h),
-
-            // Profile Info Card
-            _buildProfileCard(),
-            SizedBox(height: 20.h),
-
-            // Monthly Stats
-            _buildStatsCard(),
-            SizedBox(height: 20.h),
-
-            // Logout Button
-            ElevatedButton(
-              onPressed: () => _showLogoutDialog(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF991B1B),
-                padding: EdgeInsets.symmetric(vertical: 16.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
+            CircleAvatar(
+              radius: 42.r,
+              backgroundColor: theme.colorScheme.primary.withValues(
+                alpha: 0.12,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.logout, color: Colors.white, size: 20.sp),
-                  SizedBox(width: 8.w),
-                  Text(
-                    'Logout',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+              child: Icon(
+                Icons.person,
+                size: 42.sp,
+                color: theme.colorScheme.primary,
               ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              'Dr. Sarah Mitchell',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              'Advanced Life Support (ALS)',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.textTheme.bodySmall?.color,
+              ),
+            ),
+            SizedBox(height: 18.h),
+            _InfoTile(
+              icon: Icons.local_hospital_outlined,
+              label: 'Ambulance ID',
+              value: 'AMB-7821',
+              accentColor: theme.colorScheme.primary,
+            ),
+            SizedBox(height: 12.h),
+            _InfoTile(
+              icon: Icons.access_time,
+              label: 'Current Shift',
+              value: 'Day Shift\n09:00 - 20:00',
+              accentColor: AppColors.success,
+            ),
+            SizedBox(height: 12.h),
+            _InfoTile(
+              icon: Icons.workspace_premium_outlined,
+              label: 'Experience',
+              value: '8 years',
+              accentColor: AppColors.info,
             ),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildThemeCard() {
+class _InfoTile extends StatelessWidget {
+  const _InfoTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.accentColor,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color accentColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1F2E),
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFF2A3142)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.dark_mode,
-                color: const Color(0xFF00D9A5),
-                size: 20.sp,
-              ),
-              SizedBox(width: 12.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Theme',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    'Dark Mode',
-                    style: TextStyle(color: Colors.white54, fontSize: 12.sp),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Switch(
-            value: true,
-            onChanged: (value) {},
-            activeColor: const Color(0xFF00D9A5),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProfileCard() {
-    return Container(
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1F2E),
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFF2A3142)),
-      ),
-      child: Column(
-        children: [
-          // Avatar
-          Container(
-            width: 100.w,
-            height: 100.h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFF00D9A5), width: 3),
-            ),
-            child: Icon(
-              Icons.person,
-              size: 50.sp,
-              color: const Color(0xFF00D9A5),
-            ),
-          ),
-          SizedBox(height: 16.h),
-
-          // Name
-          Text(
-            'Dr. Sarah Mitchell',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            'Advanced Life Support (ALS)',
-            style: TextStyle(color: Colors.white70, fontSize: 14.sp),
-          ),
-          SizedBox(height: 20.h),
-
-          // Info
-          _buildInfoBox(
-            Icons.local_hospital,
-            'Ambulance ID',
-            'AMB-7821',
-            const Color(0xFF00D9A5),
-          ),
-          SizedBox(height: 12.h),
-          _buildInfoBox(
-            Icons.access_time,
-            'Current Shift',
-            'Day Shift\n09:00 - 20:00',
-            const Color(0xFF10B981),
-          ),
-          SizedBox(height: 12.h),
-          _buildInfoBox(
-            Icons.workspace_premium,
-            'Experience',
-            '8 years',
-            const Color(0xFFA855F7),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoBox(IconData icon, String label, String value, Color color) {
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0A0E1A),
-        borderRadius: BorderRadius.circular(12.r),
+        color: accentColor.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(8.w),
+            padding: EdgeInsets.all(10.w),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8.r),
+              color: accentColor.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(10.r),
             ),
-            child: Icon(icon, color: color, size: 20.sp),
+            child: Icon(icon, color: accentColor, size: 20.sp),
           ),
           SizedBox(width: 12.w),
           Expanded(
@@ -218,13 +299,14 @@ class ParamedicProfileScreen extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(color: Colors.white54, fontSize: 12.sp),
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: theme.textTheme.bodySmall?.color,
+                  ),
                 ),
+                SizedBox(height: 2.h),
                 Text(
                   value,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.sp,
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -235,94 +317,99 @@ class ParamedicProfileScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildStatsCard() {
+class _MonthlyStatsCard extends StatelessWidget {
+  const _MonthlyStatsCard({required this.theme});
+
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(20.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'This Month',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Row(
+              children: const [
+                Expanded(
+                  child: _StatCard(
+                    value: '47',
+                    label: 'Cases',
+                    accentColor: AppColors.success,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: _StatCard(
+                    value: '12.5m',
+                    label: 'Avg Response',
+                    accentColor: AppColors.info,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: _StatCard(
+                    value: '98%',
+                    label: 'Success Rate',
+                    accentColor: AppColors.warning,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  const _StatCard({
+    required this.value,
+    required this.label,
+    required this.accentColor,
+  });
+
+  final String value;
+  final String label;
+  final Color accentColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 10.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1F2E),
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: const Color(0xFF2A3142)),
+        color: accentColor.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(14.r),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'This Month',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
+            value,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: accentColor,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          SizedBox(height: 20.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStat('47', 'Cases', const Color(0xFF00D9A5)),
-              _buildStat('12.5m', 'Avg Response', const Color(0xFF00A8E8)),
-              _buildStat('98%', 'Success Rate', const Color(0xFFA855F7)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStat(String value, String label, Color color) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            color: color,
-            fontSize: 24.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 4.h),
-        Text(
-          label,
-          style: TextStyle(color: Colors.white70, fontSize: 12.sp),
-        ),
-      ],
-    );
-  }
-
-  void _showLogoutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1F2E),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        title: const Text('Logout', style: TextStyle(color: Colors.white)),
-        content: const Text(
-          'Are you sure you want to logout?',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.white70),
+          SizedBox(height: 4.h),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: theme.textTheme.bodySmall?.color,
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRoutes.login,
-                (route) => false,
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF991B1B),
-            ),
-            child: const Text('Logout'),
           ),
         ],
       ),

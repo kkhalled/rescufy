@@ -1,6 +1,6 @@
 // lib/data/datasources/local/auth_local_datasource.dart
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../models/user_model.dart';
 
 abstract class AuthLocalDataSource {
@@ -13,37 +13,37 @@ abstract class AuthLocalDataSource {
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
-  final SharedPreferences sharedPreferences;
+  final FlutterSecureStorage secureStorage;
 
-  AuthLocalDataSourceImpl(this.sharedPreferences);
+  AuthLocalDataSourceImpl(this.secureStorage);
 
   static const String _tokenKey = 'auth_token';
   static const String _userKey = 'user_data';
 
   @override
   Future<void> saveToken(String token) async {
-    await sharedPreferences.setString(_tokenKey, token);
+    await secureStorage.write(key: _tokenKey, value: token);
   }
 
   @override
   Future<String?> getToken() async {
-    return sharedPreferences.getString(_tokenKey);
+    return secureStorage.read(key: _tokenKey);
   }
 
   @override
   Future<void> deleteToken() async {
-    await sharedPreferences.remove(_tokenKey);
+    await secureStorage.delete(key: _tokenKey);
   }
 
   @override
   Future<void> saveUser(UserModel user) async {
     final userJson = jsonEncode(user.toJson());
-    await sharedPreferences.setString(_userKey, userJson);
+    await secureStorage.write(key: _userKey, value: userJson);
   }
 
   @override
   Future<UserModel?> getUser() async {
-    final userJson = sharedPreferences.getString(_userKey);
+    final userJson = await secureStorage.read(key: _userKey);
     if (userJson == null) return null;
 
     try {
@@ -56,6 +56,6 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<void> deleteUser() async {
-    await sharedPreferences.remove(_userKey);
+    await secureStorage.delete(key: _userKey);
   }
 }

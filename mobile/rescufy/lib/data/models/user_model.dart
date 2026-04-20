@@ -1,4 +1,5 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:rescufy/data/mappers/user_role_mapper.dart';
 import 'package:rescufy/domain/entities/user.dart';
 import 'package:rescufy/domain/entities/user_role.dart';
 
@@ -16,89 +17,69 @@ class UserModel extends User {
     this.token,
   });
 
-  // ---- ROLE MAPPER ----
-  static UserRole _mapRole(String? role) {
-    switch (role?.toLowerCase()) {
-      case 'paramedic':
-        return UserRole.paramedic;
-      case 'admin':
-        return UserRole.admin;
-      case 'user':
-      default:
-        return UserRole.user;
-    }
-  }
-
-  // ---- VALIDATE MOBILE LOGIN ----
-  void validateMobileLogin() {
-    if (role.isAdmin) {
-      throw AdminLoginNotAllowedException(
-        'Admin accounts cannot login from mobile app. Please use the web dashboard.',
-      );
-    }
-  }
-
-  // ---- FROM TOKEN ----
   factory UserModel.fromToken(String token) {
-    try {
-      final decodedToken = JwtDecoder.decode(token);
-
-      final roleString =
-          decodedToken['role'] ??
-          decodedToken['Role'] ??
-          decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-
-      final user = UserModel(
-        id:
-            decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] ??
-            decodedToken['userId'] ??
-            '',
-        email:
-            decodedToken['Email'] ??
-            decodedToken['email'] ??
-            decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] ??
-            '',
-        name: decodedToken['FullName'] ?? decodedToken['name'] ?? '',
-        role: _mapRole(roleString),
-        phone: decodedToken['phone'] ?? decodedToken['phoneNumber'],
-        profileImage: decodedToken['profileImage'],
-        createdAt: decodedToken['createdAt'] != null
-            ? DateTime.tryParse(decodedToken['createdAt'])
-            : null,
-        token: token,
-      );
-
-      // Validate that admins can't login
-      user.validateMobileLogin();
-
-      return user;
-    } catch (e) {
-      if (e is AdminLoginNotAllowedException) {
-        rethrow;
-      }
-      throw Exception('Failed to decode token: $e');
-    }
+    final decodedToken = JwtDecoder.decode(token);
+    return UserModel.fromMap(decodedToken, token: token);
   }
 
-  // ---- FROM JSON ----
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    final user = UserModel(
-      id: json['id']?.toString() ?? '',
-      email: json['email'] ?? '',
-      name: json['name'] ?? json['fullName'] ?? '',
-      role: _mapRole(json['role']),
-      phone: json['phone'],
-      profileImage: json['profileImage'],
+  factory UserModel.fromAuthResponse(Map<String, dynamic> response) {
+    final token = response['token']?.toString();
+    final userPayload = response['user'];
+
+    if (token != null && token.isNotEmpty) {
+      final decodedToken = JwtDecoder.decode(token);
+      final mergedPayload = {
+        ...decodedToken,
+        if (userPayload is Map<String, dynamic>) ...userPayload,
+      };
+
+      return UserModel.fromMap(mergedPayload, token: token);
+    }
+
+    if (userPayload is Map<String, dynamic>) {
+      return UserModel.fromMap(userPayload);
+    }
+
+    throw Exception('Invalid auth response: token was not provided.');
+  }
+
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      UserModel.fromMap(json, token: json['token']?.toString());
+
+  factory UserModel.fromMap(Map<String, dynamic> json, {String? token}) {
+    final rawRole =
+        json['role'] ??
+        json['Role'] ??
+        json['userRole'] ??
+        json['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+    return UserModel(
+      id:
+          json['id']?.toString() ??
+          json['userId']?.toString() ??
+          json['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
+              ?.toString() ??
+          '',
+      email:
+          json['email']?.toString() ??
+          json['Email']?.toString() ??
+          json['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
+              ?.toString() ??
+          '',
+      name:
+          json['name']?.toString() ??
+          json['fullName']?.toString() ??
+          json['FullName']?.toString() ??
+          '',
+      role: UserRoleMapper.fromBackend(rawRole?.toString()),
+      phone: json['phone']?.toString() ?? json['phoneNumber']?.toString(),
+      profileImage:
+          json['profileImage']?.toString() ?? json['ProfileImage']?.toString(),
       createdAt: json['createdAt'] != null
-          ? DateTime.tryParse(json['createdAt'])
+          ? DateTime.tryParse(json['createdAt'].toString())
           : null,
-      token: json['token'],
+      token: token,
     );
-
-    // Validate that admins can't login
-    user.validateMobileLogin();
-
-    return user;
   }
 
   Map<String, dynamic> toJson() {
@@ -136,14 +117,4 @@ class UserModel extends User {
       token: token ?? this.token,
     );
   }
-}
-
-// ---- CUSTOM EXCEPTION ----
-class AdminLoginNotAllowedException implements Exception {
-  final String message;
-
-  AdminLoginNotAllowedException(this.message);
-
-  @override
-  String toString() => message;
 }

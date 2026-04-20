@@ -2,12 +2,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/navigation/app_routes.dart';
-import '../../../../domain/usecases/auth/reset_password_usecase.dart';
+import 'package:rescufy/core/navigation/app_routes.dart';
+import 'package:rescufy/domain/repositories/auth_repository.dart';
 import 'reset_password_state.dart';
 
 class ResetPasswordCubit extends Cubit<ResetPasswordState> {
-  final ResetPasswordUseCase resetPasswordUseCase;
+  ResetPasswordCubit(this._authRepository) : super(const ResetPasswordState());
+
+  final AuthRepository _authRepository;
 
   final _obscurePasswordController = StreamController<bool>.broadcast();
   final _obscureConfirmPasswordController = StreamController<bool>.broadcast();
@@ -25,9 +27,6 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
-  ResetPasswordCubit(this.resetPasswordUseCase)
-    : super(const ResetPasswordState());
-
   void initialize({
     required BuildContext context,
     required GlobalKey<FormState> formKey,
@@ -40,6 +39,45 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
     _otp = otp;
   }
 
+  String? validateNewPassword(String? value) {
+    final password = value ?? '';
+
+    if (password.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+    if (!RegExp(r'[A-Z]').hasMatch(password)) {
+      return 'Password must contain an uppercase letter';
+    }
+    if (!RegExp(r'[a-z]').hasMatch(password)) {
+      return 'Password must contain a lowercase letter';
+    }
+    if (!RegExp(r'[0-9]').hasMatch(password)) {
+      return 'Password must contain a number';
+    }
+
+    return null;
+  }
+
+  String? validateConfirmPassword({
+    required String? newPassword,
+    required String? confirmPassword,
+  }) {
+    final confirmation = confirmPassword ?? '';
+
+    if (confirmation.isEmpty) {
+      return 'Please confirm your password';
+    }
+
+    if (confirmation != (newPassword ?? '')) {
+      return 'Passwords do not match';
+    }
+
+    return null;
+  }
+
   void togglePasswordVisibility() {
     _obscurePassword = !_obscurePassword;
     _obscurePasswordController.add(_obscurePassword);
@@ -50,22 +88,16 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
     _obscureConfirmPasswordController.add(_obscureConfirmPassword);
   }
 
-  Future<void> resetPassword({
-    required String newPassword,
-    required String confirmPassword,
-  }) async {
+  Future<void> resetPassword({required String newPassword}) async {
     if (_context == null || _formKey == null) return;
     if (!_formKey!.currentState!.validate()) return;
 
     _isLoadingController.add(true);
 
-    final result = await resetPasswordUseCase(
-      ResetPasswordParams(
-        email: _email,
-        otp: _otp,
-        newPassword: newPassword,
-        confirmPassword: confirmPassword,
-      ),
+    final result = await _authRepository.resetPassword(
+      email: _email.trim(),
+      otp: _otp.trim(),
+      newPassword: newPassword.trim(),
     );
 
     result.fold(
