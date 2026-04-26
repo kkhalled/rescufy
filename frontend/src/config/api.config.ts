@@ -4,7 +4,7 @@
  */
 
 export const API_CONFIG = {
-  BASE_URL: "http://newback111.runasp.net",
+  BASE_URL: "http://back23-4.runasp.net",
   ENDPOINTS: {
     AUTH: {
       LOGIN: "/api/Auth/login",

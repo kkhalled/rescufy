@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { getAuthToken } from "@/features/auth/utils/auth.utils";
@@ -8,31 +8,15 @@ import {
   onRequestUpdated,
   startConnection,
 } from "@/services/signalrService";
-import type { Request, ApiRequest } from "../types/request.types";
+import type { Request } from "../types/request.types";
 import {
-  type AdminStreamItem,
   fetchAdminStreamApi,
   fetchRequestsApi,
 } from "../data/requests.api";
 import { mapAdminStreamItem, mapApiRequest } from "../utils/request.mappers";
 
-function toRealtimeRequest(payload: unknown): Request | null {
-  if (!payload || typeof payload !== "object") {
-    return null;
-  }
-
-  const item = payload as Record<string, unknown>;
-
-  if (typeof item.id !== "number" && typeof item.id !== "string") {
-    return null;
-  }
-
-  if ("requestStatus" in item && "applicationUser" in item) {
-    return mapApiRequest(payload as ApiRequest);
-  }
-
-  const mapped = mapAdminStreamItem(payload as AdminStreamItem);
-  return mapped.id > 0 ? mapped : null;
+function isRequestPayload(payload: unknown): payload is Request {
+  return Boolean(payload && typeof payload === "object" && "id" in payload);
 }
 
 export function useGetRequests() {
@@ -43,52 +27,46 @@ export function useGetRequests() {
 
   const toastPosition = isRTL ? "top-left" : "top-right";
 
-  const showFetchError = useCallback(
-    (error: any) => {
-      if (error?.response?.status === 401) {
-        toast.error(t("auth:signIn.unauthorized"), { position: toastPosition });
-        return;
-      }
+  function showFetchError(error: any) {
+    if (error?.response?.status === 401) {
+      toast.error(t("auth:signIn.unauthorized"), { position: toastPosition });
+      return;
+    }
 
-      if (error?.message === "Network Error") {
-        toast.error(t("auth:signIn.networkError"), { position: toastPosition });
-        return;
-      }
+    if (error?.message === "Network Error") {
+      toast.error(t("auth:signIn.networkError"), { position: toastPosition });
+      return;
+    }
 
-      toast.error(t("requests:fetchRequests.error"), { position: toastPosition });
-    },
-    [t, toastPosition],
-  );
+    toast.error(t("requests:fetchRequests.error"), { position: toastPosition });
+  }
 
-  const fetchRequests = useCallback(
-    async (): Promise<Request[]> => {
-      setIsLoading(true);
+  async function fetchRequests(): Promise<Request[]> {
+    setIsLoading(true);
 
-      try {
-        const token = getAuthToken();
+    try {
+      const token = getAuthToken();
 
-        if (!token) {
-          toast.error(t("auth:signIn.tokenNotFound"), { position: toastPosition });
-          return [];
-        }
-
-        const apiRequests = await fetchRequestsApi(token);
-        const mapped = apiRequests.map(mapApiRequest);
-
-        setRequests(mapped);
-        return mapped;
-      } catch (error: any) {
-        console.error("Fetch requests error:", error);
-        showFetchError(error);
+      if (!token) {
+        toast.error(t("auth:signIn.tokenNotFound"), { position: toastPosition });
         return [];
-      } finally {
-        setIsLoading(false);
       }
-    },
-    [showFetchError, t, toastPosition],
-  );
 
-  const fetchAdminStreamRequests = useCallback(async (): Promise<Request[]> => {
+      const apiRequests = await fetchRequestsApi(token);
+      const mapped = apiRequests.map(mapApiRequest);
+
+      setRequests(mapped);
+      return mapped;
+    } catch (error: any) {
+      console.error("Fetch requests error:", error);
+      showFetchError(error);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function fetchAdminStreamRequests(): Promise<Request[]> {
     setIsLoading(true);
 
     try {
@@ -113,7 +91,7 @@ export function useGetRequests() {
     } finally {
       setIsLoading(false);
     }
-  }, [showFetchError, t, toastPosition]);
+  }
 
   useEffect(() => {
     let unsubscribeNewRequest = () => {};
@@ -123,60 +101,34 @@ export function useGetRequests() {
       try {
         await startConnection();
 
-        unsubscribeNewRequest = onNewRequest((payload) => {
-          const newRequest = toRealtimeRequest(payload);
-
-          if (!newRequest) {
+        unsubscribeNewRequest = onNewRequest((newRequest) => {
+          if (!isRequestPayload(newRequest)) {
             return;
           }
-
-          setRequests((previous) => {
-            const alreadyExists = previous.some(
-              (request) => String(request.id) === String(newRequest.id),
-            );
-
-            if (alreadyExists) {
-              return previous;
-            }
-
-            return [newRequest, ...previous];
-          });
+               
+          console.log("Received new request via SignalR:", newRequest);
+          setRequests((prev) => [newRequest, ...prev]);
         });
 
-        unsubscribeRequestUpdated = onRequestUpdated((payload) => {
-          const updatedRequest = toRealtimeRequest(payload);
-
-          if (!updatedRequest) {
+        unsubscribeRequestUpdated = onRequestUpdated((updatedRequest) => {
+          if (!isRequestPayload(updatedRequest)) {
             return;
           }
 
-          setRequests((previous) => {
-            const exists = previous.some(
-              (request) => String(request.id) === String(updatedRequest.id),
-            );
-
-            if (!exists) {
-              return [updatedRequest, ...previous];
-            }
-
-            return previous.map((request) => {
-              if (String(request.id) !== String(updatedRequest.id)) {
-                return request;
-              }
-
-              return {
-                ...request,
-                ...updatedRequest,
-              };
-            });
-          });
+          setRequests((prev) =>
+            prev.map((request) =>
+              request.id === updatedRequest.id
+                ? { ...request, ...updatedRequest }
+                : request,
+            ),
+          );
         });
       } catch (error) {
         console.error("SignalR setup failed:", error);
       }
     }
 
-    setupRealtime();
+    void setupRealtime();
 
     return () => {
       unsubscribeNewRequest();

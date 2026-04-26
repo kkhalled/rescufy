@@ -7,82 +7,39 @@ import { getApiUrl } from "@/config/api.config";
 import { getAuthToken } from "@/features/auth/utils/auth.utils";
 
 let connection: HubConnection | null = null;
-const shouldLogRealtime = import.meta.env.DEV;
 
-function logRealtime(label: string, payload?: unknown): void {
-  if (!shouldLogRealtime) {
-    return;
+function getPayload(event: any): unknown {
+  if (!event || typeof event !== "object") {
+    return event;
   }
 
-  if (typeof payload === "undefined") {
-    console.log(`[SignalR] ${label}`);
-    return;
-  }
-
-  console.log(`[SignalR] ${label}`, payload);
+  return event.payload ?? event.data ?? event;
 }
 
-function extractEventPayload(event: unknown): {
-  eventType: string | null;
-  payload: unknown;
-} {
+function getEventType(event: any): string | null {
   if (!event || typeof event !== "object") {
-    return {
-      eventType: null,
-      payload: event,
-    };
+    return null;
   }
 
-  const eventRecord = event as Record<string, unknown>;
-  const eventType =
-    typeof eventRecord.eventType === "string" ? eventRecord.eventType : null;
-
-  if ("payload" in eventRecord) {
-    return {
-      eventType,
-      payload: eventRecord.payload,
-    };
+  if (typeof event.eventType !== "string") {
+    return null;
   }
 
-  if ("data" in eventRecord) {
-    return {
-      eventType,
-      payload: eventRecord.data,
-    };
-  }
-
-  return {
-    eventType,
-    payload: event,
-  };
+  return event.eventType.toLowerCase();
 }
 
 export async function startConnection(): Promise<HubConnection | null> {
   if (!connection) {
     connection = new HubConnectionBuilder()
-      .withUrl(getApiUrl("/notificationHub"), {
+      .withUrl(getApiUrl("/hubs/notifications"), {
         accessTokenFactory: () => getAuthToken() ?? "",
       })
       .withAutomaticReconnect()
       .build();
-
-    connection.onreconnecting((error) => {
-      logRealtime("reconnecting", error ?? null);
-    });
-
-    connection.onreconnected((connectionId) => {
-      logRealtime("reconnected", { connectionId: connectionId ?? null });
-    });
-
-    connection.onclose((error) => {
-      logRealtime("closed", error ?? null);
-    });
   }
 
   if (connection.state === HubConnectionState.Disconnected) {
-    logRealtime("connecting", { hub: getApiUrl("/notificationHub") });
     await connection.start();
-    logRealtime("connected");
   }
 
   return connection;
@@ -94,20 +51,16 @@ export function onNewRequest(callback: (request: unknown) => void): () => void {
   }
 
   const newRequestHandler = (event: unknown) => {
-    const { payload } = extractEventPayload(event);
-    logRealtime("event NewRequest", payload);
-    callback(payload);
+    callback(getPayload(event));
   };
 
   const notificationHandler = (event: unknown) => {
-    const { eventType, payload } = extractEventPayload(event);
-    logRealtime("event ReceiveNotification", { eventType, payload });
-
-    if (eventType && eventType.toLowerCase() !== "newrequest") {
+    const eventType = getEventType(event);
+    if (eventType && eventType !== "newrequest") {
       return;
     }
 
-    callback(payload);
+    callback(getPayload(event));
   };
 
   connection.on("NewRequest", newRequestHandler);
@@ -127,31 +80,20 @@ export function onRequestUpdated(
   }
 
   const requestUpdatedHandler = (event: unknown) => {
-    const { payload } = extractEventPayload(event);
-    logRealtime("event RequestUpdated", payload);
-    callback(payload);
+    callback(getPayload(event));
   };
 
   const statusChangedHandler = (event: unknown) => {
-    const { payload } = extractEventPayload(event);
-    logRealtime("event StatusChanged", payload);
-    callback(payload);
+    callback(getPayload(event));
   };
 
   const notificationHandler = (event: unknown) => {
-    const { eventType, payload } = extractEventPayload(event);
-    logRealtime("event ReceiveNotification", { eventType, payload });
-
-    const normalizedEventType = eventType?.toLowerCase();
-
-    if (
-      normalizedEventType !== "requestupdated" &&
-      normalizedEventType !== "statuschanged"
-    ) {
+    const eventType = getEventType(event);
+    if (eventType !== "requestupdated" && eventType !== "statuschanged") {
       return;
     }
 
-    callback(payload);
+    callback(getPayload(event));
   };
 
   connection.on("RequestUpdated", requestUpdatedHandler);

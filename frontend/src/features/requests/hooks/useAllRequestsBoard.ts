@@ -25,10 +25,16 @@ export function useAllRequestsBoard({
   fetchAdminStreamRequests,
 }: UseAllRequestsBoardParams) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [hasFetchedInitial, setHasFetchedInitial] = useState(false);
 
   useEffect(() => {
-    fetchAdminStreamRequests();
-  }, [fetchAdminStreamRequests]);
+    if (hasFetchedInitial) {
+      return;
+    }
+
+    setHasFetchedInitial(true);
+    void fetchAdminStreamRequests();
+  }, [fetchAdminStreamRequests, hasFetchedInitial]);
 
   const queueRequests = useMemo<QueueRequestItem[]>(() => {
     return requests.map((request) => {
