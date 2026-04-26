@@ -1,10 +1,7 @@
-import { memo } from "react";
 import { useTranslation } from "react-i18next";
-import { motion, useReducedMotion } from "framer-motion";
 import {
   AlertTriangle,
   CheckCircle2,
-  Clock3,
   Eye,
   Navigation,
   Pencil,
@@ -56,8 +53,6 @@ interface AmbulanceCardProps {
   ambulanceNumber: string;
   status: AmbulanceStatus;
   distanceKm: number;
-  updatedSecondsAgo: number;
-  isRecentlyUpdated: boolean;
   onAssign?: () => void;
   onTrack?: () => void;
   onChangeStatus?: (status: AmbulanceStatus) => void;
@@ -66,14 +61,12 @@ interface AmbulanceCardProps {
   onDelete?: () => void;
 }
 
-export const AmbulanceCard = memo(function AmbulanceCard({
+export function AmbulanceCard({
   id,
   name,
   ambulanceNumber,
   status,
   distanceKm,
-  updatedSecondsAgo,
-  isRecentlyUpdated,
   onAssign,
   onTrack,
   onChangeStatus,
@@ -82,7 +75,6 @@ export const AmbulanceCard = memo(function AmbulanceCard({
   onDelete,
 }: AmbulanceCardProps) {
   const { t } = useTranslation("ambulances");
-  const shouldReduceMotion = useReducedMotion();
 
   const statusLabel: Record<AmbulanceStatus, string> = {
     AVAILABLE: t("status.available"),
@@ -106,10 +98,9 @@ export const AmbulanceCard = memo(function AmbulanceCard({
   const theme = STATUS_THEME[status];
   const StatusIcon = theme.icon;
   const formattedDistance = `${distanceKm.toFixed(1)} km`;
-  const updatedLabel = t("controlCenter.updatedSeconds", { value: updatedSecondsAgo });
 
   return (
-    <motion.article
+    <article
       className="
         group
         relative
@@ -128,21 +119,6 @@ export const AmbulanceCard = memo(function AmbulanceCard({
         hover:-translate-y-0.5
         hover:shadow-card
       "
-      initial={shouldReduceMotion ? undefined : { opacity: 0, y: 8 }}
-      animate={
-        shouldReduceMotion
-          ? undefined
-          : {
-              opacity: 1,
-              y: 0,
-              boxShadow: isRecentlyUpdated
-                ? "0 0 0 2px rgba(56,189,248,0.3), 0 0 30px rgba(56,189,248,0.2)"
-                : "0 0 0 0 rgba(0,0,0,0)",
-            }
-      }
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] as const }}
-      whileHover={shouldReduceMotion ? undefined : { y: -2 }}
-      viewport={{ once: true, amount: 0.3 }}
     >
       <div
         className={`pointer-events-none absolute inset-y-0 left-0 w-1 ${theme.borderClass.replace(
@@ -200,14 +176,6 @@ export const AmbulanceCard = memo(function AmbulanceCard({
       <div className="mt-4 grid gap-2.5 text-xs">
         <div className="flex items-center justify-between rounded-lg bg-surface-muted/40 px-3 py-2 border border-border/50">
           <span className="inline-flex items-center gap-1.5 text-muted">
-            <Clock3 className="h-3.5 w-3.5" />
-            {t("controlCenter.lastUpdate")}
-          </span>
-          <span className="font-medium text-heading">{updatedLabel}</span>
-        </div>
-
-        <div className="flex items-center justify-between rounded-lg bg-surface-muted/40 px-3 py-2 border border-border/50">
-          <span className="inline-flex items-center gap-1.5 text-muted">
             <Navigation className="h-3.5 w-3.5" />
             {t("controlCenter.distanceFromCenter")}
           </span>
@@ -244,6 +212,6 @@ export const AmbulanceCard = memo(function AmbulanceCard({
         />
       </div>
 
-    </motion.article>
+    </article>
   );
-});
+}

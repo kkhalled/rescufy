@@ -21,16 +21,8 @@ export type Ambulance = {
   longitude: number;
 };
 
-export type AmbulanceConnectionState =
-  | "connected"
-  | "reconnecting"
-  | "disconnected";
-
 export type AmbulanceControlItem = Ambulance & {
   distanceKm: number;
-  lastUpdatedAt: number;
-  updatedSecondsAgo: number;
-  isRecentlyUpdated: boolean;
 };
 
 export type AmbulanceApiStatus = 0 | 1 | 2 | 3;

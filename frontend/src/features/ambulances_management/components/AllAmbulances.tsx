@@ -6,13 +6,11 @@ import { DeleteAmbulanceDialog } from "./DeleteAmbulanceDialog";
 import { useAmbulances } from "../hooks/useAmbulances";
 import type { Ambulance, AmbulanceControlItem } from "../types/ambulances.types";
 import { useTranslation } from "react-i18next";
-import { useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router";
 import { Plus } from "lucide-react";
 
 export default function AllAmbulances() {
   const { t } = useTranslation("ambulances");
-  const shouldReduceMotion = !!useReducedMotion();
   const navigate = useNavigate();
   const [deleteCandidate, setDeleteCandidate] = useState<{
     id: string;
@@ -26,7 +24,7 @@ export default function AllAmbulances() {
     ambulances,
     isLoading,
     isMutating,
-    controlCenter,
+    kpis,
     submitAmbulance,
     assignAmbulance,
     trackAmbulance,
@@ -136,18 +134,16 @@ export default function AllAmbulances() {
   return (
     <div className="mt-6 space-y-6">
       <KPISection
-        total={controlCenter.kpis.total}
-        available={controlCenter.kpis.available}
-        busy={controlCenter.kpis.busy}
-        maintenance={controlCenter.kpis.maintenance}
+        total={kpis.total}
+        available={kpis.available}
+        busy={kpis.busy}
+        maintenance={kpis.maintenance}
       />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
         <AmbulanceFleetPanel
           ambulances={ambulances}
           isLoading={isLoading}
-          shouldReduceMotion={shouldReduceMotion}
-          connectionState={controlCenter.connectionState}
           onAssign={assignAmbulance}
           onTrack={trackAmbulance}
           onChangeStatus={changeAmbulanceStatus}

@@ -1,9 +1,7 @@
-import { motion } from "framer-motion";
 import { ShieldAlert } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { AmbulanceCard } from "./AmbulanceCard";
 import type {
-  AmbulanceConnectionState,
   AmbulanceControlItem,
   AmbulanceStatus,
 } from "../types/ambulances.types";
@@ -11,8 +9,6 @@ import type {
 type AmbulanceFleetPanelProps = {
   ambulances: AmbulanceControlItem[];
   isLoading: boolean;
-  shouldReduceMotion: boolean;
-  connectionState: AmbulanceConnectionState;
   onAssign: (id: string) => void;
   onTrack: (id: string) => void;
   onChangeStatus: (id: string, nextStatus: AmbulanceStatus) => void;
@@ -24,8 +20,6 @@ type AmbulanceFleetPanelProps = {
 export function AmbulanceFleetPanel({
   ambulances,
   isLoading,
-  shouldReduceMotion,
-  connectionState,
   onAssign,
   onTrack,
   onChangeStatus,
@@ -34,40 +28,6 @@ export function AmbulanceFleetPanel({
   onViewProfile,
 }: AmbulanceFleetPanelProps) {
   const { t } = useTranslation("ambulances");
-
-  const controlTone =
-    connectionState === "connected"
-      ? "bg-emerald-500"
-      : connectionState === "reconnecting"
-        ? "bg-amber-500"
-        : "bg-red-500";
-
-  const listVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: shouldReduceMotion ? 0 : 0.08,
-        delayChildren: shouldReduceMotion ? 0 : 0.06,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: {
-      opacity: 0,
-      y: shouldReduceMotion ? 0 : 14,
-      scale: shouldReduceMotion ? 1 : 0.99,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: shouldReduceMotion ? 0.15 : 0.42,
-        ease: [0.22, 1, 0.36, 1] as const,
-      },
-    },
-  };
 
   return (
     <section className="rounded-2xl border border-border bg-background-second/60 p-4 md:p-5 shadow-card">
@@ -80,7 +40,6 @@ export function AmbulanceFleetPanel({
         </div>
 
         <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-muted/40 px-3 py-1 text-xs text-muted">
-          <span className={`h-2 w-2 rounded-full ${controlTone}`} />
           {t("controlCenter.liveMonitoring")}
         </div>
       </header>
@@ -97,14 +56,9 @@ export function AmbulanceFleetPanel({
           <p className="mt-1 text-xs text-muted">{t("controlCenter.empty.subtitle")}</p>
         </div>
       ) : (
-        <motion.div
-          className="grid grid-cols-1 gap-4 rounded-xl border border-border/50 bg-surface-muted/35 p-2 md:p-3 lg:grid-cols-2"
-          variants={listVariants}
-          initial="hidden"
-          animate="visible"
-        >
+        <div className="grid grid-cols-1 gap-4 rounded-xl border border-border/50 bg-surface-muted/35 p-2 md:p-3 lg:grid-cols-2">
           {ambulances.map((ambulance) => (
-            <motion.div key={ambulance.id} variants={itemVariants}>
+            <div key={ambulance.id}>
               <AmbulanceCard
                 {...ambulance}
                 onAssign={() => onAssign(ambulance.id)}
@@ -119,9 +73,9 @@ export function AmbulanceFleetPanel({
                 }
                 onViewProfile={() => onViewProfile(ambulance)}
               />
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       )}
     </section>
   );

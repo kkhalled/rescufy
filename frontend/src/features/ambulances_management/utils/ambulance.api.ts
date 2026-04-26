@@ -9,12 +9,11 @@ import type {
 
 type ApiRecord = Record<string, unknown>;
 
-const COMMAND_CENTER_COORDINATES = {
-  latitude: 31.2454,
-  longitude: 30.0454,
-};
+const DEFAULT_LATITUDE = 31.2454;
+const DEFAULT_LONGITUDE = 30.0454;
+const COLLECTION_KEYS = ["ambulances", "items", "data", "result", "value"] as const;
 
-function toRecord(value: unknown): ApiRecord | null {
+function asRecord(value: unknown): ApiRecord | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return null;
   }
@@ -22,17 +21,7 @@ function toRecord(value: unknown): ApiRecord | null {
   return value as ApiRecord;
 }
 
-function unwrapObject(value: unknown): ApiRecord | null {
-  const record = toRecord(value);
-
-  if (!record) {
-    return null;
-  }
-
-  return toRecord(record.data) ?? toRecord(record.result) ?? toRecord(record.value) ?? record;
-}
-
-function toStringValue(value: unknown, fallback = ""): string {
+function asString(value: unknown, fallback = ""): string {
   if (typeof value === "string") {
     const trimmed = value.trim();
     return trimmed || fallback;
@@ -45,12 +34,7 @@ function toStringValue(value: unknown, fallback = ""): string {
   return fallback;
 }
 
-function toNullableString(value: unknown): string | null {
-  const normalized = toStringValue(value, "");
-  return normalized ? normalized : null;
-}
-
-function toNumberValue(value: unknown, fallback: number): number {
+function asNumber(value: unknown, fallback: number): number {
   if (typeof value === "number" && Number.isFinite(value)) {
     return value;
   }
@@ -66,31 +50,32 @@ function toNumberValue(value: unknown, fallback: number): number {
   return fallback;
 }
 
-function toNullableNumber(value: unknown): number | null {
-  const parsed = toNumberValue(value, Number.NaN);
+function asNullableString(value: unknown): string | null {
+  const normalized = asString(value);
+  return normalized ? normalized : null;
+}
+
+function asNullableNumber(value: unknown): number | null {
+  const parsed = asNumber(value, Number.NaN);
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function toUiStatus(value: unknown): AmbulanceStatus {
-  const numericValue = toNumberValue(value, Number.NaN);
+function toStatus(value: unknown): AmbulanceStatus {
+  const statusCode = asNumber(value, Number.NaN);
 
-  if (Number.isFinite(numericValue)) {
-    if (numericValue === 1) {
-      return "IN_TRANSIT";
-    }
-
-    if (numericValue === 2) {
-      return "BUSY";
-    }
-
-    if (numericValue === 3) {
-      return "MAINTENANCE";
-    }
-
-    return "AVAILABLE";
+  if (statusCode === 1) {
+    return "IN_TRANSIT";
   }
 
-  const normalized = toStringValue(value, "").toUpperCase().replace(/\s+/g, "_");
+  if (statusCode === 2) {
+    return "BUSY";
+  }
+
+  if (statusCode === 3) {
+    return "MAINTENANCE";
+  }
+
+  const normalized = asString(value).toUpperCase().replace(/\s+/g, "_");
 
   if (normalized === "IN_TRANSIT" || normalized === "INTRANSIT") {
     return "IN_TRANSIT";
@@ -107,7 +92,7 @@ function toUiStatus(value: unknown): AmbulanceStatus {
   return "AVAILABLE";
 }
 
-function toApiStatus(status: AmbulanceStatus): number {
+function toApiStatus(status: AmbulanceStatus): AmbulanceApiStatus {
   if (status === "IN_TRANSIT") {
     return 1;
   }
@@ -123,30 +108,22 @@ function toApiStatus(status: AmbulanceStatus): number {
   return 0;
 }
 
-function toProfileStatus(value: unknown): AmbulanceApiStatus {
-  const uiStatus = toUiStatus(value);
+function unwrapProfilePayload(raw: unknown): ApiRecord | null {
+  const record = asRecord(raw);
 
-  if (uiStatus === "IN_TRANSIT") {
-    return 1;
+  if (!record) {
+    return null;
   }
 
-  if (uiStatus === "BUSY") {
-    return 2;
-  }
-
-  if (uiStatus === "MAINTENANCE") {
-    return 3;
-  }
-
-  return 0;
+  return asRecord(record.data) ?? asRecord(record.result) ?? asRecord(record.value) ?? record;
 }
 
-function toRadians(value: number) {
+function toRadians(value: number): number {
   return (value * Math.PI) / 180;
 }
 
-function toDistanceKm(fromLat: number, fromLng: number, toLat: number, toLng: number) {
-  const earthRadiusKm = 6371;
+function getDistanceKm(fromLat: number, fromLng: number, toLat: number, toLng: number): number {
+  const earthRadius = 6371;
   const dLat = toRadians(toLat - fromLat);
   const dLng = toRadians(toLng - fromLng);
 
@@ -157,95 +134,79 @@ function toDistanceKm(fromLat: number, fromLng: number, toLat: number, toLng: nu
       Math.sin(dLng / 2) *
       Math.sin(dLng / 2);
 
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return earthRadiusKm * c;
+  return earthRadius * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 }
 
 export function normalizeAmbulanceProfile(raw: unknown): AmbulanceProfile | null {
-  const record = unwrapObject(raw);
+  const record = unwrapProfilePayload(raw);
 
   if (!record) {
     return null;
   }
 
-  const id = toNumberValue(record.id ?? record.ambulanceId, Number.NaN);
+  const id = asNumber(record.id ?? record.ambulanceId, Number.NaN);
 
   if (!Number.isFinite(id)) {
     return null;
   }
 
-  const latitude = toNumberValue(
-    record.simLatitude ?? record.latitude,
-    COMMAND_CENTER_COORDINATES.latitude,
-  );
-
-  const longitude = toNumberValue(
-    record.simLongitude ?? record.longitude,
-    COMMAND_CENTER_COORDINATES.longitude,
-  );
+  const latitude = asNumber(record.simLatitude ?? record.latitude, DEFAULT_LATITUDE);
+  const longitude = asNumber(record.simLongitude ?? record.longitude, DEFAULT_LONGITUDE);
 
   return {
     id,
-    name: toStringValue(record.name, `Ambulance ${id}`),
-    vehicleInfo: toStringValue(record.vehicleInfo, "-"),
-    driverPhone: toNullableString(record.driverPhone),
-    ambulanceStatus: toProfileStatus(record.ambulanceStatus ?? record.status),
+    name: asString(record.name, `Ambulance ${id}`),
+    vehicleInfo: asString(record.vehicleInfo, "-"),
+    driverPhone: asNullableString(record.driverPhone),
+    ambulanceStatus: toApiStatus(toStatus(record.ambulanceStatus ?? record.status)),
     simLatitude: latitude,
     simLongitude: longitude,
-    driverId: toNullableString(record.driverId),
-    driverName: toNullableString(record.driverName),
-    startingPrice: toNumberValue(record.startingPrice, 0),
-    ambulanceNumber: toStringValue(record.ambulanceNumber, `AMB-${id}`),
-    ambulancePointId: toNullableNumber(
+    driverId: asNullableString(record.driverId),
+    driverName: asNullableString(record.driverName),
+    startingPrice: asNumber(record.startingPrice, 0),
+    ambulanceNumber: asString(record.ambulanceNumber, `AMB-${id}`),
+    ambulancePointId: asNullableNumber(
       record.ambulancePointId ?? record.pointId ?? record.hospitalId,
     ),
-    createdAt: toNullableString(record.createdAt) ?? undefined,
-    updatedAt: toNullableString(record.updatedAt) ?? undefined,
+    createdAt: asNullableString(record.createdAt) ?? undefined,
+    updatedAt: asNullableString(record.updatedAt) ?? undefined,
   };
 }
 
 export function normalizeAmbulance(raw: unknown): Ambulance | null {
-  const record = toRecord(raw);
+  const record = asRecord(raw);
 
   if (!record) {
     return null;
   }
 
-  const id = toStringValue(record.id ?? record.ambulanceId, "");
+  const id = asString(record.id ?? record.ambulanceId);
 
   if (!id) {
     return null;
   }
 
-  const ambulancePointId = toNullableNumber(
+  const ambulancePointId = asNullableNumber(
     record.ambulancePointId ?? record.pointId ?? record.hospitalId,
   );
 
-  const latitude = toNumberValue(
-    record.simLatitude ?? record.latitude,
-    COMMAND_CENTER_COORDINATES.latitude,
-  );
-
-  const longitude = toNumberValue(
-    record.simLongitude ?? record.longitude,
-    COMMAND_CENTER_COORDINATES.longitude,
-  );
-
-  const ambulanceNumber = toStringValue(record.ambulanceNumber ?? record.licensePlate, `AMB-${id}`);
+  const latitude = asNumber(record.simLatitude ?? record.latitude, DEFAULT_LATITUDE);
+  const longitude = asNumber(record.simLongitude ?? record.longitude, DEFAULT_LONGITUDE);
+  const ambulanceNumber = asString(record.ambulanceNumber ?? record.licensePlate, `AMB-${id}`);
 
   return {
     id,
-    name: toStringValue(record.name, `Ambulance ${id}`),
+    name: asString(record.name, `Ambulance ${id}`),
     ambulanceNumber,
-    vehicleInfo: toStringValue(record.vehicleInfo, "-"),
-    driverPhone: toStringValue(record.driverPhone, "-"),
-    driverId: toNullableString(record.driverId),
-    driverName: toNullableString(record.driverName),
-    startingPrice: toNumberValue(record.startingPrice, 0),
+    vehicleInfo: asString(record.vehicleInfo, "-"),
+    driverPhone: asString(record.driverPhone, "-"),
+    driverId: asNullableString(record.driverId),
+    driverName: asNullableString(record.driverName),
+    startingPrice: asNumber(record.startingPrice, 0),
     ambulancePointId,
     licensePlate: ambulanceNumber,
     hospitalId: ambulancePointId === null ? "0" : String(ambulancePointId),
-    status: toUiStatus(record.ambulanceStatus ?? record.status),
+    status: toStatus(record.ambulanceStatus ?? record.status),
     latitude,
     longitude,
   };
@@ -256,30 +217,32 @@ export function extractAmbulanceCollection(payload: unknown): unknown[] {
     return payload;
   }
 
-  const record = toRecord(payload);
+  const record = asRecord(payload);
 
   if (!record) {
     return [];
   }
 
-  if (Array.isArray(record.ambulances)) {
-    return record.ambulances as unknown[];
-  }
+  for (const key of COLLECTION_KEYS) {
+    const value = record[key];
 
-  if (Array.isArray(record.items)) {
-    return record.items as unknown[];
-  }
+    if (Array.isArray(value)) {
+      return value;
+    }
 
-  if (Array.isArray(record.data)) {
-    return record.data as unknown[];
-  }
+    const nested = asRecord(value);
 
-  if (Array.isArray(record.result)) {
-    return record.result as unknown[];
-  }
+    if (!nested) {
+      continue;
+    }
 
-  if (Array.isArray(record.value)) {
-    return record.value as unknown[];
+    for (const nestedKey of COLLECTION_KEYS) {
+      const nestedValue = nested[nestedKey];
+
+      if (Array.isArray(nestedValue)) {
+        return nestedValue;
+      }
+    }
   }
 
   if ("id" in record || "ambulanceId" in record) {
@@ -295,9 +258,12 @@ export function buildAmbulancePayload(
     includeId?: boolean;
   },
 ) {
-  const pointId = ambulance.ambulancePointId ?? toNullableNumber(ambulance.hospitalId);
-  const ambulanceNumber = (ambulance.ambulanceNumber || ambulance.licensePlate || `AMB-${ambulance.id}`).trim();
-  const name = (ambulance.name || ambulanceNumber).trim();
+  const pointId = ambulance.ambulancePointId ?? asNullableNumber(ambulance.hospitalId);
+  const ambulanceNumber = asString(
+    ambulance.ambulanceNumber || ambulance.licensePlate,
+    `AMB-${ambulance.id}`,
+  );
+  const name = asString(ambulance.name, ambulanceNumber);
 
   const payload: Record<string, unknown> = {
     name,
@@ -338,20 +304,15 @@ export function getApiErrorMessage(error: unknown): string | null {
   return null;
 }
 
-export function enrichAmbulance(ambulance: Ambulance, lastUpdatedAt: number): AmbulanceControlItem {
-  const distanceKm = toDistanceKm(
-    COMMAND_CENTER_COORDINATES.latitude,
-    COMMAND_CENTER_COORDINATES.longitude,
-    ambulance.latitude,
-    ambulance.longitude,
-  );
-
+export function enrichAmbulance(ambulance: Ambulance): AmbulanceControlItem {
   return {
     ...ambulance,
-    distanceKm,
-    lastUpdatedAt,
-    updatedSecondsAgo: 0,
-    isRecentlyUpdated: false,
+    distanceKm: getDistanceKm(
+      DEFAULT_LATITUDE,
+      DEFAULT_LONGITUDE,
+      ambulance.latitude,
+      ambulance.longitude,
+    ),
   };
 }
 
