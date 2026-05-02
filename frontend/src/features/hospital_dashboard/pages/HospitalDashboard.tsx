@@ -2,7 +2,7 @@ import HospitalDashboardContent from "../components/hospital/HospitalDashboardCo
 
 export default function HospitalDashboard() {
   return (
-    <main className="px-4 sm:px-6 md:px-8 lg:px-12 py-4 md:py-5">
+    <main className="px-4 py-4 sm:px-6 md:py-5 lg:px-12">
       <HospitalDashboardContent />
     </main>
   );

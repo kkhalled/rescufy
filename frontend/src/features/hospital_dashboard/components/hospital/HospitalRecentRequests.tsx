@@ -6,7 +6,7 @@ import { useAuth } from "@/app/provider/AuthContext";
 import { getAuthToken } from "@/features/auth/utils/auth.utils";
 import { onNewRequest, onRequestUpdated, startConnection } from "@/services/signalrService";
 import CriticalRequests from "./CriticalRequests";
-import { HospitalRequestRow } from "../../../requests/components/hospital/HospitalRequestRow";
+import { HospitalRequestRow } from "@/features/requests/components/hospital/HospitalRequestRow";
 import type { HospitalRequestItem } from "@/features/requests/types/request-ui.types";
 import {
   fetchHospitalActiveRequestsApi,
@@ -105,20 +105,14 @@ export default function HospitalRecentRequests() {
       ? t("recentRequests.lastRefresh", { value: "just now" })
       : t("recentRequests.designModeHint");
 
-  // TODO: Fetch recent requests from API filtered by user.HospitalId
-  // Example: const { data } = useQuery(['recentHospitalRequests', user?.HospitalId], ...)
-  // The backend should return only requests assigned to this hospital
-
   return (
-    <div className="my-6 md:my-8 grid w-full grid-cols-1 gap-4 md:gap-6 lg:grid-cols-12 lg:gap-8">
+    <div className="my-6 grid w-full grid-cols-1 gap-4 md:my-8 md:gap-6 lg:grid-cols-12 lg:gap-8">
       <div className="overflow-hidden rounded-2xl border border-border bg-bg-card shadow-card lg:col-span-8">
         <div className="flex flex-col gap-4 border-b border-border p-4 md:flex-row md:items-center md:justify-between md:p-6">
           <div>
             <div className="flex items-center gap-2">
               <Activity className="h-4 w-4 text-primary" />
-              <span className="text-base font-semibold text-heading md:text-lg">
-                {t("recentRequests.title")}
-              </span>
+              <span className="text-base font-semibold text-heading md:text-lg">{t("recentRequests.title")}</span>
             </div>
             <p className="mt-2 flex items-center gap-2 text-xs text-muted">
               <Clock3 className="h-3.5 w-3.5" />
@@ -153,14 +147,14 @@ export default function HospitalRecentRequests() {
                   }
                 })();
               }}
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-3 md:px-4 py-2 text-xs font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-3 py-2 text-xs font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 md:px-4"
             >
               <RefreshCcw className={`h-3.5 w-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
               Refresh
             </button>
             <Link
               to="/hospital_user/requests"
-              className="text-xs cursor-pointer rounded-full border border-border bg-background-second px-3 md:px-4 py-2 font-medium text-heading transition hover:bg-background"
+              className="cursor-pointer rounded-full border border-border bg-background-second px-3 py-2 text-xs font-medium text-heading transition hover:bg-background md:px-4"
             >
               {t("recentRequests.viewAll")}
             </Link>
@@ -170,15 +164,21 @@ export default function HospitalRecentRequests() {
         <div className="grid gap-3 border-b border-border px-4 py-4 md:grid-cols-3 md:px-6">
           <div className="rounded-xl border border-border bg-surface-card px-4 py-3">
             <p className="text-xs uppercase tracking-[0.2em] text-muted">{t("recentRequests.incomingRate")}</p>
-            <p className="mt-1 text-lg font-semibold text-heading">{t("recentRequests.incomingRateValue", { value: requests.length })}</p>
+            <p className="mt-1 text-lg font-semibold text-heading">
+              {t("recentRequests.incomingRateValue", { value: requests.length })}
+            </p>
           </div>
           <div className="rounded-xl border border-border bg-surface-card px-4 py-3">
             <p className="text-xs uppercase tracking-[0.2em] text-muted">{t("recentRequests.avgLatency")}</p>
-            <p className="mt-1 text-lg font-semibold text-heading">{t("recentRequests.avgLatencyValue", { value: "--" })}</p>
+            <p className="mt-1 text-lg font-semibold text-heading">
+              {t("recentRequests.avgLatencyValue", { value: "--" })}
+            </p>
           </div>
           <div className="rounded-xl border border-border bg-surface-card px-4 py-3">
             <p className="text-xs uppercase tracking-[0.2em] text-muted">{t("recentRequests.eventQueue")}</p>
-            <p className="mt-1 text-lg font-semibold text-heading">{t("recentRequests.eventQueueValue", { count: visibleRequests.length })}</p>
+            <p className="mt-1 text-lg font-semibold text-heading">
+              {t("recentRequests.eventQueueValue", { count: visibleRequests.length })}
+            </p>
           </div>
         </div>
 
@@ -199,7 +199,9 @@ export default function HospitalRecentRequests() {
                 <ShieldAlert className="h-6 w-6" />
               </div>
               <p className="mt-4 text-base font-semibold text-heading">No hospital linked to this account</p>
-              <p className="mt-1 max-w-md text-sm text-muted">Once a hospital is assigned to the signed-in user, the recent requests feed will appear here.</p>
+              <p className="mt-1 max-w-md text-sm text-muted">
+                Once a hospital is assigned to the signed-in user, the recent requests feed will appear here.
+              </p>
             </div>
           </div>
         ) : visibleRequests.length === 0 ? (
@@ -209,7 +211,9 @@ export default function HospitalRecentRequests() {
                 <ShieldAlert className="h-6 w-6" />
               </div>
               <p className="mt-4 text-base font-semibold text-heading">No active requests right now</p>
-              <p className="mt-1 max-w-md text-sm text-muted">Active requests for this hospital will show up here automatically as they are assigned or updated.</p>
+              <p className="mt-1 max-w-md text-sm text-muted">
+                Active requests for this hospital will show up here automatically as they are assigned or updated.
+              </p>
             </div>
           </div>
         ) : (

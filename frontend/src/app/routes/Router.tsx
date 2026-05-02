@@ -10,7 +10,7 @@ import Analytics from "@/features/analytics/pages/Analytics";
 
 const DashBoard = lazy(() => import("@/features/dashboard/pages/DashBoard"));
 const HospitalDashboard = lazy(
-  () => import("@/features/dashboard/pages/HospitalDashboard"),
+  () => import("@/features/hospital_dashboard/pages/HospitalDashboard"),
 );
 const Request = lazy(() => import("@/features/requests/pages/Request"));
 const HospitalRequests = lazy(

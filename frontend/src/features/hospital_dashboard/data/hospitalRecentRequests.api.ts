@@ -171,23 +171,18 @@ export async function fetchHospitalActiveRequestsApi(
   token: string,
   hospitalId: number,
 ): Promise<HospitalActiveRequestApiItem[]> {
-  const response = await axios.get(
-    getApiUrl(API_CONFIG.ENDPOINTS.HOSPITALS.ACTIVE_REQUESTS(hospitalId)),
-    {
-      headers: buildHeaders(token),
-    },
-  );
+  const response = await axios.get(getApiUrl(API_CONFIG.ENDPOINTS.HOSPITALS.ACTIVE_REQUESTS(hospitalId)), {
+    headers: buildHeaders(token),
+  });
 
   return extractArrayFromPayload<HospitalActiveRequestApiItem>(response.data);
 }
 
-export function mapHospitalActiveRequestItem(
-  raw: HospitalActiveRequestApiItem,
-): HospitalRequestItem {
+export function mapHospitalActiveRequestItem(raw: HospitalActiveRequestApiItem): HospitalRequestItem {
   const status = normalizeStatus(raw.requestStatus);
 
   return {
-    id: raw.id == null ? "-" : `#${String(raw.id)}`,
+    id: raw.id == null ? "-" : `${String(raw.id)}`,
     userName: toStringValue(raw.patientName) || "-",
     userPhone: toStringValue(raw.assignedAmbulancePlate) || "-",
     location: toStringValue(raw.address) || "-",

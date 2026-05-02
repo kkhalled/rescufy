@@ -1,11 +1,11 @@
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CriticalRequestCard from "./CriticalRequestCard";
-import { useTranslation } from "react-i18next";
 import { motion, useReducedMotion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import CriticalRequestCard from "./CriticalRequestCard";
 
 export default function CriticalRequests() {
-  const { t } = useTranslation('dashboard');
+  const { t } = useTranslation("dashboard");
   const shouldReduceMotion = useReducedMotion();
 
   const listVariants = {
@@ -37,16 +37,7 @@ export default function CriticalRequests() {
 
   return (
     <motion.section
-      className="
-        relative
-        text-heading
-        
-        py-2 md:py-6 md:px-3
-        rounded-lg md:rounded-2xl
-        overflow-hidden
-        border border-red-500/20
-        shadow-[0_0_60px_rgba(230,57,70,0.15)]
-      "
+      className="relative overflow-hidden rounded-lg border border-red-500/20 px-1 py-2 text-heading shadow-[0_0_60px_rgba(230,57,70,0.15)] md:rounded-2xl md:px-3 md:py-6"
       initial={shouldReduceMotion ? undefined : { opacity: 0, y: 12 }}
       whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
@@ -56,13 +47,13 @@ export default function CriticalRequests() {
         <>
           <motion.div
             aria-hidden
-            className="absolute inset-0 rounded-2xl border border-red-500/30 pointer-events-none"
+            className="pointer-events-none absolute inset-0 rounded-2xl border border-red-500/30"
             animate={{ opacity: [0.3, 0.8, 0.3], scale: [1, 1.008, 1] }}
             transition={{ duration: 2.8, repeat: Infinity, ease: [0.42, 0, 0.58, 1] as const }}
           />
           <motion.div
             aria-hidden
-            className="absolute top-0 left-0 h-0.5 w-20 bg-linear-to-r from-transparent via-red-500/90 to-transparent pointer-events-none"
+            className="pointer-events-none absolute left-0 top-0 h-0.5 w-20 bg-linear-to-r from-transparent via-red-500/90 to-transparent"
             animate={{ x: [-90, 420] }}
             transition={{ duration: 2.4, repeat: Infinity, ease: [0.42, 0, 0.58, 1] as const }}
           />
@@ -70,13 +61,9 @@ export default function CriticalRequests() {
       )}
 
       <div className="relative">
-        <header className=" border-b border-red-500/20 gap-2 rtl:space-x-reverse flex items-center py-3 md:py-1  mb-4 md:mb-6">
+        <header className="mb-4 flex items-center gap-2 border-b border-red-500/20 py-3 rtl:space-x-reverse md:mb-6 md:py-1">
           <motion.span
-            animate={
-              shouldReduceMotion
-                ? undefined
-                : { rotate: [0, -12, 10, -7, 0], scale: [1, 1.08, 1] }
-            }
+            animate={shouldReduceMotion ? undefined : { rotate: [0, -12, 10, -7, 0], scale: [1, 1.08, 1] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: [0.42, 0, 0.58, 1] as const }}
           >
             <FontAwesomeIcon icon={faBell} style={{ color: "#E63946" }} />
@@ -91,9 +78,7 @@ export default function CriticalRequests() {
             />
           )}
 
-          <span className="font-medium text-sm md:text-base">
-            {t('criticalRequests.title')}
-          </span>
+          <span className="text-sm font-medium md:text-base">{t("criticalRequests.title")}</span>
         </header>
 
         <motion.div

@@ -20,6 +20,7 @@ export function useHospitalRequestRow({
 
   const openRequestDetails = () => {
     navigate(`/hospital_user/requests/${id}`);
+    console.log(`Navigating to request details for ID: ${id}`);
   };
 
   return {

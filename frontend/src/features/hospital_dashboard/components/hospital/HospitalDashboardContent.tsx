@@ -1,12 +1,12 @@
-import { StatCard } from "../StatCard";
-import { PhoneCall, AlertTriangle, Bed, Activity } from "lucide-react";
-import HospitalRecentRequests from "./HospitalRecentRequests";
-import { useTranslation } from "react-i18next";
-import { useGetMyHospital } from "@/features/hospitals_management/hooks/useGetMyHospital";
-import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { motion, useReducedMotion } from "framer-motion";
+import { Activity, AlertTriangle, Bed, PhoneCall } from "lucide-react";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { StatCard } from "@/features/dashboard/components/StatCard";
+import { useGetMyHospital } from "@/features/hospitals_management/hooks/useGetMyHospital";
+import HospitalRecentRequests from "./HospitalRecentRequests";
 
 export default function HospitalDashboardContent() {
   const { t } = useTranslation("dashboard");
@@ -15,16 +15,13 @@ export default function HospitalDashboardContent() {
 
   useEffect(() => {
     fetchMyHospital();
-  }, []);
+  }, [fetchMyHospital]);
 
-  // Real data from API, with fallbacks
   const totalBeds = hospital?.bedCapacity ?? 0;
   const availableBeds = hospital?.availableBeds ?? 0;
-  const occupancyPercentage = totalBeds > 0
-    ? Math.round(((totalBeds - availableBeds) / totalBeds) * 100)
-    : 0;
+  const occupancyPercentage =
+    totalBeds > 0 ? Math.round(((totalBeds - availableBeds) / totalBeds) * 100) : 0;
 
-  // These stats still need their own API endpoints - using placeholders for now
   const assignedRequests = 0;
   const newAssigned = 0;
   const completedRecently = 0;
@@ -63,7 +60,7 @@ export default function HospitalDashboardContent() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <FontAwesomeIcon icon={faSpinner} className="animate-spin text-primary text-2xl" />
+        <FontAwesomeIcon icon={faSpinner} className="text-2xl text-primary animate-spin" />
       </div>
     );
   }
@@ -71,17 +68,14 @@ export default function HospitalDashboardContent() {
   return (
     <section className="relative isolate">
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-6 md:mb-8"
+        className="mb-6 grid grid-cols-1 gap-3 md:mb-8 md:gap-4 lg:grid-cols-4 lg:gap-6 xl:grid-cols-4"
         variants={gridVariants}
         initial="hidden"
         animate="visible"
       >
-        {/* 1. Assigned Requests Count */}
         <motion.div
           variants={cardVariants}
-          whileHover={
-            shouldReduceMotion ? undefined : { y: -8, scale: 1.01, transition: { duration: 0.24 } }
-          }
+          whileHover={shouldReduceMotion ? undefined : { y: -8, scale: 1.01, transition: { duration: 0.24 } }}
           whileTap={shouldReduceMotion ? undefined : { scale: 0.995 }}
         >
           <StatCard
@@ -92,13 +86,11 @@ export default function HospitalDashboardContent() {
             subtitle={
               <div className="flex items-center gap-2 text-xs">
                 <span className="flex items-center gap-1 text-success">
-                  <span className="text-lg">↑</span> {newAssigned}{" "}
-                  {t("hospital.newAssigned")}
+                  <span className="text-lg">↑</span> {newAssigned} {t("hospital.newAssigned")}
                 </span>
                 <span className="opacity-40">•</span>
                 <span className="flex items-center gap-1 text-muted">
-                  <span className="text-lg">↓</span> {completedRecently}{" "}
-                  {t("hospital.completedRecently")}
+                  <span className="text-lg">↓</span> {completedRecently} {t("hospital.completedRecently")}
                 </span>
               </div>
             }
@@ -106,31 +98,23 @@ export default function HospitalDashboardContent() {
           />
         </motion.div>
 
-        {/* 2. Critical Cases */}
         <motion.div
           variants={cardVariants}
-          whileHover={
-            shouldReduceMotion ? undefined : { y: -8, scale: 1.01, transition: { duration: 0.24 } }
-          }
+          whileHover={shouldReduceMotion ? undefined : { y: -8, scale: 1.01, transition: { duration: 0.24 } }}
           whileTap={shouldReduceMotion ? undefined : { scale: 0.995 }}
         >
           <StatCard
             title={t("stats.criticalCases")}
             value={criticalCases}
             icon={AlertTriangle}
-            subtitle={t("stats.avgResponseTime", {
-              time: avgCriticalResponseTime,
-            })}
+            subtitle={t("stats.avgResponseTime", { time: avgCriticalResponseTime })}
             variant="critical"
           />
         </motion.div>
 
-        {/* 3. Available Beds */}
         <motion.div
           variants={cardVariants}
-          whileHover={
-            shouldReduceMotion ? undefined : { y: -8, scale: 1.01, transition: { duration: 0.24 } }
-          }
+          whileHover={shouldReduceMotion ? undefined : { y: -8, scale: 1.01, transition: { duration: 0.24 } }}
           whileTap={shouldReduceMotion ? undefined : { scale: 0.995 }}
         >
           <StatCard
@@ -139,11 +123,8 @@ export default function HospitalDashboardContent() {
             icon={Bed}
             subtitle={
               <div className="space-y-2">
-                <div className="text-xs">
-                  {t("stats.occupancyRate", { percent: occupancyPercentage })}
-                </div>
-                {/* Progress bar */}
-                <div className="w-full h-2 bg-white/20 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="text-xs">{t("stats.occupancyRate", { percent: occupancyPercentage })}</div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-white/20 dark:bg-gray-700">
                   <motion.div
                     className={`h-full rounded-full ${
                       occupancyPercentage > 85
@@ -152,10 +133,7 @@ export default function HospitalDashboardContent() {
                           ? "bg-yellow-500"
                           : "bg-green-500"
                     }`}
-                    style={{
-                      width: `${occupancyPercentage}%`,
-                      transformOrigin: "0% 50%",
-                    }}
+                    style={{ width: `${occupancyPercentage}%`, transformOrigin: "0% 50%" }}
                     initial={shouldReduceMotion ? undefined : { scaleX: 0 }}
                     whileInView={shouldReduceMotion ? undefined : { scaleX: 1 }}
                     viewport={{ once: true, amount: 0.6 }}
@@ -168,12 +146,9 @@ export default function HospitalDashboardContent() {
           />
         </motion.div>
 
-        {/* 4. Active Cases */}
         <motion.div
           variants={cardVariants}
-          whileHover={
-            shouldReduceMotion ? undefined : { y: -8, scale: 1.01, transition: { duration: 0.24 } }
-          }
+          whileHover={shouldReduceMotion ? undefined : { y: -8, scale: 1.01, transition: { duration: 0.24 } }}
           whileTap={shouldReduceMotion ? undefined : { scale: 0.995 }}
         >
           <StatCard
