@@ -34,7 +34,11 @@
         "selectRole": "Select role",
         "selectHospital": "Select hospital",
         "loadingHospitals": "Loading hospitals...",
-        "hospitalAdminHint": "Choose the hospital this hospital admin will manage."
+        "hospitalAdminHint": "Choose the hospital this hospital admin will manage.",
+        "ambulance": "Ambulance Assignment",
+        "selectAmbulance": "Select ambulance",
+        "ambulanceDriverHint": "Choose the ambulance this user will be assigned to ",
+        "ambulanceLoading": "Loading ambulances..."
     },
     "genders": {
         "Male": "Male",

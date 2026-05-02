@@ -39,13 +39,15 @@ export default function AllAmbulances() {
   };
 
   const openEditModal = (ambulance: AmbulanceControlItem) => {
-    setSelectedAmbulance({
+    setSelectedAmbulance(
+      {
       id: ambulance.id,
       name: ambulance.name,
       ambulanceNumber: ambulance.ambulanceNumber,
       vehicleInfo: ambulance.vehicleInfo,
       driverPhone: ambulance.driverPhone,
       driverId: ambulance.driverId,
+      paramedicId: ambulance.paramedicId,
       driverName: ambulance.driverName,
       startingPrice: ambulance.startingPrice,
       ambulancePointId: ambulance.ambulancePointId,
@@ -81,6 +83,7 @@ export default function AllAmbulances() {
           vehicleInfo: ambulance.vehicleInfo,
           driverPhone: ambulance.driverPhone,
           driverId: ambulance.driverId,
+          paramedicId: ambulance.paramedicId,
           driverName: ambulance.driverName,
           startingPrice: ambulance.startingPrice,
           ambulancePointId: ambulance.ambulancePointId,
@@ -140,7 +143,7 @@ export default function AllAmbulances() {
         maintenance={kpis.maintenance}
       />
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="flex flex-col gap-6 w-full">
         <AmbulanceFleetPanel
           ambulances={ambulances}
           isLoading={isLoading}

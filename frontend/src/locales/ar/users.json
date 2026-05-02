@@ -46,7 +46,11 @@
         "hospital": "المستشفى",
         "selectHospital": "اختر مستشفى",
         "loadingHospitals": "جاري تحميل المستشفيات...",
-        "hospitalAdminHint": "اختر المستشفى التي سيديرها مدير المستشفى هذا."
+        "hospitalAdminHint": "اختر المستشفى التي سيديرها مدير المستشفى هذا.",
+        "ambulance": "تعيين سيارة إسعاف",
+        "selectAmbulance": "اختر سيارة إسعاف",
+        "ambulanceLoading": " جاري تحميل سيارات الإسعاف...",
+        "ambulanceDriverHint": "اختر سيارة الإسعاف التي سيقودها سائق الإسعاف هذا."
     },
     "genders": {
         "Male": "ذكر",

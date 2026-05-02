@@ -63,6 +63,10 @@ function asNullableNumber(value: unknown): number | null {
 function toStatus(value: unknown): AmbulanceStatus {
   const statusCode = asNumber(value, Number.NaN);
 
+  if (statusCode === 0) {
+    return "AVAILABLE";
+  }
+
   if (statusCode === 1) {
     return "IN_TRANSIT";
   }
@@ -202,6 +206,7 @@ export function normalizeAmbulance(raw: unknown): Ambulance | null {
     driverPhone: asString(record.driverPhone, "-"),
     driverId: asNullableString(record.driverId),
     driverName: asNullableString(record.driverName),
+    paramedicId: asNullableString(record.paramedicId),
     startingPrice: asNumber(record.startingPrice, 0),
     ambulancePointId,
     licensePlate: ambulanceNumber,
@@ -273,6 +278,7 @@ export function buildAmbulancePayload(
     simLatitude: ambulance.latitude,
     simLongitude: ambulance.longitude,
     driverId: ambulance.driverId,
+    paramedicId: ambulance.paramedicId,
     driverName: ambulance.driverName,
     startingPrice: ambulance.startingPrice,
     ambulanceNumber,

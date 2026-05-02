@@ -12,6 +12,7 @@ export type Ambulance = {
   driverPhone: string;
   driverId: string | null;
   driverName: string | null;
+  paramedicId: string | null;
   startingPrice: number;
   ambulancePointId: number | null;
   licensePlate: string;
@@ -37,6 +38,7 @@ export type AmbulanceProfile = {
   simLongitude: number;
   driverId: string | null;
   driverName: string | null;
+  paramedicId?: string | null;
   startingPrice: number;
   ambulanceNumber: string;
   ambulancePointId: number | null;

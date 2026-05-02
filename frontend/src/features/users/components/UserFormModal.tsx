@@ -2,42 +2,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useTranslation } from "react-i18next";
 import { createPortal } from "react-dom";
-import { useEffect } from "react";
 import type { User } from "../types/users.types";
 import useModal from "../hooks/useModal";
-import { useGetHospitals } from "@/features/hospitals_management/hooks/useGetHospitals";
+import { useUserFormModalLogic } from "../hooks/useUserFormModalLogic";
 import SelectField from "@/shared/ui/SelectField";
 
-type UserFormRole =
-  | "Admin"
-  | "HospitalAdmin"
-  | "Paramedic"
-  | "AmbulanceDriver"
-  | "SuperAdmin";
 type UserFormGender = "Male" | "Female";
-
-const ROLE_SELECT_VALUE_MAP: Record<string, UserFormRole> = {
-  admin: "Admin",
-  hospitaladmin: "HospitalAdmin",
-  paramedic: "Paramedic",
-  ambulancedriver: "AmbulanceDriver",
-  superadmin: "SuperAdmin",
-  "system superadmin": "SuperAdmin",
-};
-
-const normalizeRoleForSelect = (value: unknown): UserFormRole | "" => {
-  if (typeof value !== "string") return "";
-  const normalized = value.trim().toLowerCase();
-  return ROLE_SELECT_VALUE_MAP[normalized] || "";
-};
-
-const normalizeGenderForSelect = (value: unknown): UserFormGender | "" => {
-  if (typeof value !== "string") return "";
-  const normalized = value.trim().toLowerCase();
-  if (normalized === "male") return "Male";
-  if (normalized === "female") return "Female";
-  return "";
-};
 
 interface UserFormModalProps {
   isOpen: boolean;
@@ -62,30 +32,23 @@ export function UserFormModal({
     user,
     mode,
   });
-
   const {
     hospitals,
-    fetchHospitals,
-    isLoading: isHospitalsLoading,
-  } = useGetHospitals();
-  const selectedRole =
-    normalizeRoleForSelect(watch("role")) ||
-    (mode === "edit"
-      ? normalizeRoleForSelect(
-          user?.roles && user.roles.length > 0 ? user.roles[0] : user?.role,
-        )
-      : "");
-  const selectedGender =
-    normalizeGenderForSelect(watch("gender")) ||
-    (mode === "edit" ? normalizeGenderForSelect(user?.gender) : "");
-  const selectedHospitalId = watch("hospitalId") || "";
-
-  // Fetch hospitals when the modal opens and role is HospitalAdmin
-  useEffect(() => {
-    if (isOpen && selectedRole === "HospitalAdmin") {
-      fetchHospitals();
-    }
-  }, [isOpen, selectedRole, fetchHospitals]);
+    isHospitalsLoading,
+    ambulances,
+    isAmbulancesLoading,
+    selectedRole,
+    selectedGender,
+    selectedHospitalId,
+    selectedAmbulanceId,
+    handleRoleChange,
+  } = useUserFormModalLogic({
+    isOpen,
+    mode,
+    user,
+    watch,
+    setValue,
+  });
 
   if (!isOpen) return null;
 
@@ -116,6 +79,7 @@ export function UserFormModal({
             <input type="hidden" {...register("role", { required: true })} />
             <input type="hidden" {...register("gender", { required: mode === "add" })} />
             <input type="hidden" {...register("hospitalId")} />
+            <input type="hidden" {...register("ambulanceId")} />
 
             {/* Name */}
             <div>
@@ -327,19 +291,7 @@ export function UserFormModal({
                 label={t("form.role")}
                 required
                 value={selectedRole || ""}
-                onChange={(value) => {
-                  setValue("role", value as UserFormRole, {
-                    shouldDirty: true,
-                    shouldValidate: true,
-                  });
-
-                  if (value !== "HospitalAdmin") {
-                    setValue("hospitalId", "", {
-                      shouldDirty: true,
-                      shouldValidate: true,
-                    });
-                  }
-                }}
+                onChange={handleRoleChange}
                 options={[
                   ...(mode === "edit"
                     ? [{ value: "SuperAdmin", label: t("roles.SuperAdmin") }]
@@ -398,6 +350,46 @@ export function UserFormModal({
                 )}
                 <p className="mt-1.5 text-xs text-muted">
                   {t("form.hospitalAdminHint")}
+                </p>
+              </div>
+            )}
+            {selectedRole === "AmbulanceDriver" && (
+              <div>
+                <SelectField
+                  id="ambulanceId"
+                  label={t("form.ambulance")}
+                  required
+                  value={selectedAmbulanceId}
+                  onChange={(value) =>
+                    setValue("ambulanceId", value, {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    })
+                  }
+                  options={ambulances.map((ambulance) => ({
+                    value: String(ambulance.id),
+                    label: ambulance.name,
+                  }))}
+                  placeholder={t("form.selectAmbulance")}
+                  disabled={isLoading || isAmbulancesLoading}
+                  triggerClassName="rounded-xl px-3.5 py-2.5 text-sm"
+                  error={
+                    errors.ambulanceId?.message
+                      ? String(errors.ambulanceId.message)
+                      : undefined
+                  }
+                />
+                {isAmbulancesLoading && (
+                  <p className="mt-1.5 text-xs text-muted">
+                    <FontAwesomeIcon
+                      icon={faSpinner}
+                      className="animate-spin mr-1"
+                    />
+                    {t("form.loadingAmbulances")}
+                  </p>
+                )}
+                <p className="mt-1.5 text-xs text-muted">
+                  {t("form.ambulanceDriverHint")}
                 </p>
               </div>
             )}

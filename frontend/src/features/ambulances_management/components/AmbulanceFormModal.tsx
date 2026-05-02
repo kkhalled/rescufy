@@ -177,6 +177,40 @@ export function AmbulanceFormModal({
 
               <div>
                 <label
+                  htmlFor="driverId"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  Driver ID
+                </label>
+                <input
+                  type="text"
+                  id="driverId"
+                  {...register("driverId")}
+                  className="w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted border-border focus:ring-primary/30 focus:border-primary"
+                  placeholder="Driver ID"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="paramedicId"
+                  className="block text-sm font-medium text-body mb-1.5"
+                >
+                  Paramedic ID
+                </label>
+                <input
+                  type="text"
+                  id="paramedicId"
+                  {...register("paramedicId")}
+                  className="w-full px-3.5 py-2.5 text-sm border rounded-xl focus:outline-none focus:ring-2 transition-all bg-background text-heading placeholder:text-muted border-border focus:ring-primary/30 focus:border-primary"
+                  placeholder="Paramedic ID"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label
                   htmlFor="startingPrice"
                   className="block text-sm font-medium text-body mb-1.5"
                 >
@@ -215,9 +249,7 @@ export function AmbulanceFormModal({
                   placeholder="2"
                 />
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <SelectField
                   id="status"
@@ -240,7 +272,8 @@ export function AmbulanceFormModal({
                   error={errors.status?.message}
                 />
               </div>
-
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label
                   htmlFor="latitude"
@@ -293,9 +326,6 @@ export function AmbulanceFormModal({
                 )}
               </div>
             </div>
-          </div>
-
-          <div className="flex gap-3 justify-end px-6 py-4 border-t border-border bg-surface-muted">
             <button
               type="button"
               onClick={onClose}

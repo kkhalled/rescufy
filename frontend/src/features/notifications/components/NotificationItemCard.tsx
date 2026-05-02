@@ -60,6 +60,14 @@ export default function NotificationItemCard({
   const LevelIcon = levelIcons[notification.level];
   const CategoryIcon = categoryIcons[notification.category];
 
+  const resolvedTitle = notification.titleKey
+    ? t(`notifications:${notification.titleKey}`)
+    : notification.title || "Notification";
+
+  const resolvedMessage = notification.messageKey
+    ? t(`notifications:${notification.messageKey}`)
+    : notification.message || "";
+
   return (
     <article
       className={
@@ -76,10 +84,10 @@ export default function NotificationItemCard({
 
           <div className="min-w-0">
             <h4 className="truncate text-sm font-semibold text-heading">
-              {t(`notifications:${notification.titleKey}`)}
+              {resolvedTitle}
             </h4>
             <p className="mt-0.5 line-clamp-2 text-xs leading-5 text-muted">
-              {t(`notifications:${notification.messageKey}`)}
+              {resolvedMessage}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-muted">
               <CategoryIcon size={12} />
@@ -95,14 +103,15 @@ export default function NotificationItemCard({
             type="button"
             onClick={() => onToggleReadState(notification.id)}
             className="rounded-md p-1.5 text-muted hover:bg-background hover:text-heading transition-colors"
+            disabled={notification.isRead}
             aria-label={
               notification.isRead
-                ? t("notifications:actions.markUnread")
+                ? t("notifications:status.read")
                 : t("notifications:actions.markRead")
             }
             title={
               notification.isRead
-                ? t("notifications:actions.markUnread")
+                ? t("notifications:status.read")
                 : t("notifications:actions.markRead")
             }
           >

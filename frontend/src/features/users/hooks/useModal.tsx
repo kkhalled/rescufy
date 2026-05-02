@@ -5,28 +5,9 @@ import { userSchema, userEditSchema } from "../schemas/modal.schema";
 import { useEffect } from "react";
 import type { z } from "zod";
 
-const ROLE_VALUE_MAP: Record<string, User["role"]> = {
-  admin: "Admin",
-  hospitaladmin: "HospitalAdmin",
-  paramedic: "Paramedic",
-  ambulancedriver: "AmbulanceDriver",
-  superadmin: "SuperAdmin",
-  "system superadmin": "SuperAdmin",
-};
 
-const normalizeRoleValue = (value: unknown): User["role"] | undefined => {
-  if (typeof value !== "string") return undefined;
-  const normalized = value.trim().toLowerCase();
-  return ROLE_VALUE_MAP[normalized];
-};
 
-const normalizeGenderValue = (value: unknown): User["gender"] | undefined => {
-  if (typeof value !== "string") return undefined;
-  const normalized = value.trim().toLowerCase();
-  if (normalized === "male") return "Male";
-  if (normalized === "female") return "Female";
-  return undefined;
-};
+
 
 type UserAddFormData = z.infer<typeof userSchema>;
 type UserEditFormData = z.infer<typeof userEditSchema>;
@@ -57,29 +38,26 @@ export default function useModal({ onSubmit, user, mode }: UserFormModalProps) {
       password: "",
       phoneNumber: "",
       role: undefined,
-      hospitalId: "",
+      hospitalId: undefined,
+      ambulanceId: undefined,
     },
   });
 
   useEffect(() => {
     if (user && mode === "edit") {
-      const normalizedRoleFromArray =
-        user.roles && user.roles.length > 0
-          ? normalizeRoleValue(user.roles[0])
-          : undefined;
-      const normalizedRole =
-        normalizedRoleFromArray || normalizeRoleValue(user.role);
+      
 
       reset({
         name: user.name,
         email: user.email,
         nationalId: typeof user.nationalId === "string" ? user.nationalId : "",
-        gender: normalizeGenderValue(user.gender),
-        age: typeof user.age === "number" && Number.isFinite(user.age) ? user.age : undefined,
+        gender: user.gender,
+        age:user.age,
         password: "",
-        phoneNumber: typeof user.phoneNumber === "string" ? user.phoneNumber : "",
-        role: normalizedRole as any,
-        hospitalId: user.hospitalId ? String(user.hospitalId) : "",
+        phoneNumber: user.phoneNumber || "",
+        role: user.role,
+        hospitalId: user.hospitalId ? String(user.hospitalId) : undefined,
+        ambulanceId: user.ambulanceId ? String(user.ambulanceId) : undefined,
       });
     } else {
       reset({
@@ -91,34 +69,25 @@ export default function useModal({ onSubmit, user, mode }: UserFormModalProps) {
         password: "",
         phoneNumber: "",
         role: undefined,
-        hospitalId: "",
+        hospitalId: undefined,
+        ambulanceId: undefined,
       });
     }
   }, [user, mode, reset]);
 
   const submitHandler = handleSubmit((data) => {
-    const normalizedPhoneNumber =
-      typeof data.phoneNumber === "string" ? data.phoneNumber.trim() : "";
-    const normalizedRole = data.role as User["role"] | undefined;
-
     const userData: User = {
-      ...(mode === "edit" && user?.id ? { id: user.id } : {}),
-      ...(mode === "edit" && typeof user?.isBanned === "boolean"
-        ? { isBanned: user.isBanned }
-        : {}),
       name: data.name,
+      id: user?.id,
       email: data.email,
-      role: normalizedRole,
-      ...(normalizedRole ? { roles: [normalizedRole] } : {}),
-      ...(data.password ? { password: data.password } : {}),
-      ...(data.hospitalId ? { hospitalId: Number(data.hospitalId) } : {}),
+      nationalId: data.nationalId,
+      gender: data.gender,
+      age: data.age,
+      phoneNumber: data.phoneNumber,
+      role: data.role,
+      hospitalId: data.hospitalId ? Number(data.hospitalId) : undefined,
+      ambulanceId: data.ambulanceId ? Number(data.ambulanceId) : undefined,
     };
-
-    if (mode === "add") {
-      userData.phoneNumber = normalizedPhoneNumber;
-    } else {
-      userData.phoneNumber = normalizedPhoneNumber || null;
-    }
 
     if (mode === "add") {
       const addData = data as UserAddFormData;
@@ -133,6 +102,9 @@ export default function useModal({ onSubmit, user, mode }: UserFormModalProps) {
       if (editData.gender) userData.gender = editData.gender;
       if (typeof editData.age === "number" && Number.isFinite(editData.age)) {
         userData.age = editData.age;
+      }
+      if (editData.ambulanceId) {
+        userData.ambulanceId = Number(editData.ambulanceId);
       }
     }
 

@@ -17,8 +17,10 @@ export default function NotificationBell() {
     filteredNotifications,
     unreadCount,
     criticalCount,
+    isLoading,
+    isMutating,
     markAllAsRead,
-    toggleReadState,
+    markAsRead,
     dismissNotification,
     clearRead,
   } = useNotifications();
@@ -56,12 +58,12 @@ export default function NotificationBell() {
 
   const handleMarkAllAsRead = () => {
     if (!hasUnread) return;
-    markAllAsRead();
+    void markAllAsRead();
     toast.success(t("notifications:toasts.markedAllRead"));
   };
 
   const handleClearRead = () => {
-    clearRead();
+    void clearRead();
     toast.success(t("notifications:toasts.clearedRead"));
   };
 
@@ -100,8 +102,14 @@ export default function NotificationBell() {
         onFilterChange={setActiveFilter}
         onMarkAllAsRead={handleMarkAllAsRead}
         onClearRead={handleClearRead}
-        onToggleReadState={toggleReadState}
-        onDismiss={dismissNotification}
+        onToggleReadState={(id) => {
+          void markAsRead(id);
+        }}
+        onDismiss={(id) => {
+          void dismissNotification(id);
+        }}
+        isLoading={isLoading}
+        isMutating={isMutating}
       />
     </div>
   );

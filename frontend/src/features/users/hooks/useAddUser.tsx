@@ -29,18 +29,26 @@ export function useAddUser() {
         return null;
       }
 
+      const userPayload = {
+        email: userdata.email,
+        nationalId: userdata.nationalId,
+        gender: userdata.gender,
+        age: userdata.age,
+        password: userdata.password,
+        name: userdata.name,
+        phoneNumber: userdata.phoneNumber,
+        role: userdata.role,
+        hospitalId:
+          userdata.role === "HospitalAdmin" ? userdata.hospitalId : "1",
+        ambulanceId:
+          userdata.role === "AmbulanceDriver"
+            ? userdata.ambulanceId
+            : "",
+      };
+
       const response = await axios.post(
         getApiUrl(API_CONFIG.ENDPOINTS.USERS.CREATE),
-        {
-          email: userdata.email,
-          nationalId: userdata.nationalId,
-          gender: userdata.gender,
-          age: userdata.age,
-          password: userdata.password,
-          name: userdata.name,
-          phoneNumber: userdata.phoneNumber,
-          role: userdata.role,
-        },
+        userPayload,
         {
           headers: {
             "Content-Type": "application/json",
@@ -49,13 +57,16 @@ export function useAddUser() {
         },
       );
 
-      console.log("User created successfully:", response.data);
+      console.log("User created successfully:", response);
 
       toast.success(t("users:addUser.success", { name: userdata.name }), {
         position: toastPosition,
       });
 
-      return response.data?.user || response.data || { ...userdata, id: Date.now().toString() };
+      return (
+        response.data?.user ||
+        response.data || { ...userdata, id: Date.now().toString() }
+      );
     } catch (error: any) {
       console.error("Add user error:", error);
       handleError(error, toastPosition);
@@ -65,10 +76,7 @@ export function useAddUser() {
     }
   };
 
-  const handleError = (
-    error: any,
-    toastPosition: "top-left" | "top-right",
-  ) => {
+  const handleError = (error: any, toastPosition: "top-left" | "top-right") => {
     // Log full error response for debugging
     console.error("Full error response:", error.response?.data);
     console.error("Status:", error.response?.status);
@@ -84,7 +92,9 @@ export function useAddUser() {
         // ASP.NET validation: { errors: { FieldName: ["error1", "error2"] } }
         const messages = Object.entries(data.errors)
           .map(([field, msgs]: [string, any]) => {
-            const msgList = Array.isArray(msgs) ? msgs.join(", ") : String(msgs);
+            const msgList = Array.isArray(msgs)
+              ? msgs.join(", ")
+              : String(msgs);
             return `${field}: ${msgList}`;
           })
           .join(" | ");
@@ -92,7 +102,8 @@ export function useAddUser() {
       } else if (typeof data === "string") {
         errorMessage = data;
       } else {
-        errorMessage = data?.message || data?.title || t("users:addUser.badRequest");
+        errorMessage =
+          data?.message || data?.title || t("users:addUser.badRequest");
       }
 
       toast.error(errorMessage, { position: toastPosition });

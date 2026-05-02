@@ -4,7 +4,7 @@
  */
 
 export const API_CONFIG = {
-  BASE_URL: "http://back23-4.runasp.net",
+  BASE_URL: "http://final1111.runasp.net",
   ENDPOINTS: {
     AUTH: {
       LOGIN: "/api/Auth/login",
@@ -18,13 +18,14 @@ export const API_CONFIG = {
       UPDATE: (id: string) => `/api/Users/${id}`,
       DELETE: (id: string) => `/api/Users/${id}`,
       GET_BY_ID: (id: string) => `/api/Users/${id}`,
-      ASSIGN_HOSPITAL: (userId: string, hospitalId: number) =>
-        `/api/Users/${userId}/assign-hospital/${hospitalId}`,
+     
     },
     HOSPITALS: {
       GET_ALL: "/api/Hospital",
       CREATE: "/api/Hospital",
       MY_HOSPITAL: "/api/Hospital/my",
+      MY_REQUESTS: "/api/Hospital/my-requests",
+      ACTIVE_REQUESTS: (id: number) => `/api/Hospital/${id}/active-requests`,
       GET_BY_ID: (id: string) => `/api/Hospital/${id}`,
       UPDATE: (id: string) => `/api/Hospital/${id}`,
       DELETE: (id: string) => `/api/Hospital/${id}`,
@@ -44,6 +45,13 @@ export const API_CONFIG = {
       GET_ADMIN_REQUESTS: "/api/request/admin-stream",
       GET_BY_ID: (id: string) => `/api/Request/${id}`,
       CANCEL_REQUEST: (id: string) => `/api/Request/${id}/cancel`,
+    },
+    NOTIFICATIONS: {
+      GET_ALL: "/api/Notification",
+      UNREAD_COUNT: "/api/Notification/unread-count",
+      MARK_READ: (id: string) => `/api/Notification/${id}/read`,
+      MARK_ALL_READ: "/api/Notification/mark-all-read",
+      DELETE: (id: string) => `/api/Notification/${id}`,
     },
     DASHBOARD: {
       GET_STATS: "/api/Dashboard/stats",

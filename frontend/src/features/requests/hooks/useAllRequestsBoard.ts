@@ -26,6 +26,17 @@ export function useAllRequestsBoard({
 }: UseAllRequestsBoardParams) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [hasFetchedInitial, setHasFetchedInitial] = useState(false);
+  const [timeTick, setTimeTick] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setTimeTick((current) => current + 1);
+    }, 30_000);
+
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, []);
 
   useEffect(() => {
     if (hasFetchedInitial) {
@@ -117,7 +128,7 @@ export function useAllRequestsBoard({
         dispatchAlternatives: alternatives,
       };
     });
-  }, [requests]);
+  }, [requests, timeTick]);
 
   const boardRequests = queueRequests;
 

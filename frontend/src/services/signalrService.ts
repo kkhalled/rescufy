@@ -106,3 +106,19 @@ export function onRequestUpdated(
     connection?.off("ReceiveNotification", notificationHandler);
   };
 }
+
+export function onNotification(callback: (event: unknown) => void): () => void {
+  if (!connection) {
+    return () => {};
+  }
+
+  const notificationHandler = (event: unknown) => {
+    callback(getPayload(event));
+  };
+
+  connection.on("ReceiveNotification", notificationHandler);
+
+  return () => {
+    connection?.off("ReceiveNotification", notificationHandler);
+  };
+}

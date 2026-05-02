@@ -4,7 +4,6 @@ import { useAddUser } from "./useAddUser";
 import { useGetUsers } from "./useGetUsers";
 import { useUpdateUser } from "./useUpdateUser";
 import { useDeleteUser } from "./useDeleteUser";
-import { useAssignHospital } from "./useAssignHospital";
 import { useGetUserById } from "./useGetUserById";
 
 export function useUsers() {
@@ -20,7 +19,6 @@ export function useUsers() {
   const { fetchUserById } = useGetUserById();
   const { updateUser, isLoading: isUpdateLoading } = useUpdateUser();
   const { deleteUser, isLoading: isDeleteLoading } = useDeleteUser();
-  const { assignHospital, isLoading: isAssignLoading } = useAssignHospital();
 
   // Fetch users on component mount and when role filter changes
   useEffect(() => {
@@ -83,9 +81,7 @@ export function useUsers() {
         const createdUser = await addUser(user);
         if (createdUser) {
           // If the user is a HospitalAdmin and has a hospitalId, assign the hospital
-          if (user.role === "HospitalAdmin" && user.hospitalId && createdUser.id) {
-            await assignHospital(createdUser.id, user.hospitalId);
-          }
+         
           setIsModalOpen(false);
           setSelectedUser(undefined);
           await fetchUsers(role);
@@ -101,7 +97,7 @@ export function useUsers() {
         }
       }
     },
-    [modalMode, addUser, updateUser, assignHospital, fetchUsers, role],
+    [modalMode, addUser, updateUser, fetchUsers, role],
   );
 
   const handleDeleteUser = useCallback(
@@ -124,7 +120,7 @@ export function useUsers() {
     isModalOpen,
     modalMode,
     selectedUser,
-    isLoading: isAddLoading || isFetchLoading || isUpdateLoading || isDeleteLoading || isAssignLoading,
+    isLoading: isAddLoading || isFetchLoading || isUpdateLoading || isDeleteLoading ,
     openAddModal,
     openEditModal,
     closeModal,

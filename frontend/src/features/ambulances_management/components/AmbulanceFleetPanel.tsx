@@ -56,7 +56,7 @@ export function AmbulanceFleetPanel({
           <p className="mt-1 text-xs text-muted">{t("controlCenter.empty.subtitle")}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 rounded-xl border border-border/50 bg-surface-muted/35 p-2 md:p-3 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 rounded-xl border border-border/50 bg-surface-muted/35 p-2 md:p-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {ambulances.map((ambulance) => (
             <div key={ambulance.id}>
               <AmbulanceCard

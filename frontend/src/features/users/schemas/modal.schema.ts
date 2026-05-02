@@ -51,6 +51,7 @@ export const userSchema = z.object({
     message: "Role selection is required",
   }),
   hospitalId: z.string().optional(),
+  ambulanceId: z.string().optional(),
 });
 
 export const userEditSchema = z.object({
@@ -65,6 +66,7 @@ export const userEditSchema = z.object({
     message: "Role selection is required",
   }),
   hospitalId: z.string().optional(),
+  ambulanceId: z.string().optional(),
 });
 
 // Legacy schema for backward compatibility

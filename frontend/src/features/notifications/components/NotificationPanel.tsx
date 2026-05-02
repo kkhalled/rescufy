@@ -16,6 +16,8 @@ type NotificationPanelProps = {
   activeFilter: NotificationFilter;
   unreadCount: number;
   criticalCount: number;
+  isLoading: boolean;
+  isMutating: boolean;
   onFilterChange: (filter: NotificationFilter) => void;
   onMarkAllAsRead: () => void;
   onClearRead: () => void;
@@ -30,6 +32,8 @@ export default function NotificationPanel({
   activeFilter,
   unreadCount,
   criticalCount,
+  isLoading,
+  isMutating,
   onFilterChange,
   onMarkAllAsRead,
   onClearRead,
@@ -71,7 +75,11 @@ export default function NotificationPanel({
           </div>
 
           <div className="max-h-[calc(100vh-15rem)] space-y-2 overflow-y-auto p-3 sm:max-h-96">
-            {notifications.length === 0 ? (
+            {isLoading ? (
+              <div className="rounded-xl border border-dashed border-border/70 bg-background-second/50 px-4 py-8 text-center text-sm text-muted">
+                {t("subtitle")}
+              </div>
+            ) : notifications.length === 0 ? (
               <NotificationEmptyState isCriticalView={activeFilter === "critical"} />
             ) : (
               notifications.map((item) => (
@@ -90,7 +98,7 @@ export default function NotificationPanel({
               type="button"
               onClick={onMarkAllAsRead}
               className="inline-flex w-full items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-xs font-medium text-heading transition-colors hover:bg-background disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:justify-start"
-              disabled={unreadCount === 0}
+              disabled={unreadCount === 0 || isMutating}
             >
               <CheckCheck size={14} />
               <span>{t("actions.markAllRead")}</span>
@@ -99,7 +107,8 @@ export default function NotificationPanel({
             <button
               type="button"
               onClick={onClearRead}
-              className="inline-flex w-full items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-background hover:text-heading sm:w-auto sm:justify-start"
+              className="inline-flex w-full items-center justify-center gap-1 rounded-lg px-2 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-background hover:text-heading disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:justify-start"
+              disabled={isMutating}
             >
               <Eraser size={14} />
               <span>{t("actions.clearRead")}</span>

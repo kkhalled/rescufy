@@ -11,8 +11,10 @@ export type NotificationFilter = "all" | "unread" | "critical";
 
 export interface AppNotification {
   id: string;
-  titleKey: string;
-  messageKey: string;
+  titleKey?: string;
+  messageKey?: string;
+  title?: string;
+  message?: string;
   level: NotificationLevel;
   category: NotificationCategory;
   createdAt: string;

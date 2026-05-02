@@ -3,6 +3,7 @@ export type UserGender = "Male" | "Female";
 
 export interface User {
   id?: string;
+  
   name: string;
   email: string;
   password?: string;
@@ -14,6 +15,8 @@ export interface User {
   role?: UserRole; // Keep for backward compatibility
   isBanned?: boolean;
   hospitalId?: number; // For HospitalAdmin assignment
+  ambulanceId?: number; // For AmbulanceDriver assignment
 }
+
 
 export type UserLegacy = User;
