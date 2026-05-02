@@ -31,6 +31,10 @@ export const API_CONFIG = {
       DELETE: (id: string) => `/api/Hospital/${id}`,
       GET_STATS: (id: string) => `/api/Hospital/${id}/stats`,
       GET_REQUESTS: (id: string) => `/api/Hospital/${id}/requests`,
+      WEEKLY_STATS: (id: string) => `/api/Hospital/${id}/weekly-stats`,
+    },
+    FEEDBACK: {
+      GET_HOSPITAL: (hospitalId: string) => `/api/Feedback/hospital/${hospitalId}`,
     },
     AMBULANCES: {
       GET_ALL: "/api/Ambulance",
