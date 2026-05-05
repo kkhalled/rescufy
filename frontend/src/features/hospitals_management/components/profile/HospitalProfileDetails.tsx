@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import type { Hospital } from "../../types/hospitals.types";
 import { ProfileFieldCard } from "./ProfileFieldCard";

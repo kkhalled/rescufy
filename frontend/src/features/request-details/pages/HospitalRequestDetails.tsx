@@ -74,9 +74,6 @@ export default function HospitalRequestDetails() {
     },
   ];
 
-  // Grab the latest assignment's arrival time for the modal pre-fill
-  const latestAssignment = request.assignments.at(-1);
-
   return (
     <div className="min-h-screen bg-background p-4 md:p-6" dir={isRTL ? "rtl" : "ltr"}>
       <div className="mx-auto max-w-7xl space-y-6">
@@ -104,7 +101,7 @@ export default function HospitalRequestDetails() {
 
             <AIAnalysisSectionCard aiAnalysis={request.aiAnalysis} />
 
-            <TripReportSectionCard tripReport={request.tripReport} />
+            <TripReportSectionCard tripReport={request.tripReport} onOpenModal={() => setIsReportModalOpen(true)} />
           </div>
 
           {/* Right column */}
@@ -145,8 +142,10 @@ export default function HospitalRequestDetails() {
       <HospitalReportModal
         isOpen={isReportModalOpen}
         onClose={() => setIsReportModalOpen(false)}
-        requestId={String(id ?? request.id)}
-        initialArrivalTime={latestAssignment?.assignedAt}
+        requestId={request.id}
+        hospitalId={request.assignments?.[0]?.hospitalId ?? null}
+        existingReport={request.tripReport}
+        onSuccess={() => { if (id) void fetchRequest(id); }}
       />
     </div>
   );

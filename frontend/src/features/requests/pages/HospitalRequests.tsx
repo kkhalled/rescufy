@@ -10,9 +10,9 @@ export default function HospitalRequests() {
   const { user } = useAuth();
   const { requests, isLoading, isRefreshing, lastSyncedAt, refreshRequests } = useHospitalRequests();
 
-  const pendingCount = requests.filter((request) => request.status === "pending").length;
-  const activeCount = requests.filter((request) => request.status === "assigned" || request.status === "enRoute").length;
-  const completedCount = requests.filter((request) => request.status === "completed").length;
+  const pendingCount = requests.filter((request) => request.status === "Pending").length;
+  const activeCount = requests.filter((request) => request.status === "Assigned" || request.status === "Accepted" || request.status === "OnTheWay" || request.status === "Arrived" || request.status === "PickedUp").length;
+  const completedCount = requests.filter((request) => request.status === "Delivered" || request.status === "Finished").length;
 
   return (
     <section className="page-enter min-h-screen w-full px-4 py-6 sm:px-6 lg:px-8">

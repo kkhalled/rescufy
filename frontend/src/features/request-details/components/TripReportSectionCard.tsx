@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import type { TripReport } from "../types/requestDetails.types";
 import SectionCard from "./SectionCard";
 import FieldItem from "./FieldItem";
-import { useContext } from "react";
 import { useAuth } from "@/app/provider/AuthContext";
 
 function formatDateTime(iso: string, locale: string): string {
