@@ -18,12 +18,12 @@ export default function SignInForm() {
 
   return (
     <div
-      className="w-full rounded-2xl overflow-hidden border border-white/6"
+      className="w-full rounded-xl overflow-hidden border border-white/8"
       style={{
         background:
           "linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,16,30,0.98) 100%)",
         boxShadow:
-          "0 25px 60px -12px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.05) inset",
+          "0 16px 36px -20px rgba(0,0,0,0.55), 0 0 1px rgba(255,255,255,0.04) inset",
       }}
     >
       {/* ── Card top accent line ── */}
@@ -31,9 +31,9 @@ export default function SignInForm() {
 
       <form onSubmit={formik.handleSubmit} autoComplete="off">
         {/* ── Header ── */}
-        <div className="px-7 pt-7 pb-2">
-          <h2 className="text-[17px] font-semibold text-white flex items-center gap-2.5">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-primary/10 border border-primary/15">
+        <div className="px-6 pt-5 pb-2">
+          <h2 className="text-[16px] font-semibold text-white flex items-center gap-2">
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-primary/10 border border-primary/15">
               <FontAwesomeIcon
                 icon={faArrowRightToBracket}
                 className="w-3 h-3 text-primary"
@@ -41,13 +41,13 @@ export default function SignInForm() {
             </span>
             {t("auth:signIn.title")}
           </h2>
-          <p className="text-slate-500 text-[13px] mt-2 leading-relaxed ltr:ml-9.5 rtl:mr-9.5">
+          <p className="text-slate-500 text-[12px] mt-1.5 leading-relaxed ltr:ml-8 rtl:mr-8">
             {t("auth:signIn.subtitle")}
           </p>
         </div>
 
         {/* ── Form fields ── */}
-        <div className="px-7 pt-5 pb-3 space-y-4">
+        <div className="px-6 pt-4 pb-2 space-y-3.5">
           {/* Email Field */}
           <div>
             <label
@@ -71,7 +71,7 @@ export default function SignInForm() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 placeholder={t("auth:signIn.emailPlaceholder")}
-                className="login-input w-full ltr:pl-10 rtl:pr-10 ltr:pr-4 rtl:pl-4 py-3 rounded-xl text-sm text-slate-200 bg-white/3 border border-white/7 transition-all duration-200 outline-none"
+                className="login-input w-full ltr:pl-10 rtl:pr-10 ltr:pr-4 rtl:pl-4 py-2.5 rounded-lg text-sm text-slate-200 bg-white/3 border border-white/7 transition-all duration-200 outline-none"
               />
             </div>
             {formik.touched.email && formik.errors.email && (
@@ -104,7 +104,7 @@ export default function SignInForm() {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 placeholder={t("auth:signIn.passwordPlaceholder")}
-                className="login-input w-full ltr:pl-10 rtl:pr-10 ltr:pr-11 rtl:pl-11 py-3 rounded-xl text-sm text-slate-200 bg-white/3 border border-white/7 transition-all duration-200 outline-none"
+                className="login-input w-full ltr:pl-10 rtl:pr-10 ltr:pr-11 rtl:pl-11 py-2.5 rounded-lg text-sm text-slate-200 bg-white/3 border border-white/7 transition-all duration-200 outline-none"
               />
               <button
                 type="button"
@@ -136,7 +136,7 @@ export default function SignInForm() {
           </div>
 
           {/* Submit Button */}
-          <div className="pt-1 pb-2">
+          <div className="pt-1 pb-1">
             <button
               type="submit"
               disabled={isLoading || !formik.isValid}
@@ -146,8 +146,8 @@ export default function SignInForm() {
                 w-full
                 bg-primary
                 text-white
-                py-3
-                rounded-xl
+                py-2.5
+                rounded-lg
                 font-semibold
                 text-sm
                 hover:shadow-[0_0_30px_rgba(101,77,255,0.2)]
@@ -207,7 +207,7 @@ export default function SignInForm() {
         </div>
       </form>
 
-    <div className="flex gap-2 p-4">
+    <div className="flex gap-2 p-3">
   <button
     type="button"
     onClick={() =>
@@ -215,10 +215,10 @@ export default function SignInForm() {
     }
     className="
       flex-1 rounded-xl
-      border border-cyan-500/20
-      bg-cyan-500/10
-      px-4 py-2
-      text-sm text-cyan-300
+      border border-cyan-500/18
+      bg-cyan-500/6
+      px-3 py-1.5
+      text-xs text-cyan-300/90
     "
   >
     Admin Demo
@@ -231,10 +231,10 @@ export default function SignInForm() {
     }
     className="
       flex-1 rounded-xl
-      border border-emerald-500/20
-      bg-emerald-500/10
-      px-4 py-2
-      text-sm text-emerald-300
+      border border-emerald-500/18
+      bg-emerald-500/6
+      px-3 py-1.5
+      text-xs text-emerald-300/90
     "
   >
     Hospital Demo

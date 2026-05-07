@@ -18,19 +18,17 @@ export default function useSignIn() {
   const { t } = useTranslation(["auth", "validation"]);
   const { isRTL } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
-function changeRole(
-  selectedRole: string
-) {
-  const email =
-    selectedRole === "admin"
-      ? "superadmin@mohayaa.com"
-      : "admin1@hospital.com";
+  function changeRole(selectedRole: string) {
+    const email =
+      selectedRole === "admin"
+        ? "superadmin@mohayaa.com"
+        : "admin1@hospital.com";
 
-  formik.setValues({
-    email,
-    password: "P@ssword12",
-  });
-}
+    formik.setValues({
+      email,
+      password: "P@ssword12",
+    });
+  }
 
   type SignInFormValues = {
     email: string;
@@ -57,8 +55,10 @@ function changeRole(
 
       if (decoded.Role) {
         // Handle Role as array or string
-        const roles = Array.isArray(decoded.Role) ? decoded.Role : [decoded.Role];
-        
+        const roles = Array.isArray(decoded.Role)
+          ? decoded.Role
+          : [decoded.Role];
+
         // Determine primary role (SuperAdmin > Admin > HospitalAdmin)
         let primaryRole: "SuperAdmin" | "Admin" | "hospitaladmin";
         if (roles.includes("SuperAdmin")) {
@@ -76,7 +76,11 @@ function changeRole(
 
         // Store user data in context
         setUser({
-          id: decoded.Id || decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
+          id:
+            decoded.Id ||
+            decoded[
+              "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+            ],
           FullName: decoded.FullName,
           PicUrl: decoded.PicUrl,
           Email: decoded.Email,
@@ -113,7 +117,6 @@ function changeRole(
 
       // Handle different error scenarios
       const toastPosition = isRTL ? "top-left" : "top-right";
-
 
       if (error.response?.status === 401) {
         toast.error(t("auth:signIn.invalidCredentials"), {
@@ -163,17 +166,18 @@ function changeRole(
 
   const formik = useFormik({
     initialValues: {
-      
       email: "",
       password: "",
     },
     onSubmit: handleSubmit,
     validationSchema: validationSchema,
+
+    validateOnBlur: false,
   });
 
   return {
     formik,
     isLoading,
-    changeRole
+    changeRole,
   };
 }
