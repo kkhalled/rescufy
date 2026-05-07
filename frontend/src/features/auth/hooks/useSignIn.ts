@@ -18,6 +18,19 @@ export default function useSignIn() {
   const { t } = useTranslation(["auth", "validation"]);
   const { isRTL } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
+function changeRole(
+  selectedRole: string
+) {
+  const email =
+    selectedRole === "admin"
+      ? "superadmin@mohayaa.com"
+      : "admin1@hospital.com";
+
+  formik.setValues({
+    email,
+    password: "P@ssword12",
+  });
+}
 
   type SignInFormValues = {
     email: string;
@@ -150,8 +163,9 @@ export default function useSignIn() {
 
   const formik = useFormik({
     initialValues: {
-      email: "superadmin@mohayaa.com",
-      password: "P@ssword12",
+      
+      email: "",
+      password: "",
     },
     onSubmit: handleSubmit,
     validationSchema: validationSchema,
@@ -160,5 +174,6 @@ export default function useSignIn() {
   return {
     formik,
     isLoading,
+    changeRole
   };
 }

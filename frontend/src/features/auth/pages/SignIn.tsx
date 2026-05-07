@@ -5,6 +5,7 @@ export default function SignIn() {
   return (
     <AuthPageLayout>
       <SignInForm />
+    
     </AuthPageLayout>
   );
 }
