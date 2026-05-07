@@ -8,7 +8,6 @@ export function RequestItem({
   onSelect,
 }: RequestItemProps) {
   const {
-    
     theme,
     dispatchTheme,
     previewDescription,
@@ -51,11 +50,7 @@ export function RequestItem({
             : "bg-bg-card/95"
         }
 
-        ${
-          isFailed
-            ? "border-red-500/25 bg-red-500/5"
-            : ""
-        }
+        ${isFailed ? "border-red-500/25 bg-red-500/5" : ""}
       `}
     >
       {/* Accent Line */}
@@ -161,9 +156,7 @@ export function RequestItem({
             {statusIcon}
           </span>
 
-          <span className="hidden sm:inline">
-            {statusLabel}
-          </span>
+          <span className="hidden sm:inline">{statusLabel}</span>
         </span>
       </div>
 
@@ -191,9 +184,7 @@ export function RequestItem({
         >
           <MapPin className="h-3.5 w-3.5 shrink-0 text-muted" />
 
-          <span className="truncate max-w-[220px]">
-            {request.location}
-          </span>
+          <span className="truncate max-w-[220px]">{request.location}</span>
         </div>
 
         {/* Ambulance */}
@@ -269,19 +260,13 @@ export function RequestItem({
                   uppercase
                   tracking-[0.08em]
 
-                  ${
-                    entry.active
-                      ? "text-primary"
-                      : "text-muted"
-                  }
+                  ${entry.active ? "text-primary" : "text-muted"}
                 `}
               >
                 {entry.label}
               </p>
 
-              <p className="mt-1 text-xs text-body">
-                {entry.time}
-              </p>
+              <p className="mt-1 text-xs text-body">{entry.time}</p>
             </div>
           );
         })}

@@ -9,7 +9,7 @@ import type {
   Ambulance,
   AmbulanceControlItem,
   AmbulanceStatus,
-} from "../types/ambulances.types";
+} from "../types/ambulances.types.ts";
 import {
   buildAmbulancePayload,
   enrichAmbulance,

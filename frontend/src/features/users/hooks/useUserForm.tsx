@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { API_CONFIG, getApiUrl } from "@/config/api.config";
 import { getAuthToken } from "@/features/auth/utils/auth.utils";
-import { useGetHospitals } from "@/features/hospitals_management/hooks/useGetHospitals";
-import { normalizeAmbulance, extractAmbulanceCollection } from "@/features/ambulances_management/utils/ambulance.api";
+import { useGetHospitals } from "@/features/hospitalsManagement/hooks/useGetHospitals";
+import { normalizeAmbulance, extractAmbulanceCollection } from "@/features/ambulancesManagement/utils/ambulance.api";
 import { userSchema, userEditSchema } from "../schemas/modal.schema";
 import type { User } from "../types/users.types";
 

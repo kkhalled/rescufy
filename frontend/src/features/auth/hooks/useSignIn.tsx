@@ -84,9 +84,9 @@ export default function useSignIn() {
         // Navigate based on primary role
         let roleRoute;
         if (primaryRole === "SuperAdmin" || primaryRole === "Admin") {
-          roleRoute = "/admin";
+          roleRoute = "/";
         } else {
-          roleRoute = "/hospital_user";
+          roleRoute = "/";
         }
         navigate(roleRoute);
       } else {

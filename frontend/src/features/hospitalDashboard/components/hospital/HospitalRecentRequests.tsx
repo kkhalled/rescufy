@@ -152,7 +152,7 @@ export default function HospitalRecentRequests() {
               Refresh
             </button>
             <Link
-              to="/hospital_user/requests"
+              to="/hospital/requests"
               className="cursor-pointer rounded-full border border-border bg-background-second px-3 py-2 text-xs font-medium text-heading transition hover:bg-background md:px-4"
             >
               {t("recentRequests.viewAll")}
@@ -235,7 +235,7 @@ export default function HospitalRecentRequests() {
 
         <div className="flex flex-col gap-3 border-t border-border px-4 py-4 text-sm text-muted md:flex-row md:items-center md:justify-between md:px-6">
           <span>{lastSyncedAt ? `Last sync ${new Date(lastSyncedAt).toLocaleTimeString()}` : t("recentRequests.designModeHint")}</span>
-          <Link to="/hospital_user/requests" className="text-primary transition hover:opacity-80">
+          <Link to="/hospital/requests" className="text-primary transition hover:opacity-80">
             {t("recentRequests.viewAll")}
           </Link>
         </div>

@@ -6,7 +6,7 @@ import { getAuthToken } from "@/features/auth/utils/auth.utils";
 import { useLanguage } from "@/i18n/useLanguage";
 import { onNewRequest, onRequestUpdated, startConnection } from "@/services/signalrService";
 import type { Request } from "../types/request.types";
-import { fetchHospitalActiveRequestsApi } from "@/features/hospital_dashboard/data/hospitalRecentRequests.api";
+import { fetchHospitalActiveRequestsApi } from "@/features/hospitalDashboard/data/hospitalRecentRequests.api";
 
 type LoadOptions = {
   silent?: boolean;

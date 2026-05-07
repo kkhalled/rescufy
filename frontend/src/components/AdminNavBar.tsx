@@ -6,12 +6,12 @@ import {
   LogOut,
  
 } from "lucide-react";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "../shared/hooks/useTheme";
 import { useAuth } from "@/app/provider/AuthContext";
 import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
-import LanguageSwitcher from "../ui/LanguageSwitcher";
+import LanguageSwitcher from "../shared/ui/LanguageSwitcher";
 import NotificationBell from "@/features/notifications/components/NotificationBell";
 // ...existing code...
 

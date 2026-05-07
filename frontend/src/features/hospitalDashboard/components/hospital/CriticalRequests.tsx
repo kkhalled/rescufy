@@ -154,7 +154,7 @@ export default function CriticalRequests({ requests }: CriticalRequestsProps) {
           </motion.div>
         )}
         <div className="mt-3 text-right">
-          <Link to="/hospital_user/requests" className="text-xs font-medium text-primary transition hover:opacity-80">
+          <Link to="/hospital/requests" className="text-xs font-medium text-primary transition hover:opacity-80">
             {t("recentRequests.viewAll")}
           </Link>
         </div>

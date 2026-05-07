@@ -3,10 +3,10 @@ import { useState, useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { getApiUrl, API_CONFIG } from "@/config/api.config";
-import type { Hospital } from "../types/hospitals.types";
+import type { Hospital } from "../../hospitalsManagement/types/hospitals.types.ts";
 import { useLanguage } from "@/i18n/useLanguage";
 import { getAuthToken } from "@/features/auth/utils/auth.utils";
-import { getApiErrorMessage, normalizeHospital } from "../utils/hospital.api.ts";
+import { getApiErrorMessage, normalizeHospital } from "../../hospitalsManagement/utils/hospital.api.ts";
 
 /**
  * Hook for fetching the current HospitalAdmin's own hospital

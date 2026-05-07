@@ -10,7 +10,8 @@
         "analytics": "التحليلات",
         "operations": "العمليات",
         "monitoring": "المراقبة",
-        "management": "الإدارة"
+        "management": "الإدارة",
+        "hospitalProfile": "مستشفاي"
     },
     "navbar": {
         "search": "بحث...",

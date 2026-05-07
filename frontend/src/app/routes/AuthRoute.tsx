@@ -1,6 +1,8 @@
-import { Navigate } from "react-router";
+import { Navigate } from "react-router-dom";
+
 import { useAuth } from "../provider/AuthContext";
-import Loading from './../../shared/common/Loading';
+
+import Loading from "@/shared/common/Loading";
 
 export default function AuthRoute({
   children,
@@ -9,23 +11,38 @@ export default function AuthRoute({
 }) {
   const { user, isLoading } = useAuth();
 
-  if (isLoading) return <Loading />;
-
-  if (!user) return <>{children}</>;
-
-  const role = user.Role;
-
-  const roleRoutes: Record<string, string> = {
-    SuperAdmin: "/admin",
-    Admin: "/admin",
-    hospitaladmin: "/hospital_user",
-  };
-
-  const redirectPath = roleRoutes[role];
-
-  if (redirectPath) {
-    return <Navigate to={redirectPath} replace />;
+  if (isLoading) {
+    return <Loading />;
   }
 
-  return <>{children}</>;
+  if (!user) {
+    return <>{children}</>;
+  }
+
+  switch (user.Role) {
+    case "SuperAdmin":
+    case "Admin":
+      return (
+        <Navigate
+          to="/admin"
+          replace
+        />
+      );
+
+    case "hospitaladmin":
+      return (
+        <Navigate
+          to="/hospital"
+          replace
+        />
+      );
+
+    default:
+      return (
+        <Navigate
+          to="/signin"
+          replace
+        />
+      );
+  }
 }

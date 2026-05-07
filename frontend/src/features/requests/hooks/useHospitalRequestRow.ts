@@ -13,7 +13,7 @@ const PRIORITY_COLOR_MAP: Record<string, string> = {
 export function useHospitalRequestRow({
   id,
   priority,
-  basePath = "/hospital_user/requests",
+  basePath = "/hospital/requests",
 }: Pick<HospitalRequestRowProps, "id" | "priority" | "basePath">) {
   const navigate = useNavigate();
   const { isRTL } = useLanguage();

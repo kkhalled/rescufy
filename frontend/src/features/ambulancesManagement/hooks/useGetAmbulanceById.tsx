@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { getApiUrl, API_CONFIG } from "@/config/api.config";
 import { useLanguage } from "@/i18n/useLanguage";
 import { getAuthToken } from "@/features/auth/utils/auth.utils";
-import type { AmbulanceProfile } from "../types/ambulances.types";
+import type { AmbulanceProfile } from "../types/ambulances.types.ts";
 import { normalizeAmbulanceProfile } from "../utils/ambulance.api.ts";
 
 export function useGetAmbulanceById() {

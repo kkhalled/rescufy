@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import SideBar from "../../shared/common/SideBar";
+import SideBar from "../../components/SideBar";
 import { Outlet, useLocation } from "react-router-dom";
-import AdminNavbar from "../../shared/common/AdminNavBar";
+import AdminNavbar from "../../components/AdminNavBar";
 import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
-import Footer from "@/shared/common/Footer";
+import Footer from "@/components/Footer";
 
 export default function AdminLayout() {
   const isDesktop = useMediaQuery("(min-width: 768px)");

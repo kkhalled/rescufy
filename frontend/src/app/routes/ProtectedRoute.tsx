@@ -1,42 +1,44 @@
 import { Navigate } from "react-router-dom";
+
 import { useAuth } from "@/app/provider/AuthContext";
+
 import type { Role } from "@/features/auth/types/auth.types";
+
 import Loading from "@/shared/common/Loading";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: Role;
+  allowedRoles: Role[];
 }
 
 export default function ProtectedRoute({
   children,
-  requiredRole,
+  allowedRoles,
 }: ProtectedRouteProps) {
   const { user, isLoading } = useAuth();
 
-  // Show loading state while checking authentication
   if (isLoading) {
     return <Loading />;
   }
 
-  // Check if user is authenticated
   if (!user) {
-    return <Navigate to="/signin" replace />;
-  } else {
+    return (
+      <Navigate
+        to="/signin"
+        replace
+      />
+    );
   }
 
-  // Check if user has required role
-  if (requiredRole) {
-    const userRole = user.Role;
-    
-    // Allow SuperAdmin to access Admin routes
-    if (requiredRole === "Admin" && (userRole === "SuperAdmin" || userRole === "Admin")) {
-      // Access granted
-    } else if (requiredRole === "hospitaladmin" && userRole === "hospitaladmin") {
-      // Access granted  
-    } else {
-      return <Navigate to="/signin" replace />;
-    }
+  if (
+    !allowedRoles.includes(user.Role)
+  ) {
+    return (
+      <Navigate
+        to="/signin"
+        replace
+      />
+    );
   }
 
   return <>{children}</>;

@@ -10,7 +10,8 @@
         "analytics": "Analytics",
         "operations": "Operations",
         "monitoring": "Monitoring",
-        "management": "Management"
+        "management": "Management",
+            "hospitalProfile": "My Hospital"
 
 
     },

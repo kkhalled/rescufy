@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import i18n from "@/i18n";
 import { useState } from "react";
+import { useAuth } from "@/app/provider/AuthContext";
 
 interface SideBarProps {
   isOpen: boolean;
@@ -47,7 +48,44 @@ const navSections = [
   },
 ];
 
+const navItemsConfig = [
+  {
+    title: "operations",
+    items: [
+      { key: "dashboard", icon: LayoutDashboard, path: "/hospital", end: true },
+    ],
+  },
+  {
+    title: "requests",
+    items: [{ key: "requests", icon: PhoneCall, path: "/hospital/requests" }],
+  },
+  {
+    title: "hospitalProfile",
+    items: [{ key: "hospitalProfile", icon: Hospital, path: "/hospital/profile" }],
+  },
+  {
+    title: "settings",
+    items: [{ key: "settings", icon: Settings, path: "/hospital/settings" }],
+  },
+];
+
+interface NavItem {
+  key: string;
+  icon: React.ElementType;
+  path: string;
+  end?: boolean;
+}
+type NavSection = {
+  title: string;
+  items: NavItem[];
+};
+
 export default function SideBar({ isOpen, onClose }: SideBarProps) {
+  const { user } = useAuth();
+  
+
+  const navItems:NavSection[] =
+    user?.Role === "hospitaladmin" ? navItemsConfig : navSections;
   const [isExpanded, setIsExpanded] = useState(false); // For desktop, the sidebar is considered "expanded" when hovered, not just when open
 
   function handleLinkClick() {
@@ -80,9 +118,9 @@ export default function SideBar({ isOpen, onClose }: SideBarProps) {
 
       {/* ── Sidebar ── */}
       <motion.aside
-      onMouseEnter={() => setIsExpanded(true)}
-            onMouseLeave={() => setIsExpanded(false)}
-            onMouseMove={() => setIsExpanded(true)}
+        onMouseEnter={() => setIsExpanded(true)}
+        onMouseLeave={() => setIsExpanded(false)}
+        onMouseMove={() => setIsExpanded(true)}
         key={isRTL ? "rtl" : "ltr"}
         initial={{ x: isRTL ? "100%" : "-100%" }}
         animate={{
@@ -104,7 +142,6 @@ export default function SideBar({ isOpen, onClose }: SideBarProps) {
           /* glass surface */
           bg-[#0f1117]/95 backdrop-blur-2xl
 
-          shadow-2xl md:shadow-[4px_0_24px_rgba(0,0,0,0.4)]
 
           transition-[width] duration-300 ease-in-out
           overflow-hidden
@@ -112,8 +149,8 @@ export default function SideBar({ isOpen, onClose }: SideBarProps) {
       >
         {/* ── Ambient glows ── */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -left-6 -top-6 h-56 w-56 rounded-full bg-indigo-600/10 blur-3xl" />
-          <div className="absolute -bottom-6 -right-6 h-48 w-48 rounded-full bg-red-500/8 blur-3xl" />
+          <div className="absolute -left-6 -top-6 h-56 w-56 rounded-full bg-indigo-500/10 blur-3xl" />
+          <div className="absolute -bottom-6 -right-6 h-48 w-48 rounded-full bg-violet-500/10 blur-3xl" />
         </div>
 
         {/* ── Main content ── */}
@@ -155,7 +192,6 @@ export default function SideBar({ isOpen, onClose }: SideBarProps) {
 
           {/* Navigation */}
           <motion.nav
-            
             className="
     flex flex-1 flex-col gap-5
     overflow-y-auto
@@ -166,7 +202,7 @@ export default function SideBar({ isOpen, onClose }: SideBarProps) {
             animate="visible"
             variants={{ visible: { transition: { staggerChildren: 0.045 } } }}
           >
-            {navSections.map((section) => (
+            {navItems.map((section) => (
               <div key={section.title} className="space-y-1">
                 {/* Section label */}
                 <div
@@ -198,6 +234,7 @@ export default function SideBar({ isOpen, onClose }: SideBarProps) {
                           transition-all duration-200
 
                           ${
+                            
                             isActive
                               ? "bg-indigo-500/12 text-indigo-400"
                               : "text-slate-500 hover:bg-white/4 hover:text-slate-300"
