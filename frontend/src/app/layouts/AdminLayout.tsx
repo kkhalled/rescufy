@@ -48,7 +48,7 @@ export default function AdminLayout() {
       <div className="flex-1 flex flex-col min-w-0 md:ltr:ml-22 md:rtl:mr-22">
         <AdminNavbar onMenuClick={toggleSidebar} />
 
-        <main className="flex-1 pt-20 md:pt-24 pb-6 px-4 md:px-8 lg:px-12 overflow-y-auto">
+        <main className="flex-1 pt-20 md:pt-24 pb-6  md:px-8 lg:px-12 overflow-y-auto">
           
           <AnimatePresence mode="wait">
             <motion.div  

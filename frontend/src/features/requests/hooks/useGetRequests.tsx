@@ -51,8 +51,9 @@ export function useGetRequests() {
         return [];
       }
 
+      // Fetch current requests from the API and replace local state.
+      // This hook treats the API as the source of truth for initial load and manual refreshes.
       const apiRequests = await fetchRequestsApi(token);
-
       setRequests(apiRequests);
       return apiRequests;
     } catch (error: any) {
@@ -75,8 +76,8 @@ export function useGetRequests() {
         return [];
       }
 
+      // Fetch the administrative "stream" endpoint: used by admin UIs to load a prefiltered set.
       const streamItems = await fetchAdminStreamApi(token);
-      
       setRequests(streamItems);
       return streamItems;
     } catch (error: any) {
@@ -92,33 +93,31 @@ export function useGetRequests() {
     let unsubscribeNewRequest = () => {};
     let unsubscribeRequestUpdated = () => {};
 
+    // Wire realtime updates via SignalR. We call `startConnection()` to ensure the connection is running
+    // and then subscribe to `NewRequest` and update events. Handlers update local state directly so
+    // the UI reacts instantly without waiting for a full API refresh.
     async function setupRealtime() {
       try {
         await startConnection();
 
+        // New requests are prepended to the list.
         unsubscribeNewRequest = onNewRequest((newRequest) => {
-          if (!isRequestPayload(newRequest)) {
-            return;
-          }
-               
+          if (!isRequestPayload(newRequest)) return;
           console.log("Received new request via SignalR:", newRequest);
           setRequests((prev) => [newRequest, ...prev]);
         });
 
+        // Request updates are merged into existing items by id.
         unsubscribeRequestUpdated = onRequestUpdated((updatedRequest) => {
-          if (!isRequestPayload(updatedRequest)) {
-            return;
-          }
-
+          if (!isRequestPayload(updatedRequest)) return;
           setRequests((prev) =>
             prev.map((request) =>
-              request.id === updatedRequest.id
-                ? { ...request, ...updatedRequest }
-                : request,
+              request.id === updatedRequest.id ? { ...request, ...updatedRequest } : request,
             ),
           );
         });
       } catch (error) {
+        // Failing to setup real-time should not block the app; log for diagnostics.
         console.error("SignalR setup failed:", error);
       }
     }

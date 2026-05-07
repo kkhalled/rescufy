@@ -10,11 +10,18 @@ export function useAllRequestsBoard({
   setRequests,
   fetchAdminStreamRequests,
 }: UseAllRequestsBoardParams) {
+  // This hook prepares a UI-friendly view of the admin requests "board".
+  // Responsibilities:
+  // - Keep a ticking timer to refresh derived labels (waiting time labels) without refetching data.
+  // - Ensure initial stream load is executed once.
+  // - Expose derived metrics (critical/failed/assigned/searching counts) and actions that
+  //   mutate local state immediately (reassign/fail) to reflect admin actions optimistically.
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [hasFetchedInitial, setHasFetchedInitial] = useState(false);
   const [timeTick, setTimeTick] = useState(0);
 
   useEffect(() => {
+    // Tick every 30s to update `waitingLabel` and other time-derived values shown on the board.
     const timer = window.setInterval(() => {
       setTimeTick((current) => current + 1);
     }, 30_000);
@@ -78,6 +85,8 @@ export function useAllRequestsBoard({
 
   const reassignRequest = async (requestId: number) => {
     try {
+      // Send reassign command to the API (admin-only action). If successful, update local state
+      // optimistically so the UI shows this request as searching again.
       const token = getAuthToken();
       if (!token) throw new Error("Token missing");
 
@@ -97,6 +106,7 @@ export function useAllRequestsBoard({
           r.id === requestId
             ? {
                 ...r,
+                // Mark as searching/unassigned locally so the board reflects the admin action.
                 isSearching: true,
                 isAssigned: false,
                 status: "searching",

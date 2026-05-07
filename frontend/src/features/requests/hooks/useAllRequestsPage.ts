@@ -22,7 +22,6 @@ export function useAllRequestsPage() {
     failedCount,
     searchingCount,
     assignedCount,
-    
     queueTone,
     systemState,
     reassignRequest,
@@ -99,7 +98,6 @@ export function useAllRequestsPage() {
     failedCount,
     searchingCount,
     assignedCount,
-    
     queueTone,
     systemState,
     handleReassignAmbulance,

@@ -40,13 +40,14 @@ export function useHospitalRequests() {
         return;
       }
 
+      // If the user is not associated with a hospital, we consider the feed empty.
       if (!hasHospitalId) {
         setRequests([]);
         return;
       }
 
+      // Fetch active requests for this hospital and update local state + last sync timestamp.
       const items = await fetchHospitalActiveRequestsApi(token, hospitalId);
-
       setRequests(items);
       setLastSyncedAt(new Date().toISOString());
     } catch (error: any) {
@@ -70,15 +71,15 @@ export function useHospitalRequests() {
     let unsubscribeRequestUpdated = () => {};
     let cancelled = false;
 
+    // Setup realtime: whenever the hub signals a new request or update, we refresh the hospital feed silently.
     async function setupRealtime() {
       try {
         await startConnection();
 
-        if (cancelled) {
-          return;
-        }
+        if (cancelled) return;
 
         unsubscribeNewRequest = onNewRequest(() => {
+          // Silent refresh keeps the current UI state while pulling the latest items.
           void loadRequests({ silent: true });
         });
 
@@ -86,6 +87,7 @@ export function useHospitalRequests() {
           void loadRequests({ silent: true });
         });
       } catch (error) {
+        // Real-time is optional: log failures but keep the feed functional.
         console.error("Hospital SignalR setup failed:", error);
       }
     }
