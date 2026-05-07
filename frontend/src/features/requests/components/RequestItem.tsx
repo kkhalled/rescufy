@@ -8,7 +8,7 @@ export function RequestItem({
   onSelect,
 }: RequestItemProps) {
   const {
-    t,
+    
     theme,
     dispatchTheme,
     previewDescription,
