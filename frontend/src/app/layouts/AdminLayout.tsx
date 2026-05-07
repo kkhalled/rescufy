@@ -4,6 +4,7 @@ import SideBar from "../../shared/common/SideBar";
 import { Outlet, useLocation } from "react-router-dom";
 import AdminNavbar from "../../shared/common/AdminNavBar";
 import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
+import Footer from "@/shared/common/Footer";
 
 export default function AdminLayout() {
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -45,10 +46,10 @@ export default function AdminLayout() {
       <SideBar isOpen={sidebarOpen} onClose={closeSidebar} />
 
       {/* Content */}
-      <div className="flex-1 flex flex-col min-w-0 md:ltr:ml-22 md:rtl:mr-22">
+      <div className="flex-1 flex flex-col min-w-0 md:ltr:ml-10 md:rtl:mr-10">
         <AdminNavbar onMenuClick={toggleSidebar} />
 
-        <main className="flex-1 pt-20 md:pt-24 pb-6  md:px-8 lg:px-12 overflow-y-auto">
+        <main className="flex-1 pt-20 md:pt-24 pb-6 md:px-10 lg:px-5  overflow-y-auto">
           
           <AnimatePresence mode="wait">
             <motion.div  
@@ -63,6 +64,7 @@ export default function AdminLayout() {
           </AnimatePresence>
 
         </main>
+        <Footer/>
       </div>
     </div>
   );

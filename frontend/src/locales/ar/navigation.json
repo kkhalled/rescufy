@@ -6,7 +6,11 @@
         "ambulances": "سيارات الإسعاف",
         "users": "المستخدمون",
         "audit": "السجلات",
-        "settings": "الإعدادات"
+        "settings": "الإعدادات",
+        "analytics": "التحليلات",
+        "operations": "العمليات",
+        "monitoring": "المراقبة",
+        "management": "الإدارة"
     },
     "navbar": {
         "search": "بحث...",

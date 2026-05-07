@@ -26,7 +26,7 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
   const { logout } = useAuth();
 
   return (
-    <header className="fixed top-0 right-0 left-0 md:ltr:left-22 md:rtl:right-22 md:rtl:left-0 bg-background-second/95 backdrop-blur-md border-b border-border z-49">
+    <header className="fixed top-0 right-0 left-0  md:rtl:left-0 bg-background-second/95 backdrop-blur-md border-b border-border z-49">
       <div className="h-14 md:h-16 px-4 md:px-6 lg:px-8 flex items-center justify-between gap-3">
         {/* Left Section - Mobile Menu + Search */}
         <div className="flex items-center gap-3">
