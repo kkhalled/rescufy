@@ -25,85 +25,266 @@ export function RequestItem({
     <button
       type="button"
       onClick={onSelect}
-      className={`relative flex w-full items-start gap-4 border-b border-border/80 px-4 py-3 text-left transition dark:border-border/60 ${theme.row} ${
-        isSelected
-          ? "bg-primary/10 shadow-[inset_0_0_0_1px_rgba(59,130,246,0.25)]"
-          : "bg-transparent"
-      } ${dispatchTheme.row} ${isFailed ? "bg-red-50 dark:bg-red-500/6" : ""}`}
+      className={`
+        group relative w-full overflow-hidden
+
+        rounded-2xl
+        border border-border/60
+
+        p-4
+
+        text-left
+
+        transition-all duration-200
+
+        hover:border-border
+        hover:bg-surface-muted/20
+
+        ${
+          isSelected
+            ? `
+              border-primary/40
+              bg-primary/8
+
+              shadow-[0_0_0_1px_rgba(99,102,241,0.15)]
+            `
+            : "bg-bg-card/95"
+        }
+
+        ${
+          isFailed
+            ? "border-red-500/25 bg-red-500/5"
+            : ""
+        }
+      `}
     >
+      {/* Accent Line */}
       <span
-        className={`absolute inset-y-0 left-0 w-1 ${theme.accent}`}
+        className={`
+          absolute inset-y-0 left-0 w-1
+          ${theme.accent}
+        `}
         aria-hidden
       />
 
-      <div className="w-28 shrink-0 pl-2">
-        <span
-          className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] ${theme.badge}`}
-        >
-          {priorityLabel}
-        </span>
-        <p className={`mt-2 text-sm font-semibold ${theme.waiting}`}>
-          {request.waitingLabel}
-        </p>
-      </div>
-
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center justify-between gap-3">
-          <p className="truncate text-sm font-semibold text-heading">
-            {request.patientName || "-"}
-          </p>
-          <span
-            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] ${dispatchTheme.badge}`}
-          >
+      {/* Top Header */}
+      <div className="flex items-start justify-between gap-3">
+        {/* Left */}
+        <div className="min-w-0 flex-1 pl-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`inline-flex h-3.5 w-3.5 items-center justify-center ${dispatchTheme.dot} rounded-full text-white dark:text-background-second`}
+              className={`
+                inline-flex items-center
+
+                rounded-full
+                border
+
+                px-2.5 py-1
+
+                text-[10px]
+                font-semibold
+                uppercase
+                tracking-[0.08em]
+
+                ${theme.badge}
+              `}
             >
-              {statusIcon}
+              {priorityLabel}
             </span>
+
+            <span
+              className={`
+                text-sm font-bold
+                ${theme.waiting}
+              `}
+            >
+              {request.waitingLabel}
+            </span>
+          </div>
+
+          <h3
+            className="
+              mt-3
+              truncate
+
+              text-base font-semibold
+              text-heading
+            "
+          >
+            {request.patientName || "-"}
+          </h3>
+
+          <p
+            className="
+              mt-1
+              line-clamp-2
+
+              text-sm
+              text-body
+            "
+          >
+            {previewDescription}
+          </p>
+        </div>
+
+        {/* Status */}
+        <span
+          className={`
+            inline-flex shrink-0 items-center gap-2
+
+            rounded-full
+            border
+
+            px-3 py-1.5
+
+            text-[10px]
+            font-semibold
+            uppercase
+            tracking-[0.08em]
+
+            ${dispatchTheme.badge}
+          `}
+        >
+          <span
+            className={`
+              inline-flex
+              h-4 w-4
+              items-center justify-center
+
+              rounded-full
+
+              ${dispatchTheme.dot}
+
+              text-white
+            `}
+          >
+            {statusIcon}
+          </span>
+
+          <span className="hidden sm:inline">
             {statusLabel}
           </span>
+        </span>
+      </div>
+
+      {/* Metadata */}
+      <div
+        className="
+          mt-4
+          flex flex-wrap items-center gap-2
+        "
+      >
+        {/* Location */}
+        <div
+          className="
+            inline-flex items-center gap-1.5
+
+            rounded-full
+            border border-border/60
+
+            bg-surface-muted/40
+
+            px-2.5 py-1
+
+            text-xs text-body
+          "
+        >
+          <MapPin className="h-3.5 w-3.5 shrink-0 text-muted" />
+
+          <span className="truncate max-w-[220px]">
+            {request.location}
+          </span>
         </div>
 
-        <p className="mt-1 line-clamp-2 text-xs text-body">
-          {previewDescription}
-        </p>
+        {/* Ambulance */}
+        <div
+          className="
+            rounded-full
+            border border-border/60
 
-        <div className="mt-2 flex flex-wrap items-center gap-2">
-          <p className="flex items-center gap-1.5 text-xs text-muted">
-            <MapPin className="h-3.5 w-3.5 shrink-0" />
-            <span className="truncate">{request.location}</span>
-          </p>
-          <span className="rounded-full border border-border/80 bg-surface-muted/80 px-2 py-0.5 text-[11px] text-body dark:border-border dark:bg-surface-muted/50">
-            {t("board.item.assignedAmbulance")}: {assignedAmbulanceLabel}
-          </span>
-          <span className="rounded-full border border-border/80 bg-surface-muted/80 px-2 py-0.5 text-[11px] text-body dark:border-border dark:bg-surface-muted/50">
-            {t("board.item.eta")} {etaLabel}
-          </span>
+            bg-surface-muted/40
+
+            px-2.5 py-1
+
+            text-xs text-body
+          "
+        >
+          {assignedAmbulanceLabel}
         </div>
 
-        <div className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-4">
-          {timelineEntries.map((entry) => {
-            return (
-              <div
-                key={`${request.id}-${entry.key}`}
-                className={`rounded-md border px-2 py-1.5 ${
+        {/* ETA */}
+        <div
+          className="
+            rounded-full
+            border border-border/60
+
+            bg-surface-muted/40
+
+            px-2.5 py-1
+
+            text-xs text-body
+          "
+        >
+          ETA {etaLabel}
+        </div>
+      </div>
+
+      {/* Timeline */}
+      <div
+        className="
+          mt-4
+          grid grid-cols-2 gap-2
+          xl:grid-cols-4
+        "
+      >
+        {timelineEntries.map((entry) => {
+          return (
+            <div
+              key={`${request.id}-${entry.key}`}
+              className={`
+                rounded-xl
+                border
+
+                px-3 py-2
+
+                transition-colors
+
+                ${
                   entry.reached
-                    ? "border-primary/35 bg-primary/12 dark:border-primary/25 dark:bg-primary/8"
-                    : "border-border/80 bg-surface-muted/60 dark:border-border/60 dark:bg-surface-muted/25"
-                }`}
+                    ? `
+                      border-primary/25
+                      bg-primary/10
+                    `
+                    : `
+                      border-border/60
+                      bg-surface-muted/25
+                    `
+                }
+              `}
+            >
+              <p
+                className={`
+                  text-[10px]
+                  font-semibold
+                  uppercase
+                  tracking-[0.08em]
+
+                  ${
+                    entry.active
+                      ? "text-primary"
+                      : "text-muted"
+                  }
+                `}
               >
-                <p
-                  className={`text-[10px] font-semibold uppercase tracking-[0.08em] ${entry.active ? "text-primary" : "text-muted"}`}
-                >
-                  {entry.label}
-                </p>
-                <p className="mt-1 text-[10px] text-muted">
-                  {entry.time}
-                </p>
-              </div>
-            );
-          })}
-        </div>
+                {entry.label}
+              </p>
+
+              <p className="mt-1 text-xs text-body">
+                {entry.time}
+              </p>
+            </div>
+          );
+        })}
       </div>
     </button>
   );

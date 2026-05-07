@@ -54,20 +54,28 @@ type OverviewStatProps = {
 function OverviewStat({ icon: Icon, label, value, tone }: OverviewStatProps) {
   const toneStyles = {
     primary: "border-primary/20 bg-primary/8 text-primary",
-    success: "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300",
+    success:
+      "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300",
     info: "border-cyan-500/20 bg-cyan-500/10 text-cyan-600 dark:text-cyan-300",
-    warning: "border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-300",
+    warning:
+      "border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-300",
   };
 
   return (
     <article className="rounded-xl border border-border/70 bg-bg-card p-3 shadow-card md:p-4">
       <div className="flex items-center justify-between">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">{label}</p>
-        <span className={`inline-flex h-8 w-8 items-center justify-center rounded-lg border ${toneStyles[tone]}`}>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+          {label}
+        </p>
+        <span
+          className={`inline-flex h-8 w-8 items-center justify-center rounded-lg border ${toneStyles[tone]}`}
+        >
           <Icon className="h-4 w-4" />
         </span>
       </div>
-      <p className="mt-3 text-2xl font-bold leading-none text-heading">{value}</p>
+      <p className="mt-3 text-2xl font-bold leading-none text-heading">
+        {value}
+      </p>
     </article>
   );
 }
@@ -93,14 +101,18 @@ export default function AllUsers() {
 
   const overview = useMemo(() => {
     const extractRole = (userRole: { roles?: string[]; role?: string }) =>
-      userRole.roles && userRole.roles.length > 0 ? userRole.roles[0] : userRole.role || "";
+      userRole.roles && userRole.roles.length > 0
+        ? userRole.roles[0]
+        : userRole.role || "";
 
     const admins = users.filter((user) => {
       const currentRole = extractRole(user);
       return currentRole === "Admin" || currentRole === "SuperAdmin";
     }).length;
 
-    const hospitalAdmins = users.filter((user) => extractRole(user) === "HospitalAdmin").length;
+    const hospitalAdmins = users.filter(
+      (user) => extractRole(user) === "HospitalAdmin",
+    ).length;
     const fieldTeam = users.filter((user) => {
       const currentRole = extractRole(user);
       return currentRole === "Paramedic" || currentRole === "AmbulanceDriver";
@@ -119,75 +131,203 @@ export default function AllUsers() {
   return (
     <>
       <div className="mt-6 space-y-5">
-        <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <OverviewStat
-            icon={UsersRound}
-            label={t("overview.totalUsers")}
-            value={overview.total}
-            tone="primary"
-          />
-          <OverviewStat
-            icon={ShieldCheck}
-            label={t("overview.adminTeam")}
-            value={overview.admins}
-            tone="success"
-          />
-          <OverviewStat
-            icon={Building2}
-            label={t("overview.hospitalAdmins")}
-            value={overview.hospitalAdmins}
-            tone="info"
-          />
-          <OverviewStat
-            icon={Stethoscope}
-            label={t("overview.fieldTeam")}
-            value={overview.fieldTeam}
-            tone="warning"
-          />
-        </section>
+        <div className="mt-6 space-y-5">
+          {/* Mobile Combined Card */}
+          <section className="lg:hidden">
+            <article className="rounded-2xl border border-border bg-bg-card p-4 shadow-card">
+              <div className="grid grid-cols-2 gap-4">
+                <OverviewStat
+                  icon={UsersRound}
+                  label={t("overview.totalUsers")}
+                  value={overview.total}
+                  tone="primary"
+                />
 
-        <section className="rounded-2xl border border-border/70 bg-bg-card p-4 shadow-card md:p-5">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-            <div className="flex-1">
-              <SearchInput
-                value={search}
-                onSearchChange={setSearch}
-                placeholder={t("filters.searchPlaceholder")}
-              />
-            </div>
+                <OverviewStat
+                  icon={ShieldCheck}
+                  label={t("overview.adminTeam")}
+                  value={overview.admins}
+                  tone="success"
+                />
 
-            <div className="w-full sm:w-55">
-              <UsersRoles value={role} onChange={setRole} />
-            </div>
+                <OverviewStat
+                  icon={Building2}
+                  label={t("overview.hospitalAdmins")}
+                  value={overview.hospitalAdmins}
+                  tone="info"
+                />
 
-            <button
-              onClick={openAddModal}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-white transition-colors hover:bg-primary/90"
-            >
-              <span className="text-base leading-none">+</span>
-              {t("actions.add")}
-            </button>
-          </div>
+                <OverviewStat
+                  icon={Stethoscope}
+                  label={t("overview.fieldTeam")}
+                  value={overview.fieldTeam}
+                  tone="warning"
+                />
+              </div>
+            </article>
+          </section>
 
-          <div className="mt-3 flex items-center justify-between gap-2 text-xs text-muted">
-            <p>{t("overview.usersFound", { count: users.length })}</p>
-            {hasActiveFilters && (
-              <span className="rounded-full border border-primary/25 bg-primary/8 px-2.5 py-1 text-primary">
-                {t("overview.activeFilters")}
-              </span>
-            )}
-          </div>
-        </section>
+          {/* Desktop Cards */}
+          <section className="hidden gap-3 lg:grid lg:grid-cols-4">
+            <OverviewStat
+              icon={UsersRound}
+              label={t("overview.totalUsers")}
+              value={overview.total}
+              tone="primary"
+            />
+
+            <OverviewStat
+              icon={ShieldCheck}
+              label={t("overview.adminTeam")}
+              value={overview.admins}
+              tone="success"
+            />
+
+            <OverviewStat
+              icon={Building2}
+              label={t("overview.hospitalAdmins")}
+              value={overview.hospitalAdmins}
+              tone="info"
+            />
+
+            <OverviewStat
+              icon={Stethoscope}
+              label={t("overview.fieldTeam")}
+              value={overview.fieldTeam}
+              tone="warning"
+            />
+          </section>
+        </div>
+
+        <section
+  className="
+    rounded-3xl
+    border border-border/60
+    bg-bg-card/95
+
+    p-4 md:p-5
+
+    shadow-card
+    backdrop-blur-sm
+  "
+>
+  {/* Top Controls */}
+  <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
+    {/* Search */}
+    <div className="flex-1">
+      <SearchInput
+        value={search}
+        onSearchChange={setSearch}
+        placeholder={t("filters.searchPlaceholder")}
+      />
+    </div>
+
+    {/* Filters + Action */}
+    <div
+      className="
+        flex flex-col gap-3
+        sm:flex-row sm:items-center
+      "
+    >
+      <div className="w-full sm:w-56">
+        <UsersRoles
+          value={role}
+          onChange={setRole}
+        />
+      </div>
+
+      <button
+        onClick={openAddModal}
+        className="
+          inline-flex h-11
+          items-center justify-center gap-2
+
+          rounded-2xl
+
+          bg-primary
+          px-4
+
+          text-sm font-medium text-white
+
+          shadow-[0_8px_25px_rgba(99,102,241,0.25)]
+
+          transition-all duration-200
+
+          hover:scale-[1.02]
+          hover:bg-primary/90
+
+          active:scale-[0.98]
+        "
+      >
+        <span className="text-base leading-none">
+          +
+        </span>
+
+        {t("actions.add")}
+      </button>
+    </div>
+  </div>
+
+  {/* Footer Info */}
+  <div
+    className="
+      mt-4
+      flex flex-col gap-2
+      border-t border-border/50
+      pt-3
+
+      sm:flex-row
+      sm:items-center
+      sm:justify-between
+    "
+  >
+    <p className="text-xs text-muted">
+      {t("overview.usersFound", {
+        count: users.length,
+      })}
+    </p>
+
+    {hasActiveFilters && (
+      <span
+        className="
+          inline-flex w-fit items-center
+
+          rounded-full
+
+          border border-primary/20
+          bg-primary/10
+
+          px-3 py-1
+
+          text-xs font-medium
+          text-primary
+        "
+      >
+        {t("overview.activeFilters")}
+      </span>
+    )}
+  </div>
+</section>
       </div>
 
       <main className="mt-6 overflow-hidden rounded-2xl border border-border/70 bg-bg-card shadow-card">
         {/* Table Header */}
         <div className="hidden grid-cols-[2.2fr_1.3fr_1.2fr_0.9fr_auto] items-center gap-3 border-b border-border/70 bg-surface-muted/50 px-5 py-3 md:grid">
-          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.name")}</p>
-          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.email")}</p>
-          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.role")}</p>
-          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("form.phone")}</p>
-          <p className="text-end text-xs font-semibold uppercase tracking-[0.08em] text-muted">{t("table.actions")}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
+            {t("table.name")}
+          </p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
+            {t("table.email")}
+          </p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
+            {t("table.role")}
+          </p>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
+            {t("form.phone")}
+          </p>
+          <p className="text-end text-xs font-semibold uppercase tracking-[0.08em] text-muted">
+            {t("table.actions")}
+          </p>
         </div>
 
         {/* Rows */}
@@ -196,12 +336,18 @@ export default function AllUsers() {
             Array.from({ length: 6 }).map((_, i) => <UserRowSkeleton key={i} />)
           ) : users.length > 0 ? (
             users.map((user, index) => {
-              const userRole = user.roles && user.roles.length > 0 ? user.roles[0] : user.role || "";
+              const userRole =
+                user.roles && user.roles.length > 0
+                  ? user.roles[0]
+                  : user.role || "";
               return (
                 <div
                   key={user.id}
                   className="animate-fade-in-up"
-                  style={{ animationDelay: `${index * 40}ms`, animationFillMode: "both" }}
+                  style={{
+                    animationDelay: `${index * 40}ms`,
+                    animationFillMode: "both",
+                  }}
                 >
                   <UserRow
                     id={user.id || ""}
@@ -218,7 +364,9 @@ export default function AllUsers() {
             })
           ) : (
             <div className="flex flex-col items-center justify-center gap-1 py-14">
-              <p className="text-sm font-medium text-heading">{t("empty.title")}</p>
+              <p className="text-sm font-medium text-heading">
+                {t("empty.title")}
+              </p>
               <p className="text-xs text-muted">{t("empty.description")}</p>
             </div>
           )}

@@ -59,19 +59,131 @@ export function DashboardStatsGrid({
   };
 
   return (
+  <>
+    {/* Mobile Overview */}
+    <section className="mb-6 md:hidden">
+      <div
+        className="
+          rounded-3xl
+          border border-border/60
+          bg-bg-card/95
+
+          p-4
+
+          shadow-card
+          backdrop-blur-sm
+        "
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-heading">
+              {t("stats.overview")}
+            </h3>
+
+            <p className="text-xs text-muted">
+              {t("stats.live")}
+            </p>
+          </div>
+
+          <div
+            className="
+              inline-flex h-10 w-10
+              items-center justify-center
+
+              rounded-xl
+
+              border border-primary/20
+              bg-primary/10
+
+              text-primary
+            "
+          >
+            <Radio className="h-5 w-5" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {/* Total */}
+          <div className="rounded-2xl bg-surface-muted/25 p-3">
+            <p className="text-[10px] uppercase tracking-[0.08em] text-muted">
+              {t("stats.totalRequests")}
+            </p>
+
+            <p className="mt-2 text-2xl font-bold text-heading">
+              {totalRequests}
+            </p>
+          </div>
+
+          {/* Completed */}
+          <div className="rounded-2xl bg-emerald-500/10 p-3">
+            <p className="text-[10px] uppercase tracking-[0.08em] text-emerald-300">
+              {t("stats.completedRequests")}
+            </p>
+
+            <p className="mt-2 text-2xl font-bold text-emerald-300">
+              {completedRequests}
+            </p>
+          </div>
+
+          {/* Failed */}
+          <div className="rounded-2xl bg-amber-500/10 p-3">
+            <p className="text-[10px] uppercase tracking-[0.08em] text-amber-300">
+              {t("stats.failedCancelledRequests")}
+            </p>
+
+            <p className="mt-2 text-2xl font-bold text-amber-300">
+              {failedCancelledRequests}
+            </p>
+          </div>
+
+          {/* Fleet */}
+          <div className="rounded-2xl bg-cyan-500/10 p-3">
+            <p className="text-[10px] uppercase tracking-[0.08em] text-cyan-300">
+              {t("kpi.fleetReadiness.title")}
+            </p>
+
+            <p className="mt-2 text-2xl font-bold text-cyan-300">
+              {availabilityPercentage}%
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Desktop Grid */}
     <motion.div
-      className="relative z-10 grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-4 lg:gap-6 mb-6 md:mb-8"
+      className="
+        relative z-10
+        hidden md:grid
+
+        grid-cols-2
+        lg:grid-cols-4
+
+        gap-4 lg:gap-6
+
+        mb-6 md:mb-8
+      "
       variants={gridVariants}
       initial="hidden"
       animate="visible"
     >
+      {/* Total Requests */}
       <motion.div
         className="h-full"
         variants={cardVariants}
         whileHover={
-          shouldReduceMotion ? undefined : { scale: 1.01, transition: { duration: 0.24 } }
+          shouldReduceMotion
+            ? undefined
+            : {
+                scale: 1.01,
+                transition: { duration: 0.24 },
+              }
         }
-        whileTap={shouldReduceMotion ? undefined : { scale: 0.998 }}
+        whileTap={
+          shouldReduceMotion
+            ? undefined
+            : { scale: 0.998 }
+        }
       >
         <StatCard
           title={t("stats.totalRequests")}
@@ -81,7 +193,13 @@ export function DashboardStatsGrid({
           subtitle={
             <div className="text-xs">
               <p className="text-muted">
-                {t("stats.completedRequests")}: {completedRequests} • {t("stats.failedCancelledRequests")}: {failedCancelledRequests}
+                {t("stats.completedRequests")}:
+                {" "}
+                {completedRequests}
+                {" • "}
+                {t("stats.failedCancelledRequests")}:
+                {" "}
+                {failedCancelledRequests}
               </p>
             </div>
           }
@@ -89,13 +207,23 @@ export function DashboardStatsGrid({
         />
       </motion.div>
 
+      {/* Completed */}
       <motion.div
         className="h-full"
         variants={cardVariants}
         whileHover={
-          shouldReduceMotion ? undefined : { scale: 1.01, transition: { duration: 0.24 } }
+          shouldReduceMotion
+            ? undefined
+            : {
+                scale: 1.01,
+                transition: { duration: 0.24 },
+              }
         }
-        whileTap={shouldReduceMotion ? undefined : { scale: 0.998 }}
+        whileTap={
+          shouldReduceMotion
+            ? undefined
+            : { scale: 0.998 }
+        }
       >
         <StatCard
           title={t("stats.completedRequests")}
@@ -104,7 +232,9 @@ export function DashboardStatsGrid({
           subtitle={
             <div className="text-xs">
               <p className="text-success">
-                {t("stats.ofTotalRequests", { percent: completionRate.toFixed(1) })}
+                {t("stats.ofTotalRequests", {
+                  percent: completionRate.toFixed(1),
+                })}
               </p>
             </div>
           }
@@ -112,11 +242,26 @@ export function DashboardStatsGrid({
             <div className="h-2 w-full overflow-hidden rounded-full bg-success/15">
               <motion.div
                 className="h-full rounded-full bg-success"
-                style={{ width: `${completionRate}%`, transformOrigin: "0% 50%" }}
-                initial={shouldReduceMotion ? undefined : { scaleX: 0 }}
-                whileInView={shouldReduceMotion ? undefined : { scaleX: 1 }}
+                style={{
+                  width: `${completionRate}%`,
+                  transformOrigin: "0% 50%",
+                }}
+                initial={
+                  shouldReduceMotion
+                    ? undefined
+                    : { scaleX: 0 }
+                }
+                whileInView={
+                  shouldReduceMotion
+                    ? undefined
+                    : { scaleX: 1 }
+                }
                 viewport={{ once: true, amount: 0.7 }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as const, delay: 0.12 }}
+                transition={{
+                  duration: 0.8,
+                  ease: [0.22, 1, 0.36, 1] as const,
+                  delay: 0.12,
+                }}
               />
             </div>
           }
@@ -124,13 +269,10 @@ export function DashboardStatsGrid({
         />
       </motion.div>
 
+      {/* Failed */}
       <motion.div
         className="h-full"
         variants={cardVariants}
-        whileHover={
-          shouldReduceMotion ? undefined : { scale: 1.01, transition: { duration: 0.24 } }
-        }
-        whileTap={shouldReduceMotion ? undefined : { scale: 0.998 }}
       >
         <StatCard
           title={t("stats.failedCancelledRequests")}
@@ -139,7 +281,9 @@ export function DashboardStatsGrid({
           subtitle={
             <div className="text-xs">
               <p className="text-info">
-                {t("stats.ofTotalRequests", { percent: failedCancelledRate.toFixed(1) })}
+                {t("stats.ofTotalRequests", {
+                  percent: failedCancelledRate.toFixed(1),
+                })}
               </p>
             </div>
           }
@@ -147,13 +291,10 @@ export function DashboardStatsGrid({
         />
       </motion.div>
 
+      {/* Fleet */}
       <motion.div
         className="h-full"
         variants={cardVariants}
-        whileHover={
-          shouldReduceMotion ? undefined : { scale: 1.01, transition: { duration: 0.24 } }
-        }
-        whileTap={shouldReduceMotion ? undefined : { scale: 0.998 }}
       >
         <StatCard
           title={t("kpi.fleetReadiness.title")}
@@ -173,11 +314,26 @@ export function DashboardStatsGrid({
             <div className="h-2 w-full overflow-hidden rounded-full bg-cyan-500/15">
               <motion.div
                 className="h-full rounded-full bg-cyan-500"
-                style={{ width: `${availabilityPercentage}%`, transformOrigin: "0% 50%" }}
-                initial={shouldReduceMotion ? undefined : { scaleX: 0 }}
-                whileInView={shouldReduceMotion ? undefined : { scaleX: 1 }}
+                style={{
+                  width: `${availabilityPercentage}%`,
+                  transformOrigin: "0% 50%",
+                }}
+                initial={
+                  shouldReduceMotion
+                    ? undefined
+                    : { scaleX: 0 }
+                }
+                whileInView={
+                  shouldReduceMotion
+                    ? undefined
+                    : { scaleX: 1 }
+                }
                 viewport={{ once: true, amount: 0.7 }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as const, delay: 0.2 }}
+                transition={{
+                  duration: 0.8,
+                  ease: [0.22, 1, 0.36, 1] as const,
+                  delay: 0.2,
+                }}
               />
             </div>
           }
@@ -185,5 +341,6 @@ export function DashboardStatsGrid({
         />
       </motion.div>
     </motion.div>
-  );
+  </>
+);
 }
