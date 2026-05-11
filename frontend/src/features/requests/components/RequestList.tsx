@@ -1,18 +1,14 @@
 import { ShieldAlert } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { RequestItem } from "./RequestItem";
+import { RequestListSkeleton } from "./RequestListSkeleton";
 import type { RequestListProps } from "../types/request-ui.types";
 
 export function RequestList({ requests, selectedId, isLoading, onSelect }: RequestListProps) {
   const { t } = useTranslation("requests");
 
   if (isLoading) {
-    return (
-      <div className="rounded-xl border border-dashed border-border/80 bg-surface-muted/65 px-4 py-8 text-center dark:border-border dark:bg-surface-muted/30">
-        <ShieldAlert className="mx-auto h-7 w-7 text-body dark:text-muted" />
-        <p className="mt-3 text-sm font-medium text-heading">{t("board.loading")}</p>
-      </div>
-    );
+    return <RequestListSkeleton />;
   }
 
   if (requests.length === 0) {

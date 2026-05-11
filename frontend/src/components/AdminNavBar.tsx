@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import LanguageSwitcher from "../shared/ui/LanguageSwitcher";
 import NotificationBell from "@/features/notifications/components/NotificationBell";
+import { useState } from "react";
 // ...existing code...
 
 type AdminNavbarProps = {
@@ -24,6 +25,12 @@ export default function AdminNavbar({
   const { user } = useAuth();
   const { t } = useTranslation(["navigation", "common", "auth"]);
   const { logout } = useAuth();
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    setIsProfileMenuOpen(false);
+  };
 
   return (
     <header className="fixed top-0 right-0 left-0  md:rtl:left-0 bg-background-second/95 backdrop-blur-md border-b border-border z-49">
@@ -76,7 +83,13 @@ export default function AdminNavbar({
 
           {/* User Profile */}
           <div className="relative group">
-            <div className="flex items-center gap-2 md:gap-3 cursor-pointer">
+            <button
+              type="button"
+              onClick={() => setIsProfileMenuOpen((prev) => !prev)}
+              className="flex items-center gap-2 md:gap-3 cursor-pointer"
+              aria-haspopup="menu"
+              aria-expanded={isProfileMenuOpen}
+            >
               {/* User Info - Hidden on small screens */}
               <div className="hidden md:flex flex-col items-center space-y-1 text-right rtl:text-left">
                 <p className="text-sm font-semibold text-heading leading-tight">
@@ -108,10 +121,14 @@ export default function AdminNavbar({
                   icon={faAngleDown}
                 />
               </div>
-            </div>
+            </button>
 
             {/* Dropdown Menu */}
-            <div className="absolute right-0 rtl:right-auto rtl:left-0 top-full mt-2 w-40 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            <div
+              className={`absolute right-0 rtl:right-auto rtl:left-0 top-full mt-2 w-40 transition-all duration-200 z-50 ${
+                isProfileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+              } md:opacity-0 md:invisible md:group-hover:opacity-100 md:group-hover:visible`}
+            >
               <div className="bg-background-second border border-border rounded-lg shadow-lg overflow-hidden ">
                 {/* User Info in Dropdown (Mobile) */}
                 <div className="md:hidden px-2 py-3 border-b border-border">
@@ -126,7 +143,7 @@ export default function AdminNavbar({
                 {/* Logout Button */}
                 <div className="">
                   <button
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="w-full cursor-pointer px-4 py-3 text-xs font-bold text-danger hover:bg-danger transition-colors hover:text-white  flex items-center gap-1 text-left rtl:text-right"
                   >
                     <LogOut size={16} />

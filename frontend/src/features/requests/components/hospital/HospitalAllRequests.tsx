@@ -1,6 +1,7 @@
           import { RefreshCcw, ShieldAlert } from "lucide-react";
           import { useTranslation } from "react-i18next";
           import { HospitalRequestRow } from "./HospitalRequestRow";
+          import { HospitalRequestsSkeleton } from "./HospitalRequestsSkeleton";
           import type { Request } from "../../types/request.types";
 
           type HospitalAllRequestsProps = {
@@ -43,15 +44,7 @@
                 </header>
 
                 {isLoading ? (
-                  <div className="flex min-h-85 items-center justify-center px-6 py-12 text-center">
-                    <div>
-                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <ShieldAlert className="h-6 w-6" />
-                      </div>
-                      <p className="mt-4 text-base font-semibold text-heading">Loading hospital requests...</p>
-                      <p className="mt-1 text-sm text-muted">Fetching the latest requests from your hospital queue.</p>
-                    </div>
-                  </div>
+                  <HospitalRequestsSkeleton />
                 ) : requests.length === 0 ? (
                   <div className="flex min-h-85 items-center justify-center px-6 py-12 text-center">
                     <div>
