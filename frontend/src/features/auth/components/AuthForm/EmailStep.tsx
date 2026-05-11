@@ -17,7 +17,7 @@ export default function EmailStep({ formik, isLoading }: EmailStepProps) {
       {/* ── Header ── */}
       <div className="px-7 pt-7 pb-2">
         <h2 className="text-[17px] font-semibold text-white flex items-center gap-2.5">
-          <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-primary/10 border border-primary/15">
+          <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg  ">
             <FontAwesomeIcon icon={faEnvelope} className="w-3 h-3 text-primary" />
           </span>
           {t("auth:forgotPassword.title")}

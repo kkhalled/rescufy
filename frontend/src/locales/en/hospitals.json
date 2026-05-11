@@ -92,7 +92,7 @@
         "insights": {
             "title": "Capacity Insights",
             "subtitle": "Operational pressure and bed availability",
-            "totalHospitals": "{{count}} hospitals",
+            "totalHospitals": " hospitals",
             "avgOccupancy": "Average occupancy",
             "availableBeds": "Available beds",
             "usedBeds": "Used beds",

@@ -52,15 +52,15 @@ export const HospitalsInsightsPanel = memo(function HospitalsInsightsPanel({
 
   return (
     <aside className="rounded-2xl border border-border bg-bg-card p-4 md:p-5 shadow-card xl:sticky xl:top-4 h-fit">
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-3 ">
         <div>
           <h3 className="text-sm font-semibold text-heading">{t("operations.insights.title")}</h3>
           <p className="mt-1 text-xs text-muted">{t("operations.insights.subtitle")}</p>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface-muted/40 px-2.5 py-1 text-[11px] font-semibold text-muted">
-          <Building2 className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-300" />
-          {t("operations.insights.totalHospitals", { count: totalHospitals })}
+        <span className="flex items-center gap-1.5 rounded-full border border-border bg-surface-muted/40 px-3.5 py-1 text-[10px] font-semibold text-muted">
+            {t("operations.insights.totalHospitals")}
+            <span>{  totalHospitals }</span>
         </span>
       </div>
 

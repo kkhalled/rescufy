@@ -24,12 +24,12 @@ export default function ForgotPasswordForm() {
     <div
       className="
         w-full max-w-md mx-auto
-        bg-gray-100
-        dark:bg-background
+        
+        
         py-4
         rounded-2xl
         shadow-xl
-        border border-slate-200 dark:border-white/10
+      
         text-sm
       "
     >

@@ -92,7 +92,7 @@
         "insights": {
             "title": "رؤى السعة",
             "subtitle": "ضغط التشغيل وتوفر الأسرّة",
-            "totalHospitals": "{{count}} مستشفيات",
+            "totalHospitals": " مستشفيات",
             "avgOccupancy": "متوسط الإشغال",
             "availableBeds": "الأسرّة المتاحة",
             "usedBeds": "الأسرّة المستخدمة",

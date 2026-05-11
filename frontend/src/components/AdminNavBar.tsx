@@ -1,11 +1,4 @@
-import {
-  Search,
-  Sun,
-  Moon,
-  Menu,
-  LogOut,
- 
-} from "lucide-react";
+import { Search, Sun, Moon, Menu, LogOut } from "lucide-react";
 import { useTheme } from "../shared/hooks/useTheme";
 import { useAuth } from "@/app/provider/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -17,10 +10,17 @@ import NotificationBell from "@/features/notifications/components/NotificationBe
 
 type AdminNavbarProps = {
   onMenuClick: () => void;
+  isExpanded: boolean;
+  setIsExpanded: (arg0: boolean) => void;
 };
 
-export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
+export default function AdminNavbar({
+  onMenuClick,
+  
+  setIsExpanded,
+}: AdminNavbarProps) {
   const { theme, toggleTheme } = useTheme();
+
   const { user } = useAuth();
   const { t } = useTranslation(["navigation", "common", "auth"]);
   const { logout } = useAuth();
@@ -32,7 +32,10 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
         <div className="flex items-center gap-3">
           {/* Mobile Menu Button */}
           <button
-            onClick={onMenuClick}
+            onClick={()=>{
+              onMenuClick()
+              setIsExpanded(true)
+            }}
             className="md:hidden p-2 -ml-2 rtl:-mr-2 rtl:ml-0 rounded-lg hover:bg-muted transition-colors"
             aria-label={t("common:aria.openMenu")}
           >
@@ -77,17 +80,13 @@ export default function AdminNavbar({ onMenuClick }: AdminNavbarProps) {
               {/* User Info - Hidden on small screens */}
               <div className="hidden md:flex flex-col items-center space-y-1 text-right rtl:text-left">
                 <p className="text-sm font-semibold text-heading leading-tight">
-                  {user?.FullName  || t("auth:defaultUser")}
-
-
-                
+                  {user?.FullName || t("auth:defaultUser")}
                 </p>
 
                 <span className="inline-block text-[10px] px-2 py-0.5 rounded-full bg-primary text-white font-medium">
-                 {
-                    user?.Role                      ? t(`auth:roles.${user.Role}`)
-                      : t("auth:roles.SuperAdmin")
-                 }
+                  {user?.Role
+                    ? t(`auth:roles.${user.Role}`)
+                    : t("auth:roles.SuperAdmin")}
                 </span>
               </div>
 

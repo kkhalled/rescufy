@@ -18,13 +18,8 @@ export default function SignInForm() {
 
   return (
     <div
-      className="w-full rounded-xl overflow-hidden border border-white/8"
-      style={{
-        background:
-          "linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(10,16,30,0.98) 100%)",
-        boxShadow:
-          "0 16px 36px -20px rgba(0,0,0,0.55), 0 0 1px rgba(255,255,255,0.04) inset",
-      }}
+      className="w-full rounded-xl overflow-hidden"
+      
     >
       {/* ── Card top accent line ── */}
       <div className="h-px w-full bg-linear-to-r from-transparent via-primary/30 to-transparent" />
@@ -207,39 +202,35 @@ export default function SignInForm() {
         </div>
       </form>
 
-    <div className="flex gap-2 p-3">
-  <button
-    type="button"
-    onClick={() =>
-      changeRole("admin")
-    }
-    className="
+      <div className="flex gap-2 p-3">
+        <button
+          type="button"
+          onClick={() => changeRole("admin")}
+          className="
       flex-1 rounded-xl
       border border-cyan-500/18
       bg-cyan-500/6
       px-3 py-1.5
       text-xs text-cyan-300/90
     "
-  >
-    Admin Demo
-  </button>
+        >
+          Admin Demo
+        </button>
 
-  <button
-    type="button"
-    onClick={() =>
-      changeRole("hospital")
-    }
-    className="
+        <button
+          type="button"
+          onClick={() => changeRole("hospital")}
+          className="
       flex-1 rounded-xl
       border border-emerald-500/18
       bg-emerald-500/6
       px-3 py-1.5
       text-xs text-emerald-300/90
     "
-  >
-    Hospital Demo
-  </button>
-</div>
+        >
+          Hospital Demo
+        </button>
+      </div>
 
       {/* ── Card bottom accent line ── */}
       <div className="h-px w-full bg-linear-to-r from-transparent via-white/3 to-transparent" />
