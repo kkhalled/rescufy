@@ -25,7 +25,7 @@ export default function AuthCard({
       className="
         mx-auto
         md:mt-15
-        flex w-full max-w-[360px]
+        flex w-full max-w-90
         flex-col
         justify-center
       "
@@ -41,13 +41,15 @@ export default function AuthCard({
 
             tracking-[-0.04em]
 
-            text-white
+            text-slate-900
+
+            dark:text-white
           "
         >
           Rescufy
         </h2>
 
-        <p className="mt-2 text-[12px] text-slate-500">
+        <p className="mt-2 text-[12px] text-slate-600 dark:text-slate-500">
           {subtitle ??
             t(
               "signIn.controlPanel",
@@ -63,9 +65,15 @@ export default function AuthCard({
 
           rounded-[22px]
 
-          border border-white/[0.06]
+          border border-slate-200/80
 
-          bg-white/[0.03]
+          bg-white/85
+
+          shadow-[0_24px_70px_rgba(15,23,42,0.08)]
+
+          dark:border-white/6
+          dark:bg-white/3
+          dark:shadow-none
 
           
 

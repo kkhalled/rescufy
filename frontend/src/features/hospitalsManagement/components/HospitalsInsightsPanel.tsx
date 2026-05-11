@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
-import { AlertTriangle, BedSingle, Building2, ShieldCheck } from "lucide-react";
+import { AlertTriangle, BedSingle, ShieldCheck } from "lucide-react";
 import type { HospitalLoadStatus } from "../utils/hospital.metrics";
 
 type StressedHospital = {

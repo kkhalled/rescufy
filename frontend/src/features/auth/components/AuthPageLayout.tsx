@@ -1,5 +1,3 @@
-import { useTranslation } from "react-i18next";
-
 import HeroSection from "./HeroSection";
 import AuthCard from "./AuthCard";
 
@@ -12,23 +10,23 @@ export default function AuthPageLayout({
   children,
   subtitle,
 }: AuthPageLayoutProps) {
-  const { t } = useTranslation("auth");
-
   return (
     <div
       className="
         relative isolate min-h-screen overflow-hidden
 
-        bg-[#060b12]
+        bg-slate-50
+        text-slate-900
 
-        text-white
+        dark:bg-[#060b12]
+        dark:text-white
       "
     >
       {/* Background */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute left-[10%] top-[10%] h-[24rem] w-[24rem] rounded-full bg-cyan-500/[0.05] blur-[120px]" />
+        <div className="absolute left-[10%] top-[10%] h-96 w-96 rounded-full bg-cyan-500/10 blur-[120px] dark:bg-cyan-500/5" />
 
-        <div className="absolute right-[8%] top-[12%] h-[18rem] w-[18rem] rounded-full bg-violet-500/[0.05] blur-[100px]" />
+        <div className="absolute right-[8%] top-[12%] h-72 w-72 rounded-full bg-violet-500/10 blur-[100px] dark:bg-violet-500/5" />
       </div>
 
       <main

@@ -30,9 +30,12 @@ export default function MetricsGrid() {
           className="
             rounded-xl
 
-            border border-white/[0.04]
+            border border-slate-200/80
 
-            bg-white/[0.02]
+            bg-white/2
+
+            dark:border-white/4
+            dark:bg-white/2
 
             px-3 py-2.5
           "
@@ -56,7 +59,7 @@ export default function MetricsGrid() {
               uppercase
               tracking-[0.12em]
 
-              text-slate-600
+              text-slate-600 dark:text-slate-600
             "
           >
             {item.label}

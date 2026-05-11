@@ -31,6 +31,7 @@ export default function ForgotPasswordForm() {
         shadow-xl
       
         text-sm
+        text-slate-900 dark:text-white
       "
     >
       {step === "email" && (
@@ -54,12 +55,12 @@ export default function ForgotPasswordForm() {
         />
       )}
 
-      <div className="mt-6 px-6 pt-6 border-t border-slate-300 dark:border-white/10 text-center">
-        <p className="text-gray-600 dark:text-gray-400 text-sm">
+      <div className="mt-6 border-t border-slate-200 px-6 pt-6 text-center dark:border-white/10">
+        <p className="text-sm text-slate-600 dark:text-slate-400">
           {t("auth:forgotPassword.rememberPassword")}{" "}
           <Link
             to="/signin"
-            className="text-primary font-semibold hover:text-primary/80 transition"
+            className="font-semibold text-primary transition hover:text-primary/80"
           >
             {t("auth:forgotPassword.backToSignIn")}
           </Link>

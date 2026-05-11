@@ -8,7 +8,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function HeroSection() {
   return (
-    <section className="hidden lg:block w-8/10">
+    <section className="hidden w-8/10 lg:block">
       <StatusBadge />
 
       {/* Heading */}
@@ -31,12 +31,14 @@ export default function HeroSection() {
           leading-[0.94]
           tracking-[-0.05em]
 
-          text-white
+          text-slate-900
+
+          dark:text-white
         "
       >
         AI Emergency
         <br />
-        <span className="text-slate-500">Dispatch &</span>
+        <span className="text-slate-600 dark:text-slate-500">Dispatch &</span>
         <br />
         Coordination
       </motion.h1>
@@ -58,7 +60,7 @@ export default function HeroSection() {
           text-[13px]
           leading-[1.8]
 
-          text-slate-500
+          text-slate-600 dark:text-slate-500
         "
       >
         Real-time fleet routing, intelligent hospital coordination, and live
@@ -81,9 +83,12 @@ export default function HeroSection() {
 
           rounded-[24px]
 
-          border border-white/[0.05]
+          border border-slate-200/80
 
-          bg-white/[0.02]
+          bg-white/70
+
+          dark:border-white/5
+          dark:bg-white/2
 
           p-4
         "
@@ -97,7 +102,7 @@ export default function HeroSection() {
               uppercase
               tracking-[0.16em]
 
-              text-slate-500
+              text-slate-600 dark:text-slate-500
             "
           >
             Tactical Dispatch
@@ -115,11 +120,11 @@ export default function HeroSection() {
               }}
             />
 
-            <span className="text-[9px] font-mono text-slate-600">LIVE</span>
+            <span className="text-[9px] font-mono text-slate-500 dark:text-slate-600">LIVE</span>
           </div>
         </div>
 
-        <div className="h-[260px]">
+        <div className="h-65">
           <TacticalMap />
         </div>
 

@@ -11,9 +11,9 @@ export default function StatusBadge() {
 
         rounded-full
 
-        border border-emerald-500/[0.12]
+        border border-emerald-500/12
 
-        bg-emerald-500/[0.05]
+        bg-emerald-500/5
 
         px-3 py-1
       "
@@ -36,7 +36,7 @@ export default function StatusBadge() {
           uppercase
           tracking-[0.16em]
 
-          text-emerald-400/80
+          text-emerald-700 dark:text-emerald-400/80
         "
       >
         Emergency Network Active

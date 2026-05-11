@@ -6,21 +6,24 @@ export default function TacticalMap() {
       className="
         relative h-full w-full overflow-hidden rounded-2xl
 
-        border border-white/[0.05]
+        border border-slate-200/80
 
-        bg-[#070d16]
+        bg-slate-100/90
+
+        dark:border-white/5
+        dark:bg-[#070d16]
       "
     >
       {/* Ambient */}
       <div className="absolute inset-0">
         {/* Emergency glow */}
-        <div className="absolute left-[10%] top-[62%] h-44 w-44 rounded-full bg-red-500/[0.08] blur-3xl" />
+        <div className="absolute left-[10%] top-[62%] h-44 w-44 rounded-full bg-red-500/8 blur-3xl" />
 
         {/* Hospital glow */}
-        <div className="absolute right-[8%] top-[12%] h-40 w-40 rounded-full bg-emerald-500/[0.06] blur-3xl" />
+        <div className="absolute right-[8%] top-[12%] h-40 w-40 rounded-full bg-emerald-500/6 blur-3xl" />
 
         {/* AI glow */}
-        <div className="absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/[0.05] blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/5 blur-3xl" />
       </div>
 
       {/* SVG */}
@@ -248,9 +251,11 @@ export default function TacticalMap() {
 
           rounded-xl
 
-          border border-cyan-400/[0.08]
+          border border-cyan-400/8
 
-          bg-[#07111f]/80
+          bg-white/85
+
+          dark:bg-[#07111f]/80
 
           px-3 py-2
 
@@ -282,9 +287,9 @@ export default function TacticalMap() {
           </span>
         </div>
 
-        <p className="mt-1 text-[11px] font-semibold text-white">En Route</p>
+        <p className="mt-1 text-[11px] font-semibold text-slate-900 dark:text-white">En Route</p>
 
-        <p className="mt-0.5 text-[9px] text-slate-500">ETA · 2.4 min</p>
+        <p className="mt-0.5 text-[9px] text-slate-600 dark:text-slate-500">ETA · 2.4 min</p>
       </motion.div>
 
       {/* Incident Badge */}
@@ -294,9 +299,9 @@ export default function TacticalMap() {
 
           rounded-lg
 
-          border border-red-500/[0.12]
+          border border-red-500/15
 
-          bg-red-500/[0.06]
+          bg-red-500/10
 
           px-2.5 py-1.5
 
